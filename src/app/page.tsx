@@ -1,4 +1,6 @@
+"use client";
 import { Scene } from "@/components/scene";
+import { OrbitControls } from "@react-three/drei"; 
 
 export default function Home() {
   return (
@@ -8,6 +10,7 @@ export default function Home() {
           <boxGeometry args={[1, 1, 1]} />
           <meshBasicMaterial color="orange" />
         </mesh>
+        <OrbitControls />
       </Scene>
     </main>
   );

@@ -1,6 +1,8 @@
 "use client";
-import { Scene } from "@/components/scene";
+
+//*Libraries imports
 import { OrbitControls } from "@react-three/drei"; 
+import { Scene } from "@/components/scene";
 
 export default function Home() {
   return (

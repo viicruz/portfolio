@@ -6,9 +6,9 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    "ignoreUnknown": false
   },
+  "css": {},
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -17,20 +17,20 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noUnknownAtRules": "off"
-      }
+      "recommended": true
     },
-    "domains": {
-      "next": "recommended",
-      "react": "recommended"
+    "includes": ["src/**", "!en.d.json.ts", "!messages/**"]
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
     }
   },
   "assist": {
+    "enabled": true,
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "off"
       }
     }
   }

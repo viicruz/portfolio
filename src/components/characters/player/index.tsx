@@ -1,13 +1,14 @@
 //*Libraries imports
-import type * as THREE from "three";
+import * as THREE from "three";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
 
-
 //*Components imports
 import { Controls } from "@/contexts/controls";
 
+//* Hooks imports
+import { useFollowCamera } from "@/hooks/useFollowCamera";
 
 export function Player() {
   const ref = React.useRef<THREE.Mesh>(null);
@@ -16,7 +17,11 @@ export function Player() {
 
   const speed = 2.5;
   
-
+  //@ts-expect-error
+  useFollowCamera(ref, {
+    offset: new THREE.Vector3(0, 4, 8),
+    lerp: 0.1,
+  })
   
   useFrame((_, delta) => {
     if (!ref.current) return;
@@ -27,10 +32,10 @@ export function Player() {
     
     
     if (key[Controls.Up]) {
-      ref.current.position.y += adjustedSpeed * delta;
+      ref.current.position.z -= adjustedSpeed * delta;
     }
     if (key[Controls.Down]) {
-      ref.current.position.y -= adjustedSpeed * delta;
+      ref.current.position.z += adjustedSpeed * delta;
     }
     if (key[Controls.Left]) {
       ref.current.position.x -= adjustedSpeed * delta;

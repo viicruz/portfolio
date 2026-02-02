@@ -2,6 +2,8 @@
 
 //*Libraries imports
 import { Canvas } from '@react-three/fiber';
+import { Physics } from '@react-three/rapier';
+import { Suspense } from 'react';
 
 
 type SceneProps = {
@@ -10,7 +12,11 @@ type SceneProps = {
 export function Scene(props: SceneProps) {
   return (
     <Canvas>
-      {props.children}
+      <Suspense>
+        <Physics debug>
+          {props.children}
+        </Physics>
+      </Suspense>
     </Canvas>
   );
 };

@@ -6,10 +6,10 @@ import React from "react";
 //* Hooks imports
 import { useFollowCamera } from "@/hooks/useFollowCamera";
 import { usePlayerMovement } from "@/hooks/usePlayerMovement";
+  const SPEED = 2.5;
 
 export function Player() {
   const ref = React.useRef<THREE.Mesh>(null);
-  const speed = 2.5;
   
   //@ts-expect-error
   useFollowCamera(ref, {
@@ -17,7 +17,7 @@ export function Player() {
     lerp: 0.1,
   })
   
-  usePlayerMovement(ref, { speed });
+  usePlayerMovement(ref, { speed: SPEED });
 
   return (
     <mesh ref={ref} position={[0, 0.5, 0]}>

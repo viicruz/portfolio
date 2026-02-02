@@ -26,7 +26,6 @@ export default function Home() {
             <Player />
           </CharacterControls>
         </group>
-
       </Scene>
     </main>
   );

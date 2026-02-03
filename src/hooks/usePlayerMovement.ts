@@ -1,9 +1,8 @@
-//* Libraries imports 
 import type { RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
-import { Controls } from "@/contexts/controls";
 import type { RapierRigidBody } from "@react-three/rapier";
+import { Controls } from "@/contexts/controls";
 
 export type PlayerMovementOptions = {
   speed?: number;
@@ -14,39 +13,27 @@ export function usePlayerMovement(
   options?: PlayerMovementOptions,
 ) {
   const speed = options?.speed ?? 2.5;
+  const [, getKeys] = useKeyboardControls<Controls>();
 
-  const keyboard = useKeyboardControls<Controls>();
-  const getKeys = keyboard[1];
-
-  useFrame((_, delta) => {
+  useFrame(() => {
     if (!ref.current) return;
 
+    const body = ref.current;
     const key = getKeys();
-    const sprintMultiplier = key[Controls.Sprint] ? 2 : 1;
-    const adjustedSpeed = speed * sprintMultiplier;
 
-    // Determine if the ref is a Rapier RigidBody API or a plain Object3D
-    const current = ref.current as RapierRigidBody;
+    const sprint = key[Controls.Sprint] ? 2 : 1;
+    const velocity = speed * sprint;
 
-    // Move the physics body; children meshes will follow automatically
-    const pos = (current as RapierRigidBody).translation();
-    let x = pos.x;
-    const y = pos.y;
-    let z = pos.z;
+    let x = 0;
+    let z = 0;
 
-    if (key[Controls.Up]) {
-      z -= adjustedSpeed * delta;
-    }
-    if (key[Controls.Down]) {
-      z += adjustedSpeed * delta;
-    }
-    if (key[Controls.Left]) {
-      x -= adjustedSpeed * delta;
-    }
-    if (key[Controls.Right]) {
-      x += adjustedSpeed * delta;
-    }
+    if (key[Controls.Up]) z -= velocity;
+    if (key[Controls.Down]) z += velocity;
+    if (key[Controls.Left]) x -= velocity;
+    if (key[Controls.Right]) x += velocity;
 
-    (current as RapierRigidBody).setTranslation({ x, y, z }, true);
+    const currentY = body.linvel().y;
+
+    body.setLinvel({ x, y: currentY, z }, true);
   });
 }

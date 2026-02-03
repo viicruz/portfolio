@@ -16,7 +16,8 @@ export function Player() {
 
   //@ts-expect-error
   useFollowCamera(meshRef, {
-    offset: new THREE.Vector3(0, 4, 8),
+    //45 degrees behind and above the player
+    offset: new THREE.Vector3(0, 9, 8),
     lerp: 0.1,
   })
 

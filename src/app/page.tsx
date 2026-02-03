@@ -20,7 +20,7 @@ export default function Home() {
         <RigidBody colliders="cuboid" mass={1} type="fixed">
           <mesh position={[0, 0, 0]}>
             <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color="orange" />
+            <meshBasicMaterial color="black" />
           </mesh>
         </RigidBody>
         <RigidBody colliders="cuboid" mass={1} type="fixed">

@@ -11,7 +11,7 @@ type SceneProps = {
 }
 export function Scene(props: SceneProps) {
   return (
-    <Canvas>
+    <Canvas camera={{fov: 40}}>
       <Suspense>
         <Physics debug>
           {props.children}

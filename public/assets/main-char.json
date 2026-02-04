@@ -1,11 +1,32 @@
 {
   "frames": {
     "idle_down_000": {
-      "frame": { "x": 6, "y": 5, "w": 19, "h": 25 },
+      "frame": { "x": 25, "y": 5, "w": 19, "h": 25 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 19, "h": 25 },
       "sourceSize": { "w": 19, "h": 25 }
+    },
+    "idle_left_000": {
+      "frame": { "x": 25, "y": 33, "w": 20, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 25 },
+      "sourceSize": { "w": 20, "h": 25 }
+    },
+    "idle_up_000": {
+      "frame": { "x": 26, "y": 61, "w": 19, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 19, "h": 25 },
+      "sourceSize": { "w": 19, "h": 25 }
+    },
+    "idle_right_000": {
+      "frame": { "x": 25, "y": 88, "w": 20, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 25 },
+      "sourceSize": { "w": 20, "h": 25 }
     },
     "walk_down_000": {
       "frame": { "x": 6, "y": 5, "w": 19, "h": 25 },

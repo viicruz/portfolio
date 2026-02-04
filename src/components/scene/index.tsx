@@ -9,7 +9,7 @@ type SceneProps = {
 }
 export function Scene(props: SceneProps) {
   return (
-    <Canvas>
+    <Canvas camera={{fov: 45}}>
       {props.children}
     </Canvas>
   );

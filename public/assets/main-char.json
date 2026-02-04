@@ -1,11 +1,11 @@
 {
   "frames": {
-    "Idle_000": {
-      "frame": { "x": 26, "y": 5, "w": 17, "h": 23 },
+    "idle_down_000": {
+      "frame": { "x": 6, "y": 5, "w": 19, "h": 25 },
       "rotated": false,
       "trimmed": false,
-      "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 23 },
-      "sourceSize": { "w": 17, "h": 23 }
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 19, "h": 25 },
+      "sourceSize": { "w": 19, "h": 25 }
     }
   },
   "meta": {

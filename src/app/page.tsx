@@ -8,11 +8,28 @@ import { Scene } from "@/components/scene";
 import { CharacterControls } from "@/contexts/controls";
 import { Player } from "@/components/characters/player";
 
+enum MAIN_CHAR_ANIMATIONS {
+  IDLE_DOWN = "idle_down",
+  IDLE_UP = "idle_up",
+  IDLE_LEFT = "idle_left",
+  IDLE_RIGHT = "idle_right",
+  
+  WALK_DOWN = "walk_down",
+  WALK_UP = "walk_up",
+  WALK_LEFT = "walk_left",
+  WALK_RIGHT = "walk_right",
+  
+  RUN_DOWN = "run_down",
+  RUN_UP = "run_up",
+  RUN_LEFT = "run_left",
+  RUN_RIGHT = "run_right",
+}
+
 function MainCharSprite() {
   const { spriteObj } = useSpriteLoader(
     "/assets/main-char-transparent.png",
     "/assets/main-char.json",
-    ["idle"],
+    [MAIN_CHAR_ANIMATIONS.IDLE_DOWN],
     undefined,
     (texture) => {
       texture.minFilter = THREE.NearestFilter;
@@ -26,9 +43,9 @@ function MainCharSprite() {
     <SpriteAnimator
       scale={[4, 4, 4]}
       position={[-5, 0, 0]}
-      frameName="idle"
+      frameName={MAIN_CHAR_ANIMATIONS.IDLE_DOWN}
       fps={24}
-      animationNames={["idle"]}
+      animationNames={[MAIN_CHAR_ANIMATIONS.IDLE_DOWN]}
       autoPlay={true}
       loop={true}
       alphaTest={0.01}

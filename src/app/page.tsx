@@ -1,11 +1,9 @@
 "use client";
-
-//*Components imports
+//* Components imports
 import { Scene } from "@/components/scene";
 import { CharacterControls } from "@/contexts/controls";
 import { Player } from "@/components/characters/player";
 import { RigidBody } from "@react-three/rapier";
-
 
 export default function Home() {
   return (
@@ -28,6 +26,20 @@ export default function Home() {
             <boxGeometry args={[1, 1, 1]} />
             <meshBasicMaterial color="blue" />
           </mesh>
+
+          {/* <SpriteAnimator
+            scale={[4, 4, 4]}
+            position={[0, 0, 0]}
+            frameName="idle"
+            fps={24}
+            animationNames={["idle", "celebration"]}
+            autoPlay={true}
+            loop={true}
+            alphaTest={0.01}
+            textureImageURL={"/assets/boy-hash.png"}
+            textureDataURL={"/assets/boy-hash.json"}
+          /> */}
+
         </RigidBody>
         <CharacterControls>
           <ambientLight intensity={0.5} />
@@ -35,7 +47,6 @@ export default function Home() {
 
           <Player />
         </CharacterControls>
-
       </Scene>
     </main>
   );

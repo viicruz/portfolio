@@ -47,7 +47,7 @@ export function Player() {
   });
 
   return (
-    <mesh ref={ref} position={[0, 0.5, 0]}>
+    <mesh ref={ref} position={[0, 0, 0]}>
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color="red" />
     </mesh>

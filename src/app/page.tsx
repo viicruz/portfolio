@@ -26,14 +26,23 @@ enum MAIN_CHAR_ANIMATIONS {
 }
 
 const MAIN_CHAR_ANIMATION_NAMES = [
+  //* Idle animations
   MAIN_CHAR_ANIMATIONS.IDLE_DOWN,
   MAIN_CHAR_ANIMATIONS.IDLE_LEFT,
   MAIN_CHAR_ANIMATIONS.IDLE_RIGHT,
   MAIN_CHAR_ANIMATIONS.IDLE_UP,
+
+  //* Walk animations
   MAIN_CHAR_ANIMATIONS.WALK_DOWN,
   MAIN_CHAR_ANIMATIONS.WALK_LEFT,
   MAIN_CHAR_ANIMATIONS.WALK_UP,
   MAIN_CHAR_ANIMATIONS.WALK_RIGHT,
+
+  //* Run animations
+  MAIN_CHAR_ANIMATIONS.RUN_DOWN,
+  MAIN_CHAR_ANIMATIONS.RUN_LEFT,
+  MAIN_CHAR_ANIMATIONS.RUN_UP,
+  MAIN_CHAR_ANIMATIONS.RUN_RIGHT,
 ];
 
 function MainCharSprite() {
@@ -52,10 +61,10 @@ function MainCharSprite() {
 
   return (
     <SpriteAnimator
-      scale={[4, 4, 4]}
-      position={[-5, 0, 0]}
-      frameName={MAIN_CHAR_ANIMATIONS.IDLE_UP}
-      fps={6}
+      scale={[2, 2, 2]}
+      position={[-4, 0, 0]}
+      frameName={MAIN_CHAR_ANIMATIONS.RUN_DOWN}
+      fps={1}
       animationNames={MAIN_CHAR_ANIMATION_NAMES}
       autoPlay={true}
       loop={true}

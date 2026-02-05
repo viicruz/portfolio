@@ -1,42 +1,39 @@
-import type { Object3D } from "three";
 import type { RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
-
+import type { RapierRigidBody } from "@react-three/rapier";
 import { Controls } from "@/contexts/controls";
 
 export type PlayerMovementOptions = {
-	speed?: number;
+  speed?: number;
 };
 
 export function usePlayerMovement(
-	ref: RefObject<Object3D | null>,
-	options?: PlayerMovementOptions
+  ref: RefObject<RapierRigidBody | null>,
+  options?: PlayerMovementOptions,
 ) {
-	const speed = options?.speed ?? 2.5;
+  const speed = options?.speed ?? 2.5;
+  const [, getKeys] = useKeyboardControls<Controls>();
 
-	const keyboard = useKeyboardControls<Controls>();
-	const getKeys = keyboard[1];
+  useFrame(() => {
+    if (!ref.current) return;
 
-	useFrame((_, delta) => {
-		if (!ref.current) return;
+    const body = ref.current;
+    const key = getKeys();
 
-		const key = getKeys();
-		const sprintMultiplier = key[Controls.Sprint] ? 2 : 1;
-		const adjustedSpeed = speed * sprintMultiplier;
+    const sprint = key[Controls.Sprint] ? 2 : 1;
+    const velocity = speed * sprint;
 
-		if (key[Controls.Up]) {
-			ref.current.position.z -= adjustedSpeed * delta;
-		}
-		if (key[Controls.Down]) {
-			ref.current.position.z += adjustedSpeed * delta;
-		}
-		if (key[Controls.Left]) {
-			ref.current.position.x -= adjustedSpeed * delta;
-		}
-		if (key[Controls.Right]) {
-			ref.current.position.x += adjustedSpeed * delta;
-		}
-	});
+    let x = 0;
+    let z = 0;
+
+    if (key[Controls.Up]) z -= velocity;
+    if (key[Controls.Down]) z += velocity;
+    if (key[Controls.Left]) x -= velocity;
+    if (key[Controls.Right]) x += velocity;
+
+    const currentY = body.linvel().y;
+
+    body.setLinvel({ x, y: currentY, z }, true);
+  });
 }
-

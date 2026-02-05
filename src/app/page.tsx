@@ -5,9 +5,15 @@ import { Scene } from "@/components/scene";
 import { CharacterControls } from "@/contexts/controls";
 import { Player } from "@/components/characters/player";
 
+import { useTranslations } from "next-intl"
+
+
 export default function Home() {
+  const t = useTranslations("hello")
+
   return (
     <main className="w-full h-svh">
+      <div>{t("banana")}</div>
       <Scene>
         <group position={[0, 0, 0]}>
           <mesh position={[0, 0, 0]}>

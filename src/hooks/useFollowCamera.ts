@@ -1,7 +1,7 @@
 //* Libraries imports
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import React from "react";
+import type React from "react";
 
 type FollowCameraOptions = {
   offset?: THREE.Vector3;
@@ -20,16 +20,17 @@ export function useFollowCamera(targetRef: React.RefObject<THREE.Object3D> | nul
 
   const desiredPosition = new THREE.Vector3();
   const lookAtPosition = new THREE.Vector3();
+  const worldTarget = new THREE.Vector3();
 
   useFrame(()=>{
     if(!targetRef?.current) return;
 
-    desiredPosition.copy(targetRef.current.position).add(offset);
+    // Use world position so it works when the target is a child of a moving parent (e.g., Rapier RigidBody)
+    targetRef.current.getWorldPosition(worldTarget);
+    desiredPosition.copy(worldTarget).add(offset);
     camera.position.lerp(desiredPosition, lerp);
 
-    lookAtPosition
-    .copy(targetRef.current.position)
-    .add(lookAtOffset);
+    lookAtPosition.copy(worldTarget).add(lookAtOffset);
 
     camera.lookAt(lookAtPosition);
   })

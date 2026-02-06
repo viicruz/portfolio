@@ -1,42 +1,73 @@
-import type { Object3D } from "three";
-import type { RefObject } from "react";
+import { useRef, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
-
+import type { RapierRigidBody } from "@react-three/rapier";
 import { Controls } from "@/contexts/controls";
+import { usePageVisibility } from "@/hooks/use-page-visibility";
 
 export type PlayerMovementOptions = {
-	speed?: number;
+  speed?: number;
 };
 
 export function usePlayerMovement(
-	ref: RefObject<Object3D | null>,
-	options?: PlayerMovementOptions
+  ref: RefObject<RapierRigidBody | null>,
+  options?: PlayerMovementOptions,
 ) {
-	const speed = options?.speed ?? 2.5;
+  const speed = options?.speed ?? 2.5;
+  const [, getKeys] = useKeyboardControls<Controls>();
+  const isActiveRef = useRef(true);
 
-	const keyboard = useKeyboardControls<Controls>();
-	const getKeys = keyboard[1];
+  const zeroVelocity = () => {
+    const body = ref.current;
+    if (!body) return;
+    const currentY = body.linvel().y;
+    body.setLinvel({ x: 0, y: currentY, z: 0 }, true);
 
-	useFrame((_, delta) => {
-		if (!ref.current) return;
+    const keys = getKeys();
+    Object.keys(keys).forEach((key) => {
+      keys[key as Controls] = false;
+    });
+  };
 
-		const key = getKeys();
-		const sprintMultiplier = key[Controls.Sprint] ? 2 : 1;
-		const adjustedSpeed = speed * sprintMultiplier;
+  usePageVisibility({
+    onVisibilityChange: (isVisible) => {
+      isActiveRef.current = !!isVisible;
+      if (!isVisible) zeroVelocity();
+    },
+    onBlur: () => {
+      isActiveRef.current = false;
+      zeroVelocity();
+    },
+    onFocus: () => {
+      isActiveRef.current = true;
+      zeroVelocity();
+    },
+  });
 
-		if (key[Controls.Up]) {
-			ref.current.position.z -= adjustedSpeed * delta;
-		}
-		if (key[Controls.Down]) {
-			ref.current.position.z += adjustedSpeed * delta;
-		}
-		if (key[Controls.Left]) {
-			ref.current.position.x -= adjustedSpeed * delta;
-		}
-		if (key[Controls.Right]) {
-			ref.current.position.x += adjustedSpeed * delta;
-		}
-	});
+  useFrame(() => {
+    if (!ref.current) return;
+
+    const body = ref.current;
+    if (!isActiveRef.current) {
+      const currentY = body.linvel().y;
+      body.setLinvel({ x: 0, y: currentY, z: 0 }, true);
+      zeroVelocity();
+      return;
+    }
+    const key = getKeys();
+
+    const sprint = key[Controls.Sprint] ? 2 : 1;
+    const velocity = speed * sprint;
+
+    let x = 0;
+    let z = 0;
+    if (key[Controls.Up] && isActiveRef.current) z -= velocity;
+    if (key[Controls.Down] && isActiveRef.current) z += velocity;
+    if (key[Controls.Left] && isActiveRef.current) x -= velocity;
+    if (key[Controls.Right] && isActiveRef.current) x += velocity;
+
+    const currentY = body.linvel().y;
+
+    body.setLinvel({ x, y: currentY, z }, true);
+  });
 }
-

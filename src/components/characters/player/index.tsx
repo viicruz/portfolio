@@ -5,13 +5,13 @@ import { RigidBody, type RapierRigidBody, CapsuleCollider } from "@react-three/r
 import { SpriteAnimator, useSpriteLoader } from "@react-three/drei";
 
 //* Hooks imports
-import { useFollowCamera } from "@/hooks/useFollowCamera";
-import { usePlayerMovement } from "@/hooks/usePlayerMovement";
+import { useFollowCamera } from "@/hooks/use-follow-camera";
+import { usePlayerMovement } from "@/hooks/use-player-movement";
 import {
   usePlayerAnimation,
   PlayerDirection,
   PlayerMovementState,
-} from "@/hooks/usePlayerAnimation";
+} from "@/hooks/use-player-animation";
 
 const SPEED = 2.5;
 

@@ -21,7 +21,7 @@ export default function Home() {
             <meshBasicMaterial color="gray" />
           </mesh>
         </RigidBody>
-        <RigidBody colliders="cuboid" mass={1} type="fixed">
+        <RigidBody onIntersectionEnter={()=>{console.log('aiauiaia')}} sensor colliders="cuboid" mass={1} type="fixed">
           <mesh position={[0, 0, 0]}>
             <boxGeometry args={[1, 1, 1]} />
             <meshBasicMaterial color="black" />

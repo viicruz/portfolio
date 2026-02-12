@@ -12,9 +12,9 @@ type DialogStore = {
 };
 
 export const useDialogStore = create<DialogStore>((set) => ({
-  npcId: null,
-  dialogId: null,
-  dialogLine: 0,
+  npcId: "npc1",
+  dialogId: "dialog1",
+  dialogLine: 1,
   isOnDialog: true,
 
   setNpcId: (npcId) => set({ npcId }),

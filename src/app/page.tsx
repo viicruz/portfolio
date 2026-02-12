@@ -5,11 +5,7 @@ import { CharacterControls } from "@/contexts/controls";
 import { Player } from "@/components/characters/player";
 import { RigidBody } from "@react-three/rapier";
 
-import { useTranslations } from "next-intl"
-
-
 export default function Home() {
-  const t = useTranslations("hello")
 
   return (
     <main className="w-full h-svh">

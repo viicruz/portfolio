@@ -13,7 +13,6 @@ export default function Home() {
 
   return (
     <main className="w-full h-svh">
-      <div>{t("banana")}</div>
       <Scene>
         <RigidBody type="fixed">
           <mesh position={[0, -1, 0]}>

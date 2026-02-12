@@ -6,6 +6,7 @@ import { SpriteAnimator, useSpriteLoader } from "@react-three/drei";
 
 //* Hooks imports
 import { useFollowCamera } from "@/hooks/use-follow-camera";
+import { useDialogAdvance } from "@/hooks/use-dialog-advance";
 import { usePlayerMovement } from "@/hooks/use-player-movement";
 import {
   usePlayerAnimation,
@@ -126,6 +127,7 @@ export function Player() {
     lerp: 0.1,
   });
 
+  useDialogAdvance();
   usePlayerMovement(bodyRef, { speed: SPEED });
 
   return (

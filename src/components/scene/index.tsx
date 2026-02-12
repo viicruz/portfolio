@@ -39,7 +39,7 @@ export function Scene(props: SceneProps) {
             </div>
             <div className='absolute right-2 bottom-6 animate-bounce'>
               {
-                dialogStore.canDialogAdvance && <PlayIcon className='size-4 rotate-90' fill='white' />
+                !dialogStore.isLastDialogLine && <PlayIcon className='size-4 rotate-90' fill='white' />
 
               }
             </div>

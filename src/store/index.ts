@@ -12,6 +12,7 @@ type DialogStore = {
   isOnDialog: boolean;
   canDialogAdvance: boolean;
   translationObject: Translation;
+  isLastDialogLine: boolean;
 
   setNpcId: (npcId: string | null) => void;
   setDialogId: (dialogId: string | null) => void;
@@ -27,6 +28,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
   isOnDialog: true,
   canDialogAdvance: true,
   translationObject: en.dialogs,
+  isLastDialogLine: false,
 
   setNpcId: (npcId) => set({ npcId }),
   setDialogId: (dialogId) => set({ dialogId }),
@@ -47,6 +49,12 @@ export const useDialogStore = create<DialogStore>((set) => ({
         ? !!dialogLines[nextDialogLine.toString() as keyof typeof dialogLines]
         : false;
 
+      const isLastDialogLine = dialogLines
+        ? !dialogLines[
+            (nextDialogLine + 1).toString() as keyof typeof dialogLines
+          ]
+        : false;
+
       if (canDialogAdvance) {
         console.log("Dialog advanced to line", {
           npcId: actualNpcId,
@@ -56,18 +64,22 @@ export const useDialogStore = create<DialogStore>((set) => ({
           actualDialogId,
           actualDialogLine,
           dialogLines,
-          nextDialogLine
+          nextDialogLine,
         });
-        return { dialogLine: nextDialogLine, canDialogAdvance };
-      }
-      else {
+        return {
+          dialogLine: nextDialogLine,
+          canDialogAdvance,
+          isLastDialogLine,
+        };
+      } else {
         console.log("Dialog can't advance");
         return {
           npcId: null,
           dialogId: null,
           dialogLine: 1,
           isOnDialog: false,
-          canDialogAdvance: true
+          canDialogAdvance: true,
+          isLastDialogLine: false
         };
       }
     });

@@ -3,6 +3,10 @@ import { create } from "zustand";
 //*Tranlation json import
 import en from "../../messages/en.json";
 
+//* Sound effect imports
+const dialogAdvanceSfx = new Audio("/assets/sounds/intecraction_sound.mp3");
+dialogAdvanceSfx.volume = 0.5;
+
 type Translation = typeof en.dialogs;
 
 type DialogStore = {
@@ -66,6 +70,8 @@ export const useDialogStore = create<DialogStore>((set) => ({
           dialogLines,
           nextDialogLine,
         });
+        dialogAdvanceSfx.currentTime = 0;
+        dialogAdvanceSfx.play();
         return {
           dialogLine: nextDialogLine,
           canDialogAdvance,
@@ -79,7 +85,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
           dialogLine: 1,
           isOnDialog: false,
           canDialogAdvance: true,
-          isLastDialogLine: false
+          isLastDialogLine: false,
         };
       }
     });

@@ -1,9 +1,15 @@
 "use client";
+
+//* Libraries imports
+import { RigidBody } from "@react-three/rapier";
+
+//* Context imports
+import { CharacterControls } from "@/contexts/controls";
+
 //* Components imports
 import { Scene } from "@/components/scene";
-import { CharacterControls } from "@/contexts/controls";
 import { Player } from "@/components/characters/player";
-import { RigidBody } from "@react-three/rapier";
+import { InteractionSphere } from "@/components/interactionSphere";
 
 export default function Home() {
 
@@ -16,19 +22,14 @@ export default function Home() {
             <meshBasicMaterial color="gray" />
           </mesh>
         </RigidBody>
-        <RigidBody onIntersectionEnter={()=>{console.log('aiauiaia')}} sensor colliders="cuboid" mass={1} type="fixed">
-          <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color="black" />
-          </mesh>
-        </RigidBody>
-        <RigidBody colliders="cuboid" mass={1} type="fixed">
-          <mesh position={[2, 0, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color="blue" />
-          </mesh>
+        <InteractionSphere>
+          <RigidBody colliders="cuboid" mass={1} type="fixed">
+            <mesh position={[0, 0, 0]}>
+              <boxGeometry args={[1, 1, 1]} />
+              <meshBasicMaterial color="blue" />
+            </mesh>
 
-          {/* <SpriteAnimator
+            {/* <SpriteAnimator
             scale={[4, 4, 4]}
             position={[0, 0, 0]}
             frameName="idle"
@@ -41,7 +42,8 @@ export default function Home() {
             textureDataURL={"/assets/boy-hash.json"}
           /> */}
 
-        </RigidBody>
+          </RigidBody>
+        </InteractionSphere>
         <CharacterControls>
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 5, 5]} />

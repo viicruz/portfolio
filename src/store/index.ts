@@ -1,10 +1,12 @@
+'use client';
+
 import { create } from "zustand";
 
 //*Tranlation json import
 import en from "../../messages/en.json";
 
 //* Sound effect imports
-const dialogAdvanceSfx = new Audio("/assets/sounds/intecraction_sound.mp3");
+const dialogAdvanceSfx = new Audio("/assets/sounds/interaction_sound.mp3");
 dialogAdvanceSfx.volume = 0.5;
 
 type Translation = typeof en.dialogs;

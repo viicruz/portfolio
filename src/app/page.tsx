@@ -11,7 +11,7 @@ export default function Home() {
       <Scene>
         <RigidBody type="fixed">
           <mesh position={[0, -1, 0]}>
-            <boxGeometry args={[10, 0.5, 10]} />
+            <boxGeometry args={[200, 0.5, 200]} />
             <meshBasicMaterial color="gray" />
           </mesh>
         </RigidBody>

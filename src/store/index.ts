@@ -19,22 +19,39 @@ type DialogStore = {
   canDialogAdvance: boolean;
   translationObject: Translation;
   isLastDialogLine: boolean;
+  npcDialogIntention: {npcId: string, dialogId: string} | null;
 
   setNpcId: (npcId: string | null) => void;
   setDialogId: (dialogId: string | null) => void;
   setDialogLine: (dialogLine: number) => void;
   setIsOnDialog: (isOnDialog: boolean) => void;
   advanceDialog: () => void;
+  setCanDialogAdvance: (canDialogAdvance: boolean) => void;
+  setNpcDialogIntention: (npcDialogIntention: {npcId: string, dialogId: string} | null) => void;
+  startDialog: (npcId: string, dialogId: string) => void;
 };
 
 export const useDialogStore = create<DialogStore>((set) => ({
-  npcId: "npc1",
-  dialogId: "dialog1",
+  npcId: null,
+  dialogId: null,
   dialogLine: 1,
-  isOnDialog: true,
-  canDialogAdvance: true,
+  isOnDialog: false,
+  canDialogAdvance: false,
   translationObject: en.dialogs,
   isLastDialogLine: false,
+  npcDialogIntention: null,
+  setCanDialogAdvance: (canDialogAdvance) => set({ canDialogAdvance }),
+  setNpcDialogIntention: (npcDialogIntention) => set({ npcDialogIntention }),
+  startDialog: (npcId, dialogId) => {
+    set({
+      npcId,
+      dialogId,
+      dialogLine: 1,
+      isOnDialog: true,
+      canDialogAdvance: true,
+      npcDialogIntention: null,
+    });
+  },
 
   setNpcId: (npcId) => set({ npcId }),
   setDialogId: (dialogId) => set({ dialogId }),
@@ -81,6 +98,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
         };
       } else {
         console.log("Dialog can't advance");
+        const actualNpcId = state.npcId;
         return {
           npcId: null,
           dialogId: null,
@@ -88,6 +106,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
           isOnDialog: false,
           canDialogAdvance: true,
           isLastDialogLine: false,
+          npcDialogIntention: {npcId: actualNpcId as string, dialogId: state.dialogId as string}
         };
       }
     });

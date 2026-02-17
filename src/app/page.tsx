@@ -9,7 +9,7 @@ import { CharacterControls } from "@/contexts/controls";
 //* Components imports
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
-import { InteractionSphere } from "@/components/interactionSphere";
+import { Npc } from "@/components/characters/npc";
 
 export default function Home() {
 
@@ -22,34 +22,13 @@ export default function Home() {
             <meshBasicMaterial color="gray" />
           </mesh>
         </RigidBody>
-        <InteractionSphere>
-          <RigidBody colliders="cuboid" mass={1} type="fixed">
-            <mesh position={[0, 0, 0]}>
-              <boxGeometry args={[1, 1, 1]} />
-              <meshBasicMaterial color="blue" />
-            </mesh>
-
-            {/* <SpriteAnimator
-            scale={[4, 4, 4]}
-            position={[0, 0, 0]}
-            frameName="idle"
-            fps={24}
-            animationNames={["idle", "celebration"]}
-            autoPlay={true}
-            loop={true}
-            alphaTest={0.01}
-            textureImageURL={"/assets/boy-hash.png"}
-            textureDataURL={"/assets/boy-hash.json"}
-          /> */}
-
-          </RigidBody>
-        </InteractionSphere>
         <CharacterControls>
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 5, 5]} />
 
           <Player />
         </CharacterControls>
+        <Npc npcId="npc1" dialogId="dialog1" />
       </Scene>
     </main>
   );

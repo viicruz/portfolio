@@ -149,7 +149,7 @@ export function Player() {
       {spriteObj && (
         <SpriteAnimator
           scale={[1, 1, 1]}
-          position={[0, 0, 0]}
+          position={[0, -0.25, 0]}
           frameName={animationName}
           fps={8}
           animationNames={MAIN_CHAR_ANIMATION_NAMES}

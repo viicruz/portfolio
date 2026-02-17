@@ -51,6 +51,8 @@ export const useDialogStore = create<DialogStore>((set) => ({
       canDialogAdvance: true,
       npcDialogIntention: null,
     });
+    dialogAdvanceSfx.currentTime = 0;
+    dialogAdvanceSfx.play();
   },
 
   setNpcId: (npcId) => set({ npcId }),

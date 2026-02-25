@@ -29,6 +29,7 @@ type DialogStore = {
   setCanDialogAdvance: (canDialogAdvance: boolean) => void;
   setNpcDialogIntention: (npcDialogIntention: {npcId: string, dialogId: string} | null) => void;
   startDialog: (npcId: string, dialogId: string) => void;
+  setDialogNull: () => void;
 };
 
 export const useDialogStore = create<DialogStore>((set) => ({
@@ -43,6 +44,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
   setCanDialogAdvance: (canDialogAdvance) => set({ canDialogAdvance }),
   setNpcDialogIntention: (npcDialogIntention) => set({ npcDialogIntention }),
   startDialog: (npcId, dialogId) => {
+    if(!npcId || !dialogId) return;
     set({
       npcId,
       dialogId,
@@ -113,4 +115,15 @@ export const useDialogStore = create<DialogStore>((set) => ({
       }
     });
   },
+  setDialogNull: () => {
+    set({
+      npcId: null,
+      dialogId: null,
+      dialogLine: 1,
+      isOnDialog: false,
+      canDialogAdvance: false,
+      isLastDialogLine: false,
+      npcDialogIntention: null
+    });
+  }
 }));

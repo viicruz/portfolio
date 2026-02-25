@@ -23,8 +23,11 @@ export function Npc(props: NpcProps) {
       dialogId: props.dialogId,
     });
   }
+  const handlePlayerExit = () => {
+    dialogStore.setDialogNull();
+  }
   return (
-    <InteractionSphere onPlayerEnter={handleStartDialog}>
+    <InteractionSphere onPlayerEnter={handleStartDialog} onPlayerExit={handlePlayerExit}>
       <RigidBody colliders="cuboid" mass={1} type="fixed">
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[1, 1, 1]} />

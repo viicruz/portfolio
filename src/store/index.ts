@@ -6,9 +6,14 @@ import { create } from "zustand";
 import en from "../../messages/en.json";
 
 //* Sound effect imports
-const dialogAdvanceSfx = new Audio("/assets/sounds/interaction_sound.mp3");
-dialogAdvanceSfx.volume = 0.5;
+const dialogAdvanceSfx =
+  typeof window !== "undefined"
+    ? new Audio("/assets/sounds/interaction_sound.mp3")
+    : ({} as HTMLAudioElement);
 
+if (typeof window !== "undefined") {
+  dialogAdvanceSfx.volume = 0.5;
+}
 type Translation = typeof en.dialogs;
 
 type DialogStore = {

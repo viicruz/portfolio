@@ -5,13 +5,14 @@ import { RigidBody, type RapierRigidBody, CapsuleCollider } from "@react-three/r
 import { SpriteAnimator, useSpriteLoader } from "@react-three/drei";
 
 //* Hooks imports
-import { useFollowCamera } from "@/hooks/useFollowCamera";
-import { usePlayerMovement } from "@/hooks/usePlayerMovement";
+import { useFollowCamera } from "@/hooks/use-follow-camera";
+import { useDialogAdvance } from "@/hooks/use-dialog-advance";
+import { usePlayerMovement } from "@/hooks/use-player-movement";
 import {
   usePlayerAnimation,
   PlayerDirection,
   PlayerMovementState,
-} from "@/hooks/usePlayerAnimation";
+} from "@/hooks/use-player-animation";
 
 const SPEED = 2.5;
 
@@ -126,6 +127,7 @@ export function Player() {
     lerp: 0.1,
   });
 
+  useDialogAdvance();
   usePlayerMovement(bodyRef, { speed: SPEED });
 
   return (
@@ -147,7 +149,7 @@ export function Player() {
       {spriteObj && (
         <SpriteAnimator
           scale={[1, 1, 1]}
-          position={[0, 0, 0]}
+          position={[0, -0.25, 0]}
           frameName={animationName}
           fps={8}
           animationNames={MAIN_CHAR_ANIMATION_NAMES}

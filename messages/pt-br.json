@@ -1,0 +1,11 @@
+{
+  "dialogs": {
+    "npc1": {
+      "dialog1": {
+        "1": "Olá! Bem-vindo ao mundo dos Pokémon! Meu nome é Oak. As pessoas me chamam de Professor Pokémon!",
+        "2": "Este mundo é amplamente habitado por criaturas chamadas Pokémon! Para algumas pessoas",
+        "3": "Pokémon são animais de estimação. Outros os usam para batalhas. Eu... estudo Pokémon como profissão!"
+      }
+    }
+  }
+}

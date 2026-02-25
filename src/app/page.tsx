@@ -1,45 +1,26 @@
 "use client";
-//* Components imports
-import { Scene } from "@/components/scene";
-import { CharacterControls } from "@/contexts/controls";
-import { Player } from "@/components/characters/player";
+
+//* Libraries imports
 import { RigidBody } from "@react-three/rapier";
 
+//* Context imports
+import { CharacterControls } from "@/contexts/controls";
+
+//* Components imports
+import { Scene } from "@/components/scene";
+import { Player } from "@/components/characters/player";
+import { Npc } from "@/components/characters/npc";
+
 export default function Home() {
+
   return (
     <main className="w-full h-svh">
       <Scene>
         <RigidBody type="fixed">
           <mesh position={[0, -1, 0]}>
-            <boxGeometry args={[10, 0.5, 10]} />
+            <boxGeometry args={[200, 0.5, 200]} />
             <meshBasicMaterial color="gray" />
           </mesh>
-        </RigidBody>
-        <RigidBody colliders="cuboid" mass={1} type="fixed">
-          <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color="black" />
-          </mesh>
-        </RigidBody>
-        <RigidBody colliders="cuboid" mass={1} type="fixed">
-          <mesh position={[2, 0, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color="blue" />
-          </mesh>
-
-          {/* <SpriteAnimator
-            scale={[4, 4, 4]}
-            position={[0, 0, 0]}
-            frameName="idle"
-            fps={24}
-            animationNames={["idle", "celebration"]}
-            autoPlay={true}
-            loop={true}
-            alphaTest={0.01}
-            textureImageURL={"/assets/boy-hash.png"}
-            textureDataURL={"/assets/boy-hash.json"}
-          /> */}
-
         </RigidBody>
         <CharacterControls>
           <ambientLight intensity={0.5} />
@@ -47,6 +28,7 @@ export default function Home() {
 
           <Player />
         </CharacterControls>
+        <Npc npcId="npc1" dialogId="dialog1" />
       </Scene>
     </main>
   );

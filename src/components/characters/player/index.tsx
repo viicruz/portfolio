@@ -79,7 +79,7 @@ function computeCameraDistance(
 }
 
 const CAMERA_ANGLE = 60;
-const CAMERA_DISTANCE = 7;
+const CAMERA_DISTANCE = 10;
 const CAMERA_PARAMS = computeCameraDistance(CAMERA_ANGLE, CAMERA_DISTANCE);
 
 export function Player() {
@@ -99,7 +99,8 @@ export function Player() {
   //@ts-expect-error
   useFollowCamera(meshRef, {
     offset: new THREE.Vector3(0, CAMERA_PARAMS.height, CAMERA_PARAMS.distance),
-    lerp: 0.1,
+    lerp: 0.03,
+    lookAtOffset: new THREE.Vector3(0, 0, 0),
   });
 
   useDialogAdvance();
@@ -114,7 +115,7 @@ export function Player() {
       type="dynamic"
       ccd={true}
       angularDamping={5}
-      position={[-3, 0.5, -90]}
+      position={[-3, 0.5, 0]}
     >
       <mesh ref={meshRef} position={[0, 0, 0]} />
       <CapsuleCollider args={[0.5, 0.5]} />

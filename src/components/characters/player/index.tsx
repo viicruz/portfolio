@@ -156,6 +156,8 @@ export function Player() {
       <CapsuleCollider args={[0.5, 0.5]} />
       {spriteObj && (
         <SpriteAnimator
+          castShadow
+          receiveShadow
           scale={[1, 1, 1]}
           position={[0, -0.25, 0]}
           frameName={animationName}

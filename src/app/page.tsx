@@ -1,6 +1,8 @@
 "use client";
 
 //* Libraries imports
+import { useRef } from "react";
+import { useHelper } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import {
   Bloom,
@@ -8,6 +10,7 @@ import {
   EffectComposer,
   Vignette,
 } from "@react-three/postprocessing";
+import * as THREE from "three";
 
 //* Context imports
 import { CharacterControls } from "@/contexts/controls";
@@ -16,6 +19,25 @@ import { CharacterControls } from "@/contexts/controls";
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
 import { Npc } from "@/components/characters/npc";
+
+function DirectionalLightWithHelper() {
+  const lightRef = useRef<THREE.DirectionalLight>(null);
+  useHelper(
+    lightRef as React.RefObject<THREE.Object3D>,
+    THREE.DirectionalLightHelper,
+    5,
+    "red",
+  );
+  return (
+    <directionalLight
+      ref={lightRef}
+      castShadow
+      position={[-2, 5, 5]}
+      shadow-mapSize-width={2048}
+      shadow-mapSize-height={2048}
+    />
+  );
+}
 
 export default function Home() {
   return (
@@ -46,12 +68,7 @@ export default function Home() {
         <Npc npcId="npc1" dialogId="dialog1" />
 
         <ambientLight intensity={0.4} />
-        <directionalLight
-          castShadow
-          position={[-5, 10, 5]}
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-        />
+        <DirectionalLightWithHelper />
 
         <EffectComposer>
           <DepthOfField

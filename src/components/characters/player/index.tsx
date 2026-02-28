@@ -79,7 +79,7 @@ function computeCameraDistance(
 }
 
 const CAMERA_ANGLE = 60;
-const CAMERA_DISTANCE = 10;
+const CAMERA_DISTANCE = 7;
 const CAMERA_PARAMS = computeCameraDistance(CAMERA_ANGLE, CAMERA_DISTANCE);
 
 export function Player() {
@@ -114,7 +114,7 @@ export function Player() {
       type="dynamic"
       ccd={true}
       angularDamping={5}
-      position={[-3, 0.5, 0]}
+      position={[-3, 0.5, -90]}
     >
       <mesh ref={meshRef} position={[0, 0, 0]} />
       <CapsuleCollider args={[0.5, 0.5]} />

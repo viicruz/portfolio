@@ -4,6 +4,8 @@ import React from "react";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 
+const FPS = 1;
+
 type SpriteFrame = {
   frame: { x: number; y: number; w: number; h: number };
 };
@@ -92,7 +94,7 @@ export function SpritePlaneAnimator(props: SpritePlaneAnimatorProps) {
   useFrame((_, delta) => {
     if (!meshRef.current || frames.length === 0) return;
 
-    const fps = props.fps ?? 8;
+    const fps = props.fps ?? FPS;
     elapsedRef.current += delta;
     const frameDuration = 1 / fps;
     while (elapsedRef.current >= frameDuration) {

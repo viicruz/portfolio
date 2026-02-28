@@ -115,7 +115,7 @@ export function SpritePlaneAnimator(props: SpritePlaneAnimatorProps) {
       castShadow
       customDepthMaterial={customDepthMaterial}
     >
-      <planeGeometry args={[1, 1.25]} />
+      <planeGeometry args={[1, 1.5]} />
       <meshStandardMaterial
         map={texture}
         alphaTest={props.alphaTest ?? 0.01}

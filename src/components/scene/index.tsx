@@ -40,7 +40,7 @@ export function Scene(props: SceneProps) {
 
         )}
       </div>
-      <Canvas camera={{ fov: 40 }}>
+      <Canvas camera={{ fov: 40 }} shadows>
         <Suspense>
           <Physics debug>
             {props.children}

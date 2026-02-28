@@ -1,7 +1,11 @@
 //* Libraries imports
 import * as THREE from "three";
 import React from "react";
-import { RigidBody, type RapierRigidBody, CapsuleCollider } from "@react-three/rapier";
+import {
+  RigidBody,
+  type RapierRigidBody,
+  CapsuleCollider,
+} from "@react-three/rapier";
 import { SpriteAnimator, useSpriteLoader } from "@react-three/drei";
 
 //* Hooks imports
@@ -70,22 +74,26 @@ function getAnimationName(
     [PlayerMovementState.RUN]: "RUN",
   };
 
-  const animationKey = `${stateMap[movementState]}_${directionMap[direction]}` as keyof typeof MAIN_CHAR_ANIMATIONS;
+  const animationKey =
+    `${stateMap[movementState]}_${directionMap[direction]}` as keyof typeof MAIN_CHAR_ANIMATIONS;
   return MAIN_CHAR_ANIMATIONS[animationKey] || MAIN_CHAR_ANIMATIONS.IDLE_DOWN;
 }
 
 /**
  * Compute the distance of the camera from the player based on the cosine of the angle of the camera and distance from the player
- * 
+ *
  * Example:
  * computeCameraDistance(45, 10) => {height: 10, distance: 10}
  * computeCameraDistance(30, 10) => {height: 5, distance: 10}
  * computeCameraDistance(60, 10) => {height: 8.66, distance: 10}
  */
-function computeCameraDistance(cosAngle: number, distance: number): {height: number, distance: number} {
-  const height = distance * Math.cos(cosAngle * Math.PI / 180);
-  const newDistance = distance * Math.sin(cosAngle * Math.PI / 180);
-  return {height, distance: newDistance};
+function computeCameraDistance(
+  cosAngle: number,
+  distance: number,
+): { height: number; distance: number } {
+  const height = distance * Math.cos((cosAngle * Math.PI) / 180);
+  const newDistance = distance * Math.sin((cosAngle * Math.PI) / 180);
+  return { height, distance: newDistance };
 }
 
 const CAMERA_ANGLE = 60;
@@ -139,7 +147,7 @@ export function Player() {
       type="dynamic"
       ccd={true}
       angularDamping={5}
-      position={[0, 2, 0]}
+      position={[-3, 0.5, 0]}
     >
       <mesh ref={meshRef} position={[0, 0, 0]}>
         {/* <capsuleGeometry args={[0.5, 1, 1]} /> */}

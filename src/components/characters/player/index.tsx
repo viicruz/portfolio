@@ -127,6 +127,7 @@ export function Player() {
           scale={[1, 1, 1]}
           position={[0, -0.25, 0]}
           alphaTest={0.01}
+          brightness={1}
         />
       </Suspense>
     </RigidBody>

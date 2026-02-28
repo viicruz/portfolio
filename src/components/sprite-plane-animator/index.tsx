@@ -23,6 +23,7 @@ type SpritePlaneAnimatorProps = {
   scale?: [number, number, number];
   position?: [number, number, number];
   alphaTest?: number;
+  brightness?: number;
 };
 
 const _cameraDir = new THREE.Vector3();
@@ -77,6 +78,11 @@ export function SpritePlaneAnimator(props: SpritePlaneAnimatorProps) {
     return mat;
   }, [texture, props.alphaTest]);
 
+  const brightnessColor = React.useMemo(() => {
+    const b = props.brightness ?? 1.0;
+    return new THREE.Color(b, b, b);
+  }, [props.brightness]);
+
   if (prevAnimationRef.current !== props.animationName) {
     prevAnimationRef.current = props.animationName;
     frameIndexRef.current = 0;
@@ -116,8 +122,9 @@ export function SpritePlaneAnimator(props: SpritePlaneAnimatorProps) {
       customDepthMaterial={customDepthMaterial}
     >
       <planeGeometry args={[1, 1.5]} />
-      <meshStandardMaterial
+      <meshBasicMaterial
         map={texture}
+        color={brightnessColor}
         alphaTest={props.alphaTest ?? 0.01}
         side={THREE.DoubleSide}
       />

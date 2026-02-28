@@ -45,6 +45,7 @@ export default function Home() {
         </CharacterControls>
         <Npc npcId="npc1" dialogId="dialog1" />
 
+        <ambientLight intensity={0.4} />
         <directionalLight
           castShadow
           position={[-5, 10, 5]}

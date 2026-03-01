@@ -99,8 +99,7 @@ export function Player() {
   //@ts-expect-error
   useFollowCamera(meshRef, {
     offset: new THREE.Vector3(0, CAMERA_PARAMS.height, CAMERA_PARAMS.distance),
-    lerp: 0.03,
-    lookAtOffset: new THREE.Vector3(0, 0, 0),
+    lerp: 0.1,
   });
 
   useDialogAdvance();

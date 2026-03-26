@@ -1,7 +1,7 @@
 "use client";
 
 //* Libraries imports
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useHelper } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import {
@@ -19,6 +19,7 @@ import { CharacterControls } from "@/contexts/controls";
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
 import { Npc } from "@/components/characters/npc";
+import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
 function DirectionalLightWithHelper() {
   const lightRef = useRef<THREE.DirectionalLight>(null);
@@ -40,6 +41,41 @@ function DirectionalLightWithHelper() {
 }
 
 export default function Home() {
+  const hardwareInfo = useHardwareThreeSupport();
+
+  const effectToggles = useMemo(() => {
+    const effectiveTier =
+      hardwareInfo.tier === "unknown" ? "low" : hardwareInfo.tier;
+
+    // set effectiveTier hardcoded to "low" for debug purposes
+    // const effectiveTier = "medium";
+
+    if (effectiveTier === "high") {
+      return {
+        postprocessing: true,
+        depthOfField: true,
+        bloom: true,
+        vignette: true,
+      };
+    }
+
+    if (effectiveTier === "medium") {
+      return {
+        postprocessing: true,
+        depthOfField: false,
+        bloom: true,
+        vignette: true,
+      };
+    }
+
+    return {
+      postprocessing: false,
+      depthOfField: false,
+      bloom: false,
+      vignette: false,
+    };
+  }, [hardwareInfo.tier]);
+
   return (
     <main className="w-full h-svh">
       <Scene>
@@ -70,20 +106,30 @@ export default function Home() {
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />
 
-        <EffectComposer>
-          <DepthOfField
-            focusDistance={10}
-            focalLength={5}
-            bokehScale={1}
-            height={480}
-          />
-          <Bloom
-            luminanceThreshold={0.2}
-            luminanceSmoothing={0.3}
-            height={300}
-          />
-          <Vignette eskil={false} offset={0.1} darkness={0.6} />
-        </EffectComposer>
+        {effectToggles.postprocessing && (
+          <EffectComposer>
+            <>
+              {effectToggles.depthOfField && (
+                <DepthOfField
+                  focusDistance={10}
+                  focalLength={5}
+                  bokehScale={1}
+                  height={480}
+                />
+              )}
+              {effectToggles.bloom && (
+                <Bloom
+                  luminanceThreshold={0.2}
+                  luminanceSmoothing={0.3}
+                  height={300}
+                />
+              )}
+              {effectToggles.vignette && (
+                <Vignette eskil={false} offset={0.1} darkness={0.6} />
+              )}
+            </>
+          </EffectComposer>
+        )}
       </Scene>
     </main>
   );

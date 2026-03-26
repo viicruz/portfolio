@@ -114,7 +114,7 @@ export function Player() {
       type="dynamic"
       ccd={true}
       angularDamping={5}
-      position={[-3, 0.5, 0]}
+      position={[-3, 2, 0]}
     >
       <mesh ref={meshRef} position={[0, 0, 0]} />
       <CapsuleCollider args={[0.5, 0.5]} />

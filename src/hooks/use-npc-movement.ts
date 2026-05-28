@@ -40,7 +40,6 @@ export function useNpcMovement(
   options?: Options,
 ): UseNpcMovementControls {
   const pausedRef = useRef(false);
-  console.log("useNpcMovement: initializing with behavior", bodyRef.current);
 
   const defaultSpeed = options?.defaultSpeed ?? 1.5;
   const arrivalEpsilon = options?.arrivalEpsilon ?? 0.05;
@@ -89,9 +88,6 @@ export function useNpcMovement(
       if (behavior && behavior.kind === "patrol") {
         routeIndexRef.current = behavior.route.startIndex ?? 0;
       }
-      // debug
-      // eslint-disable-next-line no-console
-      console.debug("useNpcMovement: spawn initialized", spawnRef.current.toArray(), "startIndex", routeIndexRef.current);
     }
     if (pausedRef.current) return;
     const body = bodyRef.current;
@@ -114,23 +110,15 @@ export function useNpcMovement(
       targetRef.current.set(...point.position);
     }
 
-    // keep Y from spawn if point y is not provided (still allow explicit y)
-    // (points always include a 3-tuple so we just use it)
-
     const dist = tmpVec.current.distanceTo(targetRef.current);
 
-    // arrival handling
-    if (dist <= arrivalEpsilon) {
-      // eslint-disable-next-line no-console
-      console.debug("useNpcMovement: arrived at point", routeIndexRef.current, "dist", dist);
-      // arrive: switch to waiting if waitMs provided
+    // arrival handling (only on first frame at a waypoint; avoid resetting wait timer)
+    if (dist <= arrivalEpsilon && stateRef.current !== "waiting") {
       const waitMs = point.waitMs ?? 0;
       if (waitMs > 0) {
         stateRef.current = "waiting";
         waitElapsedRef.current = 0;
       } else {
-        // advance immediately
-        // advance index
         if (route.pendulum) {
           if (forwardRef.current) {
             if (routeIndexRef.current >= route.points.length - 1) forwardRef.current = false;
@@ -141,9 +129,8 @@ export function useNpcMovement(
           }
         } else if (route.loop) {
           routeIndexRef.current = (routeIndexRef.current + 1) % route.points.length;
-        } else {
-          // if not loop, stop at last point
-          if (routeIndexRef.current < route.points.length - 1) routeIndexRef.current++;
+        } else if (routeIndexRef.current < route.points.length - 1) {
+          routeIndexRef.current++;
         }
       }
 
@@ -179,37 +166,16 @@ export function useNpcMovement(
 
     const speed = point.speed ?? defaultSpeed;
 
-    // compute interpolation factor
     // move by speed * delta towards target
     const step = Math.min(1, (speed * delta) / Math.max(dist, 1e-6));
 
     tmpVec.current.lerp(targetRef.current, step);
 
-    // debug
-    // eslint-disable-next-line no-console
-    console.debug("useNpcMovement: moving -> cur", tmpVec.current.toArray(), "target", targetRef.current.toArray(), "step", step, "speed", speed);
-
     // set new position on the body (kinematic-style movement)
-    // prefer setNextKinematicTranslation for kinematic bodies so physics computes
-    // velocity for interacting dynamic bodies; fallback to setTranslation
-    try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (typeof body.setNextKinematicTranslation === "function") {
-        // eslint-disable-next-line no-console
-        console.debug("useNpcMovement: calling setNextKinematicTranslation", tmpVec.current.toArray());
-        // @ts-ignore
-        body.setNextKinematicTranslation({ x: tmpVec.current.x, y: tmpVec.current.y, z: tmpVec.current.z });
-      } else if (typeof body.setTranslation === "function") {
-        // eslint-disable-next-line no-console
-        console.debug("useNpcMovement: calling setTranslation", tmpVec.current.toArray());
-        // @ts-ignore
-        body.setTranslation({ x: tmpVec.current.x, y: tmpVec.current.y, z: tmpVec.current.z }, true);
-      }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error("useNpcMovement: failed to set translation", e);
-      // fallback: do nothing
+    if (typeof body.setNextKinematicTranslation === "function") {
+      body.setNextKinematicTranslation({ x: tmpVec.current.x, y: tmpVec.current.y, z: tmpVec.current.z });
+    } else {
+      body.setTranslation({ x: tmpVec.current.x, y: tmpVec.current.y, z: tmpVec.current.z }, true);
     }
   });
 

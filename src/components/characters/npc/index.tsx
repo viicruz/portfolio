@@ -2,7 +2,7 @@
 
 //* Libraries imports
 import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useNpcMovement, type NpcBehavior } from "@/hooks/use-npc-movement";
 
 //* Components imports
@@ -20,19 +20,15 @@ type NpcProps = {
 }
 
 export function Npc(props: NpcProps) {
-  console.log("Rendering Npc", props.npcId, "with behavior", props.behavior);
   const dialogStore = useDialogStore();
   const bodyRef = useRef<RapierRigidBody | null>(null);
 
-  const setBodyRef = (b: RapierRigidBody | null) => {
+  const setBodyRef = useCallback((b: RapierRigidBody | null) => {
     bodyRef.current = b;
-    // debug: log when body attached
-    // eslint-disable-next-line no-console
-    console.debug("Npc: body ref set", props.npcId, b != null);
-  };
+  }, []);
 
-  // attach movement behavior if provided
   useNpcMovement(bodyRef, props.behavior);
+
   const handleStartDialog = () => {
     dialogStore.setNpcDialogIntention({
       npcId: props.npcId,
@@ -44,7 +40,7 @@ export function Npc(props: NpcProps) {
   }
   return (
     <RigidBody
-      ref={bodyRef}
+      ref={setBodyRef}
       colliders="cuboid"
       mass={1}
       type={props.behavior ? "kinematicPosition" : "fixed"}

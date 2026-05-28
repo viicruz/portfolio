@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import * as THREE from "three";
@@ -40,7 +40,8 @@ export function FollowerPkm({
 
   const wasMovingRef = React.useRef(false);
 
-  const groundY = -0.5;
+  const groundTopY = -0.75;
+  const groundY = groundTopY + size / 2;
 
   useFrame((_, delta) => {
     const playerBody = playerBodyRef.current;
@@ -133,19 +134,19 @@ export function FollowerPkm({
 
 
     //trail logic: we push the current player position to the trail, and if the trail is longer than the delay, we remove the oldest position. The pkm will then follow the oldest position in the trail, creating a delayed following effect
-    trailRef.current.push(
-      playerPositionRef.current.clone(),
-    );
+    const nextTrailPoint =
+      trailRef.current.length >= delayFrames
+        ? trailRef.current.shift() ?? new THREE.Vector3()
+        : new THREE.Vector3();
 
-    if (trailRef.current.length > delayFrames) {
-      trailRef.current.shift();
-    }
+    nextTrailPoint.copy(playerPositionRef.current);
+    trailRef.current.push(nextTrailPoint);
 
     const delayedPos = trailRef.current[0];
 
     if (!delayedPos) return;
 
-    //desired direction is the direction from the pkm to the delayed player position. We ignore the y component to keep the pkm on the ground plane
+    //desired direction is the direction from the current player position to the delayed player position (i.e., backwards along the player trail). We ignore the y component to keep the pkm on the ground plane
     desiredDirectionRef.current
       .copy(delayedPos)
       .sub(playerPositionRef.current);
@@ -172,7 +173,7 @@ export function FollowerPkm({
       minDistance,
     );
 
-  
+
     // target position is the position the pkm should move towards, which is behind the player in the direction of followDirectionRef, at a distance of desiredDistance
     targetPositionRef.current
       .copy(playerPositionRef.current)
@@ -183,7 +184,7 @@ export function FollowerPkm({
 
     targetPositionRef.current.y = groundY;
 
-  
+
     //logic to smoothly move the pkm towards the target position. We use an exponential smoothing function to create a smooth following effect, where followStrength controls how quickly the pkm moves towards the target position. The pkm's position is then updated by linearly interpolating between its current position and the target position based on the calculated smoothing factor
     const smoothing =
       1 - Math.exp(-followStrength * delta);

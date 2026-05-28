@@ -18,7 +18,7 @@ import { CharacterControls } from "@/contexts/controls";
 //* Components imports
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
-import { FollowerCube } from "@/components/characters/follower-cube";
+import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
@@ -102,7 +102,7 @@ export default function Home() {
         </mesh>
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
-          <FollowerCube playerBodyRef={playerBodyRef} />
+          <FollowerPkm playerBodyRef={playerBodyRef} />
         </CharacterControls>
         <Npc npcId="npc1" dialogId="dialog1" />
 

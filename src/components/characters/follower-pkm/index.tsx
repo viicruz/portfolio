@@ -7,7 +7,7 @@ import type { RapierRigidBody } from "@react-three/rapier";
 
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
 
-type FollowerCubeProps = {
+type FollowerPkmProps = {
   playerBodyRef: React.RefObject<RapierRigidBody | null>;
   delayFrames?: number;
   followStrength?: number;
@@ -16,14 +16,14 @@ type FollowerCubeProps = {
   size?: number;
 };
 
-export function FollowerCube({
+export function FollowerPkm({
   playerBodyRef,
   delayFrames = 36,
   followStrength = 6,
   minDistance = 1.25,
   color = "crimson",
   size = 0.5,
-}: FollowerCubeProps) {
+}: FollowerPkmProps) {
   const meshRef = React.useRef<THREE.Mesh>(null);
   const trailRef = React.useRef<THREE.Vector3[]>([]);
   const playerPositionRef = React.useRef(new THREE.Vector3());
@@ -67,7 +67,7 @@ export function FollowerCube({
 
     const isMoving = horizontalSpeed > 0.01;
 
-    //when the player stops, we want the cube to smoothly come to a stop at the last position, rather than snapping to the player or continuing to follow the trail
+    //when the player stops, we want the pkm to smoothly come to a stop at the last position, rather than snapping to the player or continuing to follow the trail
     if (wasMovingRef.current && !isMoving) {
       trailRef.current = [];
 
@@ -132,7 +132,7 @@ export function FollowerCube({
     }
 
 
-    //trail logic: we push the current player position to the trail, and if the trail is longer than the delay, we remove the oldest position. The cube will then follow the oldest position in the trail, creating a delayed following effect
+    //trail logic: we push the current player position to the trail, and if the trail is longer than the delay, we remove the oldest position. The pkm will then follow the oldest position in the trail, creating a delayed following effect
     trailRef.current.push(
       playerPositionRef.current.clone(),
     );
@@ -145,7 +145,7 @@ export function FollowerCube({
 
     if (!delayedPos) return;
 
-    //desired direction is the direction from the cube to the delayed player position. We ignore the y component to keep the cube on the ground plane
+    //desired direction is the direction from the pkm to the delayed player position. We ignore the y component to keep the pkm on the ground plane
     desiredDirectionRef.current
       .copy(delayedPos)
       .sub(playerPositionRef.current);
@@ -173,7 +173,7 @@ export function FollowerCube({
     );
 
   
-    // target position is the position the cube should move towards, which is behind the player in the direction of followDirectionRef, at a distance of desiredDistance
+    // target position is the position the pkm should move towards, which is behind the player in the direction of followDirectionRef, at a distance of desiredDistance
     targetPositionRef.current
       .copy(playerPositionRef.current)
       .addScaledVector(
@@ -184,7 +184,7 @@ export function FollowerCube({
     targetPositionRef.current.y = groundY;
 
   
-    //logic to smoothly move the cube towards the target position. We use an exponential smoothing function to create a smooth following effect, where followStrength controls how quickly the cube moves towards the target position. The cube's position is then updated by linearly interpolating between its current position and the target position based on the calculated smoothing factor
+    //logic to smoothly move the pkm towards the target position. We use an exponential smoothing function to create a smooth following effect, where followStrength controls how quickly the pkm moves towards the target position. The pkm's position is then updated by linearly interpolating between its current position and the target position based on the calculated smoothing factor
     const smoothing =
       1 - Math.exp(-followStrength * delta);
 
@@ -209,5 +209,3 @@ export function FollowerCube({
     </mesh>
   );
 }
-
-export default FollowerCube;

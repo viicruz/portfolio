@@ -1,7 +1,7 @@
 'use client';
 
 //* Libraries imports
-import { RigidBody, type CuboidCollider } from "@react-three/rapier";
+import { RigidBody } from "@react-three/rapier";
 import { CuboidCollider as CuboidColliderComp } from "@react-three/rapier";
 
 type InteractionSphereProps = {

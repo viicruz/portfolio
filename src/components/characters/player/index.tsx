@@ -82,19 +82,26 @@ const CAMERA_ANGLE = 60;
 const CAMERA_DISTANCE = 10;
 const CAMERA_PARAMS = computeCameraDistance(CAMERA_ANGLE, CAMERA_DISTANCE);
 
-export function Player() {
+type PlayerProps = {
+  playerBodyRef: React.RefObject<RapierRigidBody | null>;
+};
+
+export function Player({ playerBodyRef }: PlayerProps) {
   const meshRef = React.useRef<THREE.Mesh>(null);
-  const bodyRef = React.useRef<RapierRigidBody | null>(null);
 
-  const { direction, movementState } = usePlayerAnimation(bodyRef);
+  const setBodyRef = React.useCallback(
+    (body: RapierRigidBody | null) => {
+      playerBodyRef.current = body;
+      if (!body) return;
+
+      body.setEnabledRotations(false, false, false, false);
+      body.setAngularDamping(5);
+    },
+    [playerBodyRef],
+  );
+
+  const { direction, movementState } = usePlayerAnimation(playerBodyRef);
   const animationName = getAnimationName(direction, movementState);
-
-  React.useEffect(() => {
-    const body = bodyRef.current;
-    if (!body) return;
-    body.setEnabledRotations(false, false, false, false);
-    body.setAngularDamping(5);
-  }, []);
 
   //@ts-expect-error
   useFollowCamera(meshRef, {
@@ -103,11 +110,11 @@ export function Player() {
   });
 
   useDialogAdvance();
-  usePlayerMovement(bodyRef, { speed: SPEED });
+  usePlayerMovement(playerBodyRef, { speed: SPEED });
 
   return (
     <RigidBody
-      ref={bodyRef}
+      ref={setBodyRef}
       args={[0.5, 1, 1]}
       mass={1}
       colliders={false}

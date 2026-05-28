@@ -3,7 +3,7 @@
 //* Libraries imports
 import { useMemo, useRef } from "react";
 import { useHelper } from "@react-three/drei";
-import { RigidBody } from "@react-three/rapier";
+import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import {
   Bloom,
   DepthOfField,
@@ -18,6 +18,7 @@ import { CharacterControls } from "@/contexts/controls";
 //* Components imports
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
+import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
@@ -42,6 +43,7 @@ function DirectionalLightWithHelper() {
 
 export default function Home() {
   const hardwareInfo = useHardwareThreeSupport();
+  const playerBodyRef = useRef<RapierRigidBody | null>(null);
 
   const effectToggles = useMemo(() => {
     const effectiveTier =
@@ -99,7 +101,8 @@ export default function Home() {
           <meshStandardMaterial color="yellow" />
         </mesh>
         <CharacterControls>
-          <Player />
+          <Player playerBodyRef={playerBodyRef} />
+          <FollowerPkm playerBodyRef={playerBodyRef} />
         </CharacterControls>
         <Npc npcId="npc1" dialogId="dialog1" />
 

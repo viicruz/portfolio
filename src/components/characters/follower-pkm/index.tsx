@@ -1,0 +1,212 @@
+"use client";
+//* Libraries imports
+import React from "react";
+import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
+import type { RapierRigidBody } from "@react-three/rapier";
+
+const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
+
+type FollowerPkmProps = {
+  playerBodyRef: React.RefObject<RapierRigidBody | null>;
+  delayFrames?: number;
+  followStrength?: number;
+  minDistance?: number;
+  color?: string;
+  size?: number;
+};
+
+export function FollowerPkm({
+  playerBodyRef,
+  delayFrames = 36,
+  followStrength = 6,
+  minDistance = 1.25,
+  color = "crimson",
+  size = 0.5,
+}: FollowerPkmProps) {
+  const meshRef = React.useRef<THREE.Mesh>(null);
+  const trailRef = React.useRef<THREE.Vector3[]>([]);
+  const playerPositionRef = React.useRef(new THREE.Vector3());
+  const followDirectionRef = React.useRef(new THREE.Vector3());
+  const desiredDirectionRef = React.useRef(new THREE.Vector3());
+
+  const targetPositionRef = React.useRef(new THREE.Vector3());
+
+  const stopTargetRef = React.useRef(new THREE.Vector3());
+  const stopStartPositionRef = React.useRef(new THREE.Vector3());
+
+  const stopElapsedRef = React.useRef(0);
+  const stopDurationRef = React.useRef(0);
+
+  const wasMovingRef = React.useRef(false);
+
+  const groundTopY = -0.75;
+  const groundY = groundTopY + size / 2;
+
+  useFrame((_, delta) => {
+    const playerBody = playerBodyRef.current;
+    const mesh = meshRef.current;
+
+    if (!playerBody || !mesh) return;
+
+    const playerPos = playerBody.translation();
+
+    playerPositionRef.current.set(
+      playerPos.x,
+      playerPos.y,
+      playerPos.z,
+    );
+
+    //Player Movement   
+
+    const playerVelocity = playerBody.linvel();
+
+    const horizontalSpeed = Math.hypot(
+      playerVelocity.x,
+      playerVelocity.z,
+    );
+
+    const isMoving = horizontalSpeed > 0.01;
+
+    //when the player stops, we want the pkm to smoothly come to a stop at the last position, rather than snapping to the player or continuing to follow the trail
+    if (wasMovingRef.current && !isMoving) {
+      trailRef.current = [];
+
+      followDirectionRef.current
+        .copy(mesh.position)
+        .sub(playerPositionRef.current);
+
+      followDirectionRef.current.y = 0;
+
+      // fallback direction
+      if (followDirectionRef.current.lengthSq() < 0.0001) {
+        followDirectionRef.current.set(0, 0, 1);
+      }
+
+      followDirectionRef.current.normalize();
+
+      stopTargetRef.current
+        .copy(playerPositionRef.current)
+        .addScaledVector(
+          followDirectionRef.current,
+          minDistance,
+        );
+
+      stopTargetRef.current.y = groundY;
+
+      stopStartPositionRef.current.copy(mesh.position);
+      stopStartPositionRef.current.y = groundY;
+
+      const stopDistance =
+        stopStartPositionRef.current.distanceTo(
+          stopTargetRef.current,
+        );
+
+      stopElapsedRef.current = 0;
+
+      stopDurationRef.current = Math.max(
+        stopDistance * STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE,
+        0.001,
+      );
+    }
+
+    wasMovingRef.current = isMoving;
+
+    //if the player is not moving, we want to smoothly come to a stop at the last position
+    if (!isMoving) {
+      stopElapsedRef.current += delta;
+
+      const progress = Math.min(
+        stopElapsedRef.current / stopDurationRef.current,
+        1,
+      );
+
+      mesh.position.lerpVectors(
+        stopStartPositionRef.current,
+        stopTargetRef.current,
+        progress,
+      );
+
+      mesh.position.y = groundY;
+
+      return;
+    }
+
+
+    //trail logic: we push the current player position to the trail, and if the trail is longer than the delay, we remove the oldest position. The pkm will then follow the oldest position in the trail, creating a delayed following effect
+    const nextTrailPoint =
+      trailRef.current.length >= delayFrames
+        ? trailRef.current.shift() ?? new THREE.Vector3()
+        : new THREE.Vector3();
+
+    nextTrailPoint.copy(playerPositionRef.current);
+    trailRef.current.push(nextTrailPoint);
+
+    const delayedPos = trailRef.current[0];
+
+    if (!delayedPos) return;
+
+    //desired direction is the direction from the current player position to the delayed player position (i.e., backwards along the player trail). We ignore the y component to keep the pkm on the ground plane
+    desiredDirectionRef.current
+      .copy(delayedPos)
+      .sub(playerPositionRef.current);
+
+    desiredDirectionRef.current.y = 0;
+
+    const rawDistance =
+      desiredDirectionRef.current.length();
+
+    if (rawDistance < 0.0001) return;
+
+    desiredDirectionRef.current.normalize();
+
+    // smooth direction changes
+    followDirectionRef.current.lerp(
+      desiredDirectionRef.current,
+      1 - Math.exp(-10 * delta),
+    );
+
+    followDirectionRef.current.normalize();
+
+    const desiredDistance = Math.max(
+      rawDistance,
+      minDistance,
+    );
+
+
+    // target position is the position the pkm should move towards, which is behind the player in the direction of followDirectionRef, at a distance of desiredDistance
+    targetPositionRef.current
+      .copy(playerPositionRef.current)
+      .addScaledVector(
+        followDirectionRef.current,
+        desiredDistance,
+      );
+
+    targetPositionRef.current.y = groundY;
+
+
+    //logic to smoothly move the pkm towards the target position. We use an exponential smoothing function to create a smooth following effect, where followStrength controls how quickly the pkm moves towards the target position. The pkm's position is then updated by linearly interpolating between its current position and the target position based on the calculated smoothing factor
+    const smoothing =
+      1 - Math.exp(-followStrength * delta);
+
+    mesh.position.lerp(
+      targetPositionRef.current,
+      smoothing,
+    );
+
+    mesh.position.y = groundY;
+  });
+
+  return (
+    <mesh
+      ref={meshRef}
+      castShadow
+      receiveShadow
+      position={[0, groundY, 0]}
+    >
+      <boxGeometry args={[size, size, size]} />
+
+      <meshStandardMaterial color={color} />
+    </mesh>
+  );
+}

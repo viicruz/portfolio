@@ -19,6 +19,7 @@ type SceneProps = {
 export function Scene(props: SceneProps) {
   const dialogStore = useDialogStore();
   const t = useTranslations("dialogs");
+  const showPhysicsDebug = process.env.NODE_ENV === 'development';
   const line = `${dialogStore.npcId}.${dialogStore.dialogId}.${dialogStore.dialogLine}`;
   return (
     <div className='relative w-full h-svh'>
@@ -41,8 +42,13 @@ export function Scene(props: SceneProps) {
         )}
       </div>
       <Canvas camera={{ fov: 40 }} shadows>
-        <Suspense>
-          <Physics debug>
+        <Suspense fallback={null}>
+          <Physics
+            debug={showPhysicsDebug}
+            timeStep={1 / 60}
+            interpolate={true}
+            updateLoop='independent'
+          >
             {props.children}
           </Physics>
         </Suspense>

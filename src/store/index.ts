@@ -11,9 +11,23 @@ const dialogAdvanceSfx =
     ? new Audio("/assets/sounds/interaction_sound.mp3")
     : ({} as HTMLAudioElement);
 
+const bumpingSfx =
+  typeof window !== "undefined"
+    ? new Audio("/assets/sounds/bumping_sound.mp3")
+    : ({} as HTMLAudioElement);
+
 if (typeof window !== "undefined") {
   dialogAdvanceSfx.volume = 0.5;
+  bumpingSfx.volume = 0.5;
 }
+
+export const playBumpingSound = () => {
+  if (typeof window === "undefined") return;
+
+  bumpingSfx.currentTime = 0;
+  bumpingSfx.play();
+};
+
 type Translation = typeof en.dialogs;
 
 type DialogStore = {

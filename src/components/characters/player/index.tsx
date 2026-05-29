@@ -1,17 +1,27 @@
 //* Libraries imports
 import * as THREE from "three";
-import React from "react";
-import { RigidBody, type RapierRigidBody, CapsuleCollider } from "@react-three/rapier";
-import { SpriteAnimator, useSpriteLoader } from "@react-three/drei";
+import React, { Suspense } from "react";
+import {
+  RigidBody,
+  type RapierRigidBody,
+  CapsuleCollider,
+} from "@react-three/rapier";
+
+//* Components imports
+import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
+
+//* Utils imports
+import { playBumpingSound } from "@/store";
 
 //* Hooks imports
-import { useFollowCamera } from "@/hooks/useFollowCamera";
-import { usePlayerMovement } from "@/hooks/usePlayerMovement";
+import { useFollowCamera } from "@/hooks/use-follow-camera";
+import { useDialogAdvance } from "@/hooks/use-dialog-advance";
+import { usePlayerMovement } from "@/hooks/use-player-movement";
 import {
   usePlayerAnimation,
   PlayerDirection,
   PlayerMovementState,
-} from "@/hooks/usePlayerAnimation";
+} from "@/hooks/use-player-animation";
 
 const SPEED = 2.5;
 
@@ -32,26 +42,6 @@ enum MAIN_CHAR_ANIMATIONS {
   RUN_RIGHT = "run_right",
 }
 
-const MAIN_CHAR_ANIMATION_NAMES = [
-  //* Idle animations
-  MAIN_CHAR_ANIMATIONS.IDLE_DOWN,
-  MAIN_CHAR_ANIMATIONS.IDLE_LEFT,
-  MAIN_CHAR_ANIMATIONS.IDLE_RIGHT,
-  MAIN_CHAR_ANIMATIONS.IDLE_UP,
-
-  //* Walk animations
-  MAIN_CHAR_ANIMATIONS.WALK_DOWN,
-  MAIN_CHAR_ANIMATIONS.WALK_LEFT,
-  MAIN_CHAR_ANIMATIONS.WALK_UP,
-  MAIN_CHAR_ANIMATIONS.WALK_RIGHT,
-
-  //* Run animations
-  MAIN_CHAR_ANIMATIONS.RUN_DOWN,
-  MAIN_CHAR_ANIMATIONS.RUN_LEFT,
-  MAIN_CHAR_ANIMATIONS.RUN_UP,
-  MAIN_CHAR_ANIMATIONS.RUN_RIGHT,
-];
-
 function getAnimationName(
   direction: PlayerDirection,
   movementState: PlayerMovementState,
@@ -69,94 +59,92 @@ function getAnimationName(
     [PlayerMovementState.RUN]: "RUN",
   };
 
-  const animationKey = `${stateMap[movementState]}_${directionMap[direction]}` as keyof typeof MAIN_CHAR_ANIMATIONS;
+  const animationKey =
+    `${stateMap[movementState]}_${directionMap[direction]}` as keyof typeof MAIN_CHAR_ANIMATIONS;
   return MAIN_CHAR_ANIMATIONS[animationKey] || MAIN_CHAR_ANIMATIONS.IDLE_DOWN;
 }
 
 /**
  * Compute the distance of the camera from the player based on the cosine of the angle of the camera and distance from the player
- * 
+ *
  * Example:
  * computeCameraDistance(45, 10) => {height: 10, distance: 10}
  * computeCameraDistance(30, 10) => {height: 5, distance: 10}
  * computeCameraDistance(60, 10) => {height: 8.66, distance: 10}
  */
-function computeCameraDistance(cosAngle: number, distance: number): {height: number, distance: number} {
-  const height = distance * Math.cos(cosAngle * Math.PI / 180);
-  const newDistance = distance * Math.sin(cosAngle * Math.PI / 180);
-  return {height, distance: newDistance};
+function computeCameraDistance(
+  cosAngle: number,
+  distance: number,
+): { height: number; distance: number } {
+  const height = distance * Math.cos((cosAngle * Math.PI) / 180);
+  const newDistance = distance * Math.sin((cosAngle * Math.PI) / 180);
+  return { height, distance: newDistance };
 }
 
 const CAMERA_ANGLE = 60;
 const CAMERA_DISTANCE = 10;
 const CAMERA_PARAMS = computeCameraDistance(CAMERA_ANGLE, CAMERA_DISTANCE);
 
-export function Player() {
+type PlayerProps = {
+  playerBodyRef: React.RefObject<RapierRigidBody | null>;
+};
+
+export function Player({ playerBodyRef }: PlayerProps) {
   const meshRef = React.useRef<THREE.Mesh>(null);
-  const bodyRef = React.useRef<RapierRigidBody | null>(null);
 
-  const { direction, movementState } = usePlayerAnimation(bodyRef);
-  const animationName = getAnimationName(direction, movementState);
+  const handleCollisionEnter = React.useCallback(() => {
+    playBumpingSound();
+  }, []);
 
-  const { spriteObj } = useSpriteLoader(
-    "/assets/main-char-transparent.png",
-    "/assets/main-char.json",
-    MAIN_CHAR_ANIMATION_NAMES,
-    undefined,
-    (texture) => {
-      texture.minFilter = THREE.NearestFilter;
-      texture.magFilter = THREE.NearestFilter;
+  const setBodyRef = React.useCallback(
+    (body: RapierRigidBody | null) => {
+      playerBodyRef.current = body;
+      if (!body) return;
+
+      body.setEnabledRotations(false, false, false, false);
+      body.setAngularDamping(5);
     },
+    [playerBodyRef],
   );
 
-  // Keep the capsule upright: allow yaw (Y), lock roll/pitch (X/Z)
-  React.useEffect(() => {
-    const body = bodyRef.current;
-    if (!body) return;
-    // Disable rotation around X and Z, keep Y rotation enabled
-    body.setEnabledRotations(false, false, false, false);
-    // Add some angular damping to resist any residual spin
-    body.setAngularDamping(5);
-  }, []);
+  const { direction, movementState } = usePlayerAnimation(playerBodyRef);
+  const animationName = getAnimationName(direction, movementState);
 
   //@ts-expect-error
   useFollowCamera(meshRef, {
-    //45 degrees behind and above the player
     offset: new THREE.Vector3(0, CAMERA_PARAMS.height, CAMERA_PARAMS.distance),
     lerp: 0.1,
   });
 
-  usePlayerMovement(bodyRef, { speed: SPEED });
+  useDialogAdvance();
+  usePlayerMovement(playerBodyRef, { speed: SPEED });
 
   return (
     <RigidBody
-      ref={bodyRef}
+      ref={setBodyRef}
       args={[0.5, 1, 1]}
       mass={1}
       colliders={false}
       type="dynamic"
       ccd={true}
       angularDamping={5}
-      position={[0, 2, 0]}
+      position={[-3, 2, 0]}
+      onCollisionEnter={handleCollisionEnter}
     >
-      <mesh ref={meshRef} position={[0, 0, 0]}>
-        {/* <capsuleGeometry args={[0.5, 1, 1]} /> */}
-        {/* <meshStandardMaterial color="red" /> */}
-      </mesh>
+      <mesh ref={meshRef} position={[0, 0, 0]} />
       <CapsuleCollider args={[0.5, 0.5]} />
-      {spriteObj && (
-        <SpriteAnimator
-          scale={[1, 1, 1]}
-          position={[0, 0, 0]}
-          frameName={animationName}
+      <Suspense fallback={null}>
+        <SpritePlaneAnimator
+          texturePath="/assets/main-char-transparent.png"
+          spriteDataUrl="/assets/main-char.json"
+          animationName={animationName}
           fps={8}
-          animationNames={MAIN_CHAR_ANIMATION_NAMES}
-          autoPlay={true}
-          loop={true}
+          scale={[1, 1, 1]}
+          position={[0, -0.25, 0]}
           alphaTest={0.01}
-          spriteDataset={spriteObj}
+          brightness={1}
         />
-      )}
+      </Suspense>
     </RigidBody>
   );
 }

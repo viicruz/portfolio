@@ -39,25 +39,29 @@ export function usePlayerAnimation(
       keys[Controls.Left] ||
       keys[Controls.Right];
 
-    // Determine movement state
-    if (!isMoving) {
-      setMovementState(PlayerMovementState.IDLE);
-    } else if (isSprinting) {
-      setMovementState(PlayerMovementState.RUN);
+    const nextMovementState = !isMoving
+      ? PlayerMovementState.IDLE
+      : isSprinting
+        ? PlayerMovementState.RUN
+        : PlayerMovementState.WALK;
+
+    let nextDirection: PlayerDirection;
+    if (keys[Controls.Up]) {
+      nextDirection = PlayerDirection.UP;
+    } else if (keys[Controls.Down]) {
+      nextDirection = PlayerDirection.DOWN;
+    } else if (keys[Controls.Left]) {
+      nextDirection = PlayerDirection.LEFT;
+    } else if (keys[Controls.Right]) {
+      nextDirection = PlayerDirection.RIGHT;
     } else {
-      setMovementState(PlayerMovementState.WALK);
+      nextDirection = direction;
     }
 
-    // Determine direction (prioritize vertical movement over horizontal)
-    if (keys[Controls.Up]) {
-      setDirection(PlayerDirection.UP);
-    } else if (keys[Controls.Down]) {
-      setDirection(PlayerDirection.DOWN);
-    } else if (keys[Controls.Left]) {
-      setDirection(PlayerDirection.LEFT);
-    } else if (keys[Controls.Right]) {
-      setDirection(PlayerDirection.RIGHT);
-    }
+    setMovementState((prev) =>
+      prev !== nextMovementState ? nextMovementState : prev,
+    );
+    setDirection((prev) => (prev !== nextDirection ? nextDirection : prev));
   });
 
   return { direction, movementState };

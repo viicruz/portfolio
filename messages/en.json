@@ -1,0 +1,16 @@
+{
+  "dialogs": {
+    "npc1": {
+      "dialog1": {
+        "1": "Hello there! Welcome to the world of Pokémon! My name is Oak. People call me the Pokémon Prof!",
+        "2": "This world is widely inhabited by creatures called Pokémon! For some people",
+        "3": "Pokémon are pets. Others use them for fights. Myself... I study Pokémon as a profession!"
+      }
+    },
+    "npc2":{
+      "dialog1":{
+        "1": "Hello, im a patroller npc for testing purposes :D"
+      }
+    }
+  }
+}

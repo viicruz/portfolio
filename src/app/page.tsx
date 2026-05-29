@@ -1,52 +1,159 @@
 "use client";
+
+//* Libraries imports
+import { useMemo, useRef } from "react";
+import { useHelper } from "@react-three/drei";
+import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
+import {
+  Bloom,
+  DepthOfField,
+  EffectComposer,
+  Vignette,
+} from "@react-three/postprocessing";
+import * as THREE from "three";
+
+//* Context imports
+import { CharacterControls } from "@/contexts/controls";
+
 //* Components imports
 import { Scene } from "@/components/scene";
-import { CharacterControls } from "@/contexts/controls";
 import { Player } from "@/components/characters/player";
-import { RigidBody } from "@react-three/rapier";
+import { FollowerPkm } from "@/components/characters/follower-pkm";
+import { Npc } from "@/components/characters/npc";
+import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
+
+function DirectionalLightWithHelper() {
+  const lightRef = useRef<THREE.DirectionalLight>(null);
+  useHelper(
+    lightRef as React.RefObject<THREE.Object3D>,
+    THREE.DirectionalLightHelper,
+    5,
+    "red",
+  );
+  return (
+    <directionalLight
+      ref={lightRef}
+      castShadow
+      position={[-2, 5, 5]}
+      shadow-mapSize-width={2048}
+      shadow-mapSize-height={2048}
+    />
+  );
+}
 
 export default function Home() {
+  const hardwareInfo = useHardwareThreeSupport();
+  const playerBodyRef = useRef<RapierRigidBody | null>(null);
+
+  const effectToggles = useMemo(() => {
+    const effectiveTier =
+      hardwareInfo.tier === "unknown" ? "low" : hardwareInfo.tier;
+
+    // set effectiveTier hardcoded to "low" for debug purposes
+    // const effectiveTier = "medium";
+
+    if (effectiveTier === "high") {
+      return {
+        postprocessing: true,
+        depthOfField: true,
+        bloom: true,
+        vignette: true,
+      };
+    }
+
+    if (effectiveTier === "medium") {
+      return {
+        postprocessing: true,
+        depthOfField: false,
+        bloom: true,
+        vignette: true,
+      };
+    }
+
+    return {
+      postprocessing: false,
+      depthOfField: false,
+      bloom: false,
+      vignette: false,
+    };
+  }, [hardwareInfo.tier]);
+
   return (
     <main className="w-full h-svh">
       <Scene>
         <RigidBody type="fixed">
-          <mesh position={[0, -1, 0]}>
-            <boxGeometry args={[10, 0.5, 10]} />
-            <meshBasicMaterial color="gray" />
+          <mesh position={[0, -1, 0]} receiveShadow>
+            <boxGeometry args={[200, 0.5, 200]} />
+            <meshStandardMaterial color="gray" />
           </mesh>
         </RigidBody>
-        <RigidBody colliders="cuboid" mass={1} type="fixed">
-          <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color="black" />
-          </mesh>
-        </RigidBody>
-        <RigidBody colliders="cuboid" mass={1} type="fixed">
-          <mesh position={[2, 0, 0]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color="blue" />
-          </mesh>
 
-          {/* <SpriteAnimator
-            scale={[4, 4, 4]}
-            position={[0, 0, 0]}
-            frameName="idle"
-            fps={24}
-            animationNames={["idle", "celebration"]}
-            autoPlay={true}
-            loop={true}
-            alphaTest={0.01}
-            textureImageURL={"/assets/boy-hash.png"}
-            textureDataURL={"/assets/boy-hash.json"}
-          /> */}
-
-        </RigidBody>
+        <mesh position={[2, 0, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1, 2, 1]} />
+          <meshStandardMaterial color="yellow" />
+        </mesh>
+        <mesh position={[4, 0, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1, 2, 1]} />
+          <meshStandardMaterial color="yellow" />
+        </mesh>
+        <mesh position={[6, 0, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1, 2, 1]} />
+          <meshStandardMaterial color="yellow" />
+        </mesh>
         <CharacterControls>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 5, 5]} />
-
-          <Player />
+          <Player playerBodyRef={playerBodyRef} />
+          <FollowerPkm playerBodyRef={playerBodyRef} />
         </CharacterControls>
+        <Npc npcId="npc1" dialogId="dialog1" />
+
+        {/* Example NPC with patrol behavior (local square route) */}
+        <Npc
+          npcId="npc2"
+          dialogId="dialog1"
+          position={[8, 0, 0]}
+          behavior={{
+            kind: "patrol",
+            route: {
+              localSpace: true,
+              loop: true,
+              startIndex: 0,
+              points: [
+                { position: [0, 0, 0], waitMs: 500 },
+                { position: [0, 0, 3], waitMs: 500 },
+                { position: [2, 0, 3], waitMs: 500 },
+                { position: [2, 0, 0], waitMs: 500 },
+              ],
+            },
+          }}
+        />
+
+        <ambientLight intensity={0.4} />
+        <DirectionalLightWithHelper />
+
+        {effectToggles.postprocessing && (
+          <EffectComposer>
+            <>
+              {effectToggles.depthOfField && (
+                <DepthOfField
+                  focusDistance={10}
+                  focalLength={5}
+                  bokehScale={1}
+                  height={480}
+                />
+              )}
+              {effectToggles.bloom && (
+                <Bloom
+                  luminanceThreshold={0.2}
+                  luminanceSmoothing={0.3}
+                  height={300}
+                />
+              )}
+              {effectToggles.vignette && (
+                <Vignette eskil={false} offset={0.1} darkness={0.6} />
+              )}
+            </>
+          </EffectComposer>
+        )}
       </Scene>
     </main>
   );

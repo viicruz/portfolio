@@ -1,0 +1,17 @@
+diff --git a/node_modules/@react-three/drei/core/SpriteAnimator.js b/node_modules/@react-three/drei/core/SpriteAnimator.js
+index 1234567..abcdefg 100644
+--- a/node_modules/@react-three/drei/core/SpriteAnimator.js
++++ b/node_modules/@react-three/drei/core/SpriteAnimator.js
+@@ -212,6 +212,12 @@ const SpriteAnimator = /* @__PURE__ */React.forwardRef(({
+         } = getFirstFrame(spriteData.current.frames, frameName).sourceSize;
+         const _aspect = calculateAspectRatio(w, h);
+         setAspect(_aspect);
++        const frames = spriteData.current.frames;
++        const spriteFrames = Array.isArray(frames) ? frames : frameName && frames[frameName] ? frames[frameName] : [];
++        if (spriteFrames.length > 0) {
++          calculateFinalPosition(w, h, spriteData.current.meta.size, spriteFrames);
++          currentFrame.current = 0;
++        }
+       }
+     }
+   }, [frameName, fpsInterval, state, endFrame, startFrame]);

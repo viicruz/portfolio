@@ -57,7 +57,7 @@ export function Npc(props: NpcProps) {
       ref={setBodyRef}
       colliders="cuboid"
       mass={1}
-      type={props.behavior ? "kinematicPosition" : "fixed"}
+      type={props.behavior?.kind === "patrol" ? "kinematicPosition" : "fixed"}
       position={props.position ?? [0, 0, 0]}
       onCollisionEnter={handleCollisionEnter}
       onCollisionExit={handleCollisionExit}

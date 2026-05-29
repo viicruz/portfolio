@@ -23,9 +23,8 @@ if (typeof window !== "undefined") {
 
 export const playBumpingSound = () => {
   if (typeof window === "undefined") return;
-
   bumpingSfx.currentTime = 0;
-  bumpingSfx.play();
+  void bumpingSfx.play().catch(() => {});
 };
 
 type Translation = typeof en.dialogs;

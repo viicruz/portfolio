@@ -105,7 +105,7 @@ export function useNpcMovement(
     if (!point) return;
 
     if (route.localSpace) {
-      targetRef.current.copy(spawnRef.current).add(new THREE.Vector3(...point.position));
+      targetRef.current.set(...point.position).add(spawnRef.current);
     } else {
       targetRef.current.set(...point.position);
     }

@@ -108,8 +108,8 @@ export default function Home() {
 
         {/* Example NPC with patrol behavior (local square route) */}
         <Npc
-          npcId="npc_patrol"
-          dialogId="dialog_patrol"
+          npcId="npc2"
+          dialogId="dialog1"
           position={[8, 0, 0]}
           behavior={{
             kind: "patrol",

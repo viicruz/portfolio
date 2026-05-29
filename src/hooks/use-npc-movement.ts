@@ -146,12 +146,21 @@ export function useNpcMovement(
         // advance index for next target, same logic as above
         if (route.pendulum) {
           if (forwardRef.current) {
-            if (routeIndexRef.current >= route.points.length - 1) forwardRef.current = false;
-            else routeIndexRef.current++;
+            if (routeIndexRef.current >= route.points.length - 1) {
+              forwardRef.current = false;
+              routeIndexRef.current = Math.max(0, routeIndexRef.current - 1);
+            } else {
+              routeIndexRef.current++;
+            }
           } else {
-            if (routeIndexRef.current <= 0) forwardRef.current = true;
-            else routeIndexRef.current--;
+            if (routeIndexRef.current <= 0) {
+              forwardRef.current = true;
+              routeIndexRef.current = Math.min(route.points.length - 1, routeIndexRef.current + 1);
+            } else {
+              routeIndexRef.current--;
+            }
           }
+        }
         } else if (route.loop) {
           routeIndexRef.current = (routeIndexRef.current + 1) % route.points.length;
         } else {

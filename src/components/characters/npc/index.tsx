@@ -22,12 +22,26 @@ type NpcProps = {
 export function Npc(props: NpcProps) {
   const dialogStore = useDialogStore();
   const bodyRef = useRef<RapierRigidBody | null>(null);
+  const collisionCountRef = useRef(0);
 
   const setBodyRef = useCallback((b: RapierRigidBody | null) => {
     bodyRef.current = b;
   }, []);
 
-  useNpcMovement(bodyRef, props.behavior);
+  const movementControls = useNpcMovement(bodyRef, props.behavior);
+
+  const handleCollisionEnter = useCallback(() => {
+    collisionCountRef.current += 1;
+    movementControls.pause();
+  }, [movementControls]);
+
+  const handleCollisionExit = useCallback(() => {
+    collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
+
+    if (collisionCountRef.current === 0) {
+      movementControls.resume();
+    }
+  }, [movementControls]);
 
   const handleStartDialog = () => {
     dialogStore.setNpcDialogIntention({
@@ -45,6 +59,8 @@ export function Npc(props: NpcProps) {
       mass={1}
       type={props.behavior ? "kinematicPosition" : "fixed"}
       position={props.position ?? [0, 0, 0]}
+      onCollisionEnter={handleCollisionEnter}
+      onCollisionExit={handleCollisionExit}
     >
       <InteractionSphere asChild onPlayerEnter={handleStartDialog} onPlayerExit={handlePlayerExit} />
 

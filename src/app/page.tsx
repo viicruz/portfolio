@@ -106,6 +106,27 @@ export default function Home() {
         </CharacterControls>
         <Npc npcId="npc1" dialogId="dialog1" />
 
+        {/* Example NPC with patrol behavior (local square route) */}
+        <Npc
+          npcId="npc2"
+          dialogId="dialog1"
+          position={[8, 0, 0]}
+          behavior={{
+            kind: "patrol",
+            route: {
+              localSpace: true,
+              loop: true,
+              startIndex: 0,
+              points: [
+                { position: [0, 0, 0], waitMs: 500 },
+                { position: [0, 0, 3], waitMs: 500 },
+                { position: [2, 0, 3], waitMs: 500 },
+                { position: [2, 0, 0], waitMs: 500 },
+              ],
+            },
+          }}
+        />
+
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />
 

@@ -10,6 +10,9 @@ import {
 //* Components imports
 import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
+//* Utils imports
+import { playBumpingSound } from "@/store";
+
 //* Hooks imports
 import { useFollowCamera } from "@/hooks/use-follow-camera";
 import { useDialogAdvance } from "@/hooks/use-dialog-advance";
@@ -89,6 +92,10 @@ type PlayerProps = {
 export function Player({ playerBodyRef }: PlayerProps) {
   const meshRef = React.useRef<THREE.Mesh>(null);
 
+  const handleCollisionEnter = React.useCallback(() => {
+    playBumpingSound();
+  }, []);
+
   const setBodyRef = React.useCallback(
     (body: RapierRigidBody | null) => {
       playerBodyRef.current = body;
@@ -122,6 +129,7 @@ export function Player({ playerBodyRef }: PlayerProps) {
       ccd={true}
       angularDamping={5}
       position={[-3, 2, 0]}
+      onCollisionEnter={handleCollisionEnter}
     >
       <mesh ref={meshRef} position={[0, 0, 0]} />
       <CapsuleCollider args={[0.5, 0.5]} />

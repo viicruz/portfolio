@@ -5,6 +5,9 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import type { RapierRigidBody } from "@react-three/rapier";
 
+//* Components imports
+import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
+
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
 
 type FollowerPkmProps = {
@@ -12,7 +15,6 @@ type FollowerPkmProps = {
   delayFrames?: number;
   followStrength?: number;
   minDistance?: number;
-  color?: string;
   size?: number;
 };
 
@@ -21,10 +23,9 @@ export function FollowerPkm({
   delayFrames = 36,
   followStrength = 6,
   minDistance = 1.25,
-  color = "crimson",
   size = 0.5,
 }: FollowerPkmProps) {
-  const meshRef = React.useRef<THREE.Mesh>(null);
+  const meshRef = React.useRef<THREE.Group>(null);
   const trailRef = React.useRef<THREE.Vector3[]>([]);
   const playerPositionRef = React.useRef(new THREE.Vector3());
   const followDirectionRef = React.useRef(new THREE.Vector3());
@@ -198,15 +199,24 @@ export function FollowerPkm({
   });
 
   return (
-    <mesh
+    <group
       ref={meshRef}
       castShadow
       receiveShadow
       position={[0, groundY, 0]}
     >
-      <boxGeometry args={[size, size, size]} />
-
-      <meshStandardMaterial color={color} />
-    </mesh>
+      <React.Suspense fallback={null}>
+        <SpritePlaneAnimator
+          texturePath="/assets/pokemon_gen_2_sprites_background.png"
+          spriteDataUrl="/assets/cyndaquil.json"
+          animationName="walk_down"
+          fps={1}
+          scale={[size, size, size]}
+          position={[0, 0, 0]}
+          alphaTest={0.01}
+          brightness={1}
+        />
+      </React.Suspense>
+    </group>
   );
 }

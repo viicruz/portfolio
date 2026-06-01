@@ -269,12 +269,12 @@ export function FollowerPkm({
     >
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath="/assets/pokemon_gen_2_sprites_background.png"
+          texturePath="/assets/pokemon_gen_2_sprites.png"
           spriteDataUrl="/assets/totodile.json"
-          // animationName={animationNameRef.current}
-          animationName="walk_down"
-          // fps={animationFps}
-          fps={0}
+          animationName={animationNameRef.current}
+          // animationName="walk_right"
+          fps={animationFps}
+          // fps={1}
           scale={scale}
           position={[0, 0, 0]}
           alphaTest={0.01}

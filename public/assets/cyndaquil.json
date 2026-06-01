@@ -1,18 +1,18 @@
 {
 	"frames": {
 		"walk_up_000": {
-			"frame": { "x": 267, "y": 14, "w": 21, "h": 17 },
+			"frame": { "x": 268, "y": 14, "w": 21, "h": 20 },
 			"rotated": false,
 			"trimmed": false,
-			"spriteSourceSize": { "x": 0, "y": 0, "w": 21, "h": 17 },
-			"sourceSize": { "w": 21, "h": 17 }
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 21, "h": 20 },
+			"sourceSize": { "w": 21, "h": 20 }
 		},
 		"walk_up_001": {
-			"frame": { "x": 267, "y": 45, "w": 21, "h": 17 },
+			"frame": { "x": 268, "y": 46, "w": 21, "h": 20 },
 			"rotated": false,
 			"trimmed": false,
-			"spriteSourceSize": { "x": 0, "y": 0, "w": 21, "h": 17 },
-			"sourceSize": { "w": 21, "h": 17 }
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 21, "h": 20 },
+			"sourceSize": { "w": 21, "h": 20 }
 		},
     "walk_down_000": {
 			"frame": { "x": 268, "y": 108, "w": 21, "h": 23 },

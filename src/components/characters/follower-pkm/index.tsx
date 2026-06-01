@@ -209,7 +209,7 @@ export function FollowerPkm({
         <SpritePlaneAnimator
           texturePath="/assets/pokemon_gen_2_sprites_background.png"
           spriteDataUrl="/assets/cyndaquil.json"
-          animationName="walk_down"
+          animationName="walk_up"
           fps={1}
           scale={[size, size, size]}
           position={[0, 0, 0]}

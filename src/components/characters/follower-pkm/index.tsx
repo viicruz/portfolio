@@ -55,6 +55,7 @@ export function FollowerPkm({
 
   const targetPositionRef = React.useRef(new THREE.Vector3());
   const previousPositionRef = React.useRef(new THREE.Vector3());
+  const [animationFps, setAnimationFps] = React.useState(2);
   const animationNameRef = React.useRef<FOLLOWER_ANIMATIONS>(
     FOLLOWER_ANIMATIONS.WALK_DOWN,
   );
@@ -96,6 +97,10 @@ export function FollowerPkm({
       playerVelocity.z,
     );
 
+    const nextAnimationFps = horizontalSpeed > 3.5 ? 4 : 2;
+    if (animationFps !== nextAnimationFps) {
+      setAnimationFps(nextAnimationFps);
+    }
     const isMoving = horizontalSpeed > 0.01;
 
     //when the player stops, we want the pkm to smoothly come to a stop at the last position, rather than snapping to the player or continuing to follow the trail
@@ -265,7 +270,7 @@ export function FollowerPkm({
           texturePath="/assets/pokemon_gen_2_sprites.png"
           spriteDataUrl="/assets/cyndaquil.json"
           animationName={animationNameRef.current}
-          fps={2}
+          fps={animationFps}
           scale={[size, size, size]}
           position={[0, 0, 0]}
           alphaTest={0.01}

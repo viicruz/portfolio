@@ -102,7 +102,7 @@ export default function Home() {
         </mesh>
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
-          <FollowerPkm playerBodyRef={playerBodyRef} />
+          <FollowerPkm size={0.8} playerBodyRef={playerBodyRef} />
         </CharacterControls>
         <Npc npcId="npc1" dialogId="dialog1" />
 

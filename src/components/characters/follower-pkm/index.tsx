@@ -10,6 +10,28 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
 
+enum FOLLOWER_ANIMATIONS {
+  WALK_UP = "walk_up",
+  WALK_DOWN = "walk_down",
+  WALK_LEFT = "walk_left",
+  WALK_RIGHT = "walk_right",
+}
+
+function getAnimationNameFromDelta(delta: THREE.Vector3) {
+  const absX = Math.abs(delta.x);
+  const absZ = Math.abs(delta.z);
+
+  if (absX >= absZ) {
+    return delta.x >= 0
+      ? FOLLOWER_ANIMATIONS.WALK_RIGHT
+      : FOLLOWER_ANIMATIONS.WALK_LEFT;
+  }
+
+  return delta.z >= 0
+    ? FOLLOWER_ANIMATIONS.WALK_DOWN
+    : FOLLOWER_ANIMATIONS.WALK_UP;
+}
+
 type FollowerPkmProps = {
   playerBodyRef: React.RefObject<RapierRigidBody | null>;
   delayFrames?: number;
@@ -32,6 +54,11 @@ export function FollowerPkm({
   const desiredDirectionRef = React.useRef(new THREE.Vector3());
 
   const targetPositionRef = React.useRef(new THREE.Vector3());
+  const previousPositionRef = React.useRef(new THREE.Vector3());
+  const animationNameRef = React.useRef<FOLLOWER_ANIMATIONS>(
+    FOLLOWER_ANIMATIONS.WALK_DOWN,
+  );
+  const [, forceRender] = React.useState(0);
 
   const stopTargetRef = React.useRef(new THREE.Vector3());
   const stopStartPositionRef = React.useRef(new THREE.Vector3());
@@ -49,6 +76,8 @@ export function FollowerPkm({
     const mesh = meshRef.current;
 
     if (!playerBody || !mesh) return;
+
+    previousPositionRef.current.copy(mesh.position);
 
     const playerPos = playerBody.translation();
 
@@ -130,6 +159,19 @@ export function FollowerPkm({
 
       mesh.position.y = groundY;
 
+      const movementDelta = mesh.position
+        .clone()
+        .sub(previousPositionRef.current);
+
+      if (movementDelta.lengthSq() > 0.000001) {
+        const nextAnimationName = getAnimationNameFromDelta(movementDelta);
+
+        if (animationNameRef.current !== nextAnimationName) {
+          animationNameRef.current = nextAnimationName;
+          forceRender((value) => value + 1);
+        }
+      }
+
       return;
     }
 
@@ -196,6 +238,19 @@ export function FollowerPkm({
     );
 
     mesh.position.y = groundY;
+
+    const movementDelta = mesh.position
+      .clone()
+      .sub(previousPositionRef.current);
+
+    if (movementDelta.lengthSq() > 0.000001) {
+      const nextAnimationName = getAnimationNameFromDelta(movementDelta);
+
+      if (animationNameRef.current !== nextAnimationName) {
+        animationNameRef.current = nextAnimationName;
+        forceRender((value) => value + 1);
+      }
+    }
   });
 
   return (
@@ -207,9 +262,9 @@ export function FollowerPkm({
     >
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath="/assets/pokemon_gen_2_sprites_background.png"
+          texturePath="/assets/pokemon_gen_2_sprites.png"
           spriteDataUrl="/assets/cyndaquil.json"
-          animationName="walk_right"
+          animationName={animationNameRef.current}
           fps={2}
           scale={[size, size, size]}
           position={[0, 0, 0]}

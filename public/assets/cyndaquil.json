@@ -60,7 +60,7 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "pokemon_gen_2_sprites_background.png",
+		"image": "pokemon_gen_2_sprites.png",
 		"format": "RGBA8888",
 		"size": { "w": 712, "h": 1811 },
 		"scale": "1",

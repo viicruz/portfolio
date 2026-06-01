@@ -38,6 +38,7 @@ type FollowerPkmProps = {
   followStrength?: number;
   minDistance?: number;
   size?: number;
+  scale: [number, number, number];
 };
 
 export function FollowerPkm({
@@ -46,6 +47,7 @@ export function FollowerPkm({
   followStrength = 6,
   minDistance = 1.25,
   size = 0.5,
+  scale,
 }: FollowerPkmProps) {
   const meshRef = React.useRef<THREE.Group>(null);
   const trailRef = React.useRef<THREE.Vector3[]>([]);
@@ -70,7 +72,7 @@ export function FollowerPkm({
   const wasMovingRef = React.useRef(false);
 
   const groundTopY = -0.75;
-  const groundY = groundTopY + size / 2;
+  const groundY = groundTopY + scale[1] / 2;
 
   useFrame((_, delta) => {
     const playerBody = playerBodyRef.current;
@@ -267,11 +269,13 @@ export function FollowerPkm({
     >
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath="/assets/pokemon_gen_2_sprites.png"
-          spriteDataUrl="/assets/cyndaquil.json"
-          animationName={animationNameRef.current}
-          fps={animationFps}
-          scale={[size, size, size]}
+          texturePath="/assets/pokemon_gen_2_sprites_background.png"
+          spriteDataUrl="/assets/totodile.json"
+          // animationName={animationNameRef.current}
+          animationName="walk_down"
+          // fps={animationFps}
+          fps={0}
+          scale={scale}
           position={[0, 0, 0]}
           alphaTest={0.01}
           brightness={1}

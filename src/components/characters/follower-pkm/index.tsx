@@ -270,7 +270,7 @@ export function FollowerPkm({
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
           texturePath="/assets/pokemon_gen_2_sprites.png"
-          spriteDataUrl="/assets/totodile.json"
+          spriteDataUrl="/assets/cyndaquil.json"
           animationName={animationNameRef.current}
           // animationName="walk_right"
           fps={animationFps}

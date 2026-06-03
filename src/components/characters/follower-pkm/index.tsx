@@ -42,7 +42,6 @@ type FollowerPkmProps = {
   delayFrames?: number;
   followStrength?: number;
   minDistance?: number;
-  size?: number;
   scale: [number, number, number];
 };
 

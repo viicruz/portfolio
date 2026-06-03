@@ -1,0 +1,20 @@
+{
+	"frames": {
+		"walk_up_000": {
+			"frame": { "x": 7, "y": 13, "w": 21, "h": 22 },
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 21, "h": 22 },
+			"sourceSize": { "w": 21, "h": 22 }
+		}
+	},
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "../pkm/chikorita.json",
+		"format": "RGBA8888",
+		"size": { "w": 712, "h": 1811 },
+		"scale": "1",
+		"smartupdate": "$TexturePacker:SmartUpdate:chikorita$"
+	}
+}

@@ -9,6 +9,8 @@ import type { RapierRigidBody } from "@react-three/rapier";
 import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
+const HOP_ANIMATION_SPEED = 16;
+const HOP_ANIMATION_HEIGHT = 0.03;
 
 enum FOLLOWER_ANIMATIONS {
   WALK_UP = "walk_up",
@@ -68,6 +70,7 @@ export function FollowerPkm({
 
   const stopElapsedRef = React.useRef(0);
   const stopDurationRef = React.useRef(0);
+  const hopElapsedRef = React.useRef(0);
 
   const wasMovingRef = React.useRef(false);
 
@@ -81,6 +84,7 @@ export function FollowerPkm({
     if (!playerBody || !mesh) return;
 
     previousPositionRef.current.copy(mesh.position);
+    hopElapsedRef.current += delta;
 
     const playerPos = playerBody.translation();
 
@@ -99,7 +103,7 @@ export function FollowerPkm({
       playerVelocity.z,
     );
 
-    const nextAnimationFps = horizontalSpeed > 3.5 ? 4 : 2;
+    const nextAnimationFps = horizontalSpeed > 3.5 ? 6 : 3.2;
     if (animationFps !== nextAnimationFps) {
       setAnimationFps(nextAnimationFps);
     }
@@ -164,11 +168,12 @@ export function FollowerPkm({
         progress,
       );
 
-      mesh.position.y = groundY;
+      mesh.position.y = groundY + Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) * HOP_ANIMATION_HEIGHT;
 
       const movementDelta = mesh.position
         .clone()
         .sub(previousPositionRef.current);
+      movementDelta.y = 0;
 
       if (movementDelta.lengthSq() > 0.000001) {
         const nextAnimationName = getAnimationNameFromDelta(movementDelta);
@@ -244,11 +249,12 @@ export function FollowerPkm({
       smoothing,
     );
 
-    mesh.position.y = groundY;
+    mesh.position.y = groundY + Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) * HOP_ANIMATION_HEIGHT;
 
     const movementDelta = mesh.position
       .clone()
       .sub(previousPositionRef.current);
+    movementDelta.y = 0;
 
     if (movementDelta.lengthSq() > 0.000001) {
       const nextAnimationName = getAnimationNameFromDelta(movementDelta);

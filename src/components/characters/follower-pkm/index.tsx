@@ -278,7 +278,7 @@ export function FollowerPkm({
     >
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath={POKEMON_SPRITES.CYNDAQUIL.SPITE_SHEET}
+          texturePath={POKEMON_SPRITES.CYNDAQUIL.SPRITE_SHEET}
           spriteDataUrl={POKEMON_SPRITES.CYNDAQUIL.SPRITE_DATA}
           animationName={animationNameRef.current}
           // animationName="walk_right"

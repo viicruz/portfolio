@@ -10,8 +10,8 @@ import { PLAYER_SPRITES } from "@/utils/player-sprites";
 export function ProfessorElm() {
   return (
     <>
-      <Npc npcId="npc1" dialogId="dialog1" />
-      <Suspense fallback={null}>
+      <Npc name="PROFESSOR_ELM" />
+      {/* <Suspense fallback={null}>
         <SpritePlaneAnimator
           texturePath={PLAYER_SPRITES.BOY.SPRITE_SHEET}
           spriteDataUrl={PLAYER_SPRITES.BOY.SPRITE_DATA}
@@ -21,7 +21,7 @@ export function ProfessorElm() {
           alphaTest={0.01}
           brightness={1}
         />
-      </Suspense>
+      </Suspense> */}
     </>
   )
 }

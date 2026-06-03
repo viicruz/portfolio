@@ -109,7 +109,7 @@ export default function Home() {
         <ProfessorElm />
 
         {/* Example NPC with patrol behavior (local square route) */}
-        <Npc
+        {/* <Npc
           npcId="npc2"
           dialogId="dialog1"
           position={[8, 0, 0]}
@@ -127,7 +127,7 @@ export default function Home() {
               ],
             },
           }}
-        />
+        /> */}
 
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />

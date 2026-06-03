@@ -135,8 +135,8 @@ export function Player({ playerBodyRef }: PlayerProps) {
       <CapsuleCollider args={[0.5, 0.5]} />
       <Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath="/assets/main-char-transparent.png"
-          spriteDataUrl="/assets/main-char.json"
+          texturePath="/assets/sprites/player/main-char-transparent.png"
+          spriteDataUrl="/assets/sprites/player/main-char.json"
           animationName={animationName}
           fps={8}
           scale={[1, 1, 1]}

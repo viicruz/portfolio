@@ -21,6 +21,7 @@ import { Player } from "@/components/characters/player";
 import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
+import { ProfessorElm } from "@/components/characters/npc/professor-elm";
 
 function DirectionalLightWithHelper() {
   const lightRef = useRef<THREE.DirectionalLight>(null);
@@ -104,7 +105,8 @@ export default function Home() {
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm scale={[1, 0.8, 1]} playerBodyRef={playerBodyRef} />
         </CharacterControls>
-        <Npc npcId="npc1" dialogId="dialog1" />
+        {/* <Npc npcId="npc1" dialogId="dialog1" /> */}
+        <ProfessorElm />
 
         {/* Example NPC with patrol behavior (local square route) */}
         <Npc

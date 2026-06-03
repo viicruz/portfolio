@@ -1,7 +1,7 @@
 'use client';
 
 //* Libraries imports
-import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
+import { RigidBody, type RapierRigidBody, CapsuleCollider } from "@react-three/rapier";
 import { useCallback, useRef } from "react";
 import { useNpcMovement, type NpcBehavior } from "@/hooks/use-npc-movement";
 
@@ -65,8 +65,7 @@ export function Npc(props: NpcProps) {
       <InteractionSphere asChild onPlayerEnter={handleStartDialog} onPlayerExit={handlePlayerExit} />
 
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color="blue" />
+        <CapsuleCollider args={[0.5, 0.5]} />
       </mesh>
 
       {/* <SpriteAnimator

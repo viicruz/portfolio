@@ -12,6 +12,7 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
 //* Utils imports
 import { playBumpingSound } from "@/store";
+import { PLAYER_SPRITES } from "@/utils/player-sprites";
 
 //* Hooks imports
 import { useFollowCamera } from "@/hooks/use-follow-camera";
@@ -135,8 +136,8 @@ export function Player({ playerBodyRef }: PlayerProps) {
       <CapsuleCollider args={[0.5, 0.5]} />
       <Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath="/assets/sprites/player/main-char-transparent.png"
-          spriteDataUrl="/assets/sprites/player/main-char.json"
+          texturePath={PLAYER_SPRITES.BOY.SPRITE_SHEET}
+          spriteDataUrl={PLAYER_SPRITES.BOY.SPRITE_DATA}
           animationName={animationName}
           fps={8}
           scale={[1, 1, 1]}

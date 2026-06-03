@@ -50,7 +50,6 @@ export function FollowerPkm({
   delayFrames = 36,
   followStrength = 6,
   minDistance = 1.25,
-  size = 0.5,
   scale,
 }: FollowerPkmProps) {
   const meshRef = React.useRef<THREE.Group>(null);

@@ -8,6 +8,9 @@ import type { RapierRigidBody } from "@react-three/rapier";
 //* Components imports
 import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
+//* Utils imports
+import { POKEMON_SPRITES } from "@/utils/pokemon-sprites";
+
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
 const HOP_ANIMATION_SPEED = 16;
 const HOP_ANIMATION_HEIGHT = 0.03;
@@ -275,8 +278,8 @@ export function FollowerPkm({
     >
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath="/assets/pokemon_gen_2_sprites.png"
-          spriteDataUrl="/assets/cyndaquil.json"
+          texturePath={POKEMON_SPRITES.CYNDAQUIL.SPITE_SHEET}
+          spriteDataUrl={POKEMON_SPRITES.CYNDAQUIL.SPRITE_DATA}
           animationName={animationNameRef.current}
           // animationName="walk_right"
           fps={animationFps}

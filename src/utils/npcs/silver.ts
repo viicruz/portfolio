@@ -7,7 +7,7 @@ export const SILVER_DATA: NPCData = {
   dialogId: "dialog1",
   position: [0, 0, 0],
   sprite: {
-    sheet: "/assets/sprites/npcs/silver-background.png",
+    sheet: "/assets/sprites/npcs/silver.png",
     data: "/assets/sprites/npcs/npc.json",
   },
   behavior: {

@@ -15,8 +15,8 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 import { useDialogStore } from "@/store";
 
 //* Hooks imports
-import { useNpcMovement } from "@/hooks/use-npc-movement";
-import { useNpcAnimation } from "../../../hooks/use-npc-animation";
+import { useNpcMovement,  } from "@/hooks/use-npc-movement";
+import { useNpcAnimation } from "@/hooks/use-npc-animation";
 
 //* Utils imports
 import { NPC, type NPCName } from "@/utils/npcs";
@@ -85,7 +85,7 @@ export function Npc(props: NpcProps) {
         texturePath={npcData.sprite.sheet}
         spriteDataUrl={npcData.sprite.data}
         animationName={animationName}
-        fps={8}
+        fps={6}
         scale={[1, 1, 1]}
         position={[0, 0, 0]}
         alphaTest={0.01}

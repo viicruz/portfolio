@@ -15,7 +15,7 @@ export type NPCData = {
   behavior: NPCBehavior;
 
   sprite: {
-    sheet: `${string}.png`;
-    data: `${string}.json`;
+    sheet: `${string}.png` | string;
+    data: `${string}.json` | string;
   };
 };

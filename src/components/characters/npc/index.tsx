@@ -16,6 +16,7 @@ import { useDialogStore } from "@/store";
 
 //* Hooks imports
 import { useNpcMovement } from "@/hooks/use-npc-movement";
+import { useNpcAnimation } from "../../../hooks/use-npc-animation";
 
 //* Utils imports
 import { NPC, type NPCName } from "@/utils/npcs";
@@ -35,6 +36,7 @@ export function Npc(props: NpcProps) {
   }, []);
 
   const movementControls = useNpcMovement(bodyRef, npcData.behavior);
+  const { animationName } = useNpcAnimation(bodyRef);
 
   const handleCollisionEnter = React.useCallback(() => {
     collisionCountRef.current += 1;
@@ -58,6 +60,7 @@ export function Npc(props: NpcProps) {
   const handlePlayerExit = () => {
     dialogStore.setDialogNull();
   };
+
   return (
     <RigidBody
       ref={setBodyRef}
@@ -81,8 +84,8 @@ export function Npc(props: NpcProps) {
       <SpritePlaneAnimator
         texturePath={npcData.sprite.sheet}
         spriteDataUrl={npcData.sprite.data}
-        animationName="walk_right"
-        fps={1}
+        animationName={animationName}
+        fps={8}
         scale={[1, 1, 1]}
         position={[0, 0, 0]}
         alphaTest={0.01}

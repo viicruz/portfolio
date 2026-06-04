@@ -1,12 +1,9 @@
-export type NPCBehavior = {
-  kind: "patrol";
-  route: {
-    localSpace: boolean;
-    loop: boolean;
-    startIndex: number;
-    points: { position: [number, number, number]; waitMs?: number }[];
-  }
-}
+//* Type imports
+import type { PatrolRoute } from "@/hooks/use-npc-movement";
+
+export type NPCBehavior =
+  | { kind: "none" }
+  | { kind: "patrol"; route: PatrolRoute };
 
 export type NPCData = {
   id: string;
@@ -20,5 +17,5 @@ export type NPCData = {
   sprite: {
     sheet: `${string}.png`;
     data: `${string}.json`;
-  }
+  };
 };

@@ -11,17 +11,6 @@ export const PROFESSOR_ELM_DATA: NPCData = {
     data: "/assets/sprites/npcs/npc.json",
   },
   behavior: {
-    kind: "patrol",
-    route: {
-      localSpace: true,
-      loop: true,
-      startIndex: 0,
-      points: [
-        { position: [0, 0, 0], waitMs: 500 },
-        { position: [0, 0, 3], waitMs: 500 },
-        { position: [2, 0, 3], waitMs: 500 },
-        { position: [2, 0, 0], waitMs: 500 },
-      ],
-    },
+    kind: "none",
   },
 };

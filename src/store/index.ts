@@ -105,16 +105,6 @@ export const useDialogStore = create<DialogStore>((set) => ({
         : false;
 
       if (canDialogAdvance) {
-        console.log("Dialog advanced to line", {
-          npcId: actualNpcId,
-          dialogId: actualDialogId,
-          dialogLine: nextDialogLine,
-          canDialogAdvance,
-          actualDialogId,
-          actualDialogLine,
-          dialogLines,
-          nextDialogLine,
-        });
         dialogAdvanceSfx.currentTime = 0;
         dialogAdvanceSfx.play();
         return {
@@ -123,7 +113,6 @@ export const useDialogStore = create<DialogStore>((set) => ({
           isLastDialogLine,
         };
       } else {
-        console.log("Dialog can't advance");
         const actualNpcId = state.npcId;
         return {
           npcId: null,

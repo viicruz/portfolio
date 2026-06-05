@@ -66,7 +66,6 @@ export function useNpcAnimation(
     const body = bodyRef.current;
     if (!body) return;
     if(lookAtDirection !== null) {
-      console.log("Forcing lookAt animation, direction:", lookAtDirection, "current animation:", animationName);
       setAnimationName(lookAtDirection);
       return;
     }

@@ -61,8 +61,7 @@ export function Npc(props: NpcProps) {
     );
 
     npcAnimation.lookAt(directionToPlayer);
-    console.log("NPC looking at player, direction:", directionToPlayer);
-
+    
     // if player starts a dialog with the npc, pause the npc movement so it doesn't interfere with the dialog
     movementControls.pause();
 

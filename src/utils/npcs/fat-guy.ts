@@ -6,7 +6,7 @@ export const FAT_GUY_DATA: NPCData = {
   id: "fat-guy",
   name: "Fat Guy",
   dialogId: "dialog1",
-  position: [0, 0, 0],
+  position: [10, 0, 0],
   sprite: {
     sheet: NPC_SPRITES.FATGUY.SPRITE_SHEET,
     data: NPC_SPRITES.FATGUY.SPRITE_DATA,

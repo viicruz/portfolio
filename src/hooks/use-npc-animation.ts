@@ -22,14 +22,10 @@ function getWalkAnimationNameFromDelta(delta: THREE.Vector3) {
   const absZ = Math.abs(delta.z);
 
   if (absX >= absZ) {
-    return delta.x >= 0
-      ? NPC_ANIMATIONS.WALK_RIGHT
-      : NPC_ANIMATIONS.WALK_LEFT;
+    return delta.x >= 0 ? NPC_ANIMATIONS.WALK_RIGHT : NPC_ANIMATIONS.WALK_LEFT;
   }
 
-  return delta.z >= 0
-    ? NPC_ANIMATIONS.WALK_DOWN
-    : NPC_ANIMATIONS.WALK_UP;
+  return delta.z >= 0 ? NPC_ANIMATIONS.WALK_DOWN : NPC_ANIMATIONS.WALK_UP;
 }
 
 function getIdleAnimationFromWalkAnimation(animationName: NPC_ANIMATIONS) {
@@ -50,6 +46,8 @@ function getIdleAnimationFromWalkAnimation(animationName: NPC_ANIMATIONS) {
 type UseNpcAnimationResult = {
   animationName: NPC_ANIMATIONS;
   animationFps: number;
+  lookAt: (direction: THREE.Vector3) => void;
+  clearLookAt: () => void;
 };
 
 export function useNpcAnimation(
@@ -57,9 +55,8 @@ export function useNpcAnimation(
 ): UseNpcAnimationResult {
   const previousPositionRef = useRef(new THREE.Vector3());
   const hasPreviousPositionRef = useRef(false);
-  const lastWalkAnimationRef = useRef<NPC_ANIMATIONS>(
-    NPC_ANIMATIONS.WALK_DOWN,
-  );
+  const [lookAtDirection, setLookAtDirection] = useState<NPC_ANIMATIONS | null>(null);
+  const lastWalkAnimationRef = useRef<NPC_ANIMATIONS>(NPC_ANIMATIONS.WALK_DOWN);
   const [animationName, setAnimationName] = useState<NPC_ANIMATIONS>(
     NPC_ANIMATIONS.IDLE_DOWN,
   );
@@ -68,6 +65,10 @@ export function useNpcAnimation(
   useFrame(() => {
     const body = bodyRef.current;
     if (!body) return;
+    if(lookAtDirection !== null) {
+      setAnimationName(lookAtDirection);
+      return;
+    }
 
     const position = body.translation();
     const currentPosition = new THREE.Vector3(
@@ -111,5 +112,27 @@ export function useNpcAnimation(
     previousPositionRef.current.copy(currentPosition);
   });
 
-  return { animationName, animationFps };
+  const lookAt = (direction: THREE.Vector3) => {
+    const absX = Math.abs(direction.x);
+    const absZ = Math.abs(direction.z);
+
+    let nextAnimation: NPC_ANIMATIONS;
+
+    if (absX >= absZ) {
+      nextAnimation =
+        direction.x >= 0 ? NPC_ANIMATIONS.IDLE_RIGHT : NPC_ANIMATIONS.IDLE_LEFT;
+    } else {
+      nextAnimation =
+        direction.z >= 0 ? NPC_ANIMATIONS.IDLE_DOWN : NPC_ANIMATIONS.IDLE_UP;
+    }
+
+    setLookAtDirection(nextAnimation);
+    setAnimationName(nextAnimation);
+  };
+
+  const clearLookAt = () => {
+    setLookAtDirection(null);
+  }
+
+  return { animationName, animationFps, lookAt, clearLookAt };
 }

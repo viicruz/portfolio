@@ -4,6 +4,7 @@ import { useKeyboardControls } from "@react-three/drei";
 import type { RapierRigidBody } from "@react-three/rapier";
 import { Controls } from "@/contexts/controls";
 import { usePageVisibility } from "@/hooks/use-page-visibility";
+import { useDialogStore } from "@/store";
 
 export type PlayerMovementOptions = {
   speed?: number;
@@ -16,6 +17,7 @@ export function usePlayerMovement(
   const speed = options?.speed ?? 2.5;
   const [, getKeys] = useKeyboardControls<Controls>();
   const isActiveRef = useRef(true);
+  const setGlobalPlayerPosition = useDialogStore((state) => state.setGlobalPlayerPosition);
 
   const zeroVelocity = () => {
     const body = ref.current;
@@ -69,5 +71,6 @@ export function usePlayerMovement(
     const currentY = body.linvel().y;
 
     body.setLinvel({ x, y: currentY, z }, true);
+    setGlobalPlayerPosition([body.translation().x, body.translation().y, body.translation().z]);
   });
 }

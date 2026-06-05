@@ -38,6 +38,7 @@ type DialogStore = {
   translationObject: Translation;
   isLastDialogLine: boolean;
   npcDialogIntention: {npcId: string, dialogId: string} | null;
+  globalPlayerPosition: [number, number, number] | null;
 
   setNpcId: (npcId: string | null) => void;
   setDialogId: (dialogId: string | null) => void;
@@ -48,6 +49,7 @@ type DialogStore = {
   setNpcDialogIntention: (npcDialogIntention: {npcId: string, dialogId: string} | null) => void;
   startDialog: (npcId: string, dialogId: string) => void;
   setDialogNull: () => void;
+  setGlobalPlayerPosition: (position: [number, number, number] | null) => void;
 };
 
 export const useDialogStore = create<DialogStore>((set) => ({
@@ -59,8 +61,10 @@ export const useDialogStore = create<DialogStore>((set) => ({
   translationObject: en.dialogs,
   isLastDialogLine: false,
   npcDialogIntention: null,
+  globalPlayerPosition: null,
   setCanDialogAdvance: (canDialogAdvance) => set({ canDialogAdvance }),
   setNpcDialogIntention: (npcDialogIntention) => set({ npcDialogIntention }),
+  setGlobalPlayerPosition: (position) => set({ globalPlayerPosition: position }),
   startDialog: (npcId, dialogId) => {
     if(!npcId || !dialogId) return;
     set({
@@ -101,16 +105,6 @@ export const useDialogStore = create<DialogStore>((set) => ({
         : false;
 
       if (canDialogAdvance) {
-        console.log("Dialog advanced to line", {
-          npcId: actualNpcId,
-          dialogId: actualDialogId,
-          dialogLine: nextDialogLine,
-          canDialogAdvance,
-          actualDialogId,
-          actualDialogLine,
-          dialogLines,
-          nextDialogLine,
-        });
         dialogAdvanceSfx.currentTime = 0;
         dialogAdvanceSfx.play();
         return {
@@ -119,7 +113,6 @@ export const useDialogStore = create<DialogStore>((set) => ({
           isLastDialogLine,
         };
       } else {
-        console.log("Dialog can't advance");
         const actualNpcId = state.npcId;
         return {
           npcId: null,

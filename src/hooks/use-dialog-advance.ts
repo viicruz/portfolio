@@ -20,12 +20,9 @@ export function useDialogAdvance(options?: DialogAdvanceOptions) {
       (state) => state[Controls.Interact],
       (pressed) => {
         if (!pressed) return;
-        console.log("Apertou space")
         if(dialogIntention) {
-          console.log("caiu no if")
           dialogStore.startDialog(dialogIntention.npcId, dialogIntention.dialogId);
         }else{
-          console.log("caiu no else")
           advanceDialog();
         }
       },

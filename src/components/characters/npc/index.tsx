@@ -6,6 +6,7 @@ import {
   type RapierRigidBody,
   CapsuleCollider,
 } from "@react-three/rapier";
+import * as THREE from "three";
 
 //* Components imports
 import { InteractionSphere } from "@/components/interactionSphere";
@@ -15,7 +16,7 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 import { useDialogStore } from "@/store";
 
 //* Hooks imports
-import { useNpcMovement,  } from "@/hooks/use-npc-movement";
+import { useNpcMovement, } from "@/hooks/use-npc-movement";
 import { useNpcAnimation } from "@/hooks/use-npc-animation";
 
 //* Utils imports
@@ -27,6 +28,7 @@ type NpcProps = {
 
 export function Npc(props: NpcProps) {
   const dialogStore = useDialogStore();
+  const playerPosition = useDialogStore((state) => state.globalPlayerPosition);
   const bodyRef = React.useRef<RapierRigidBody | null>(null);
   const collisionCountRef = React.useRef(0);
   const npcData = React.useMemo(() => NPC[props.name], [props.name]);
@@ -36,22 +38,46 @@ export function Npc(props: NpcProps) {
   }, []);
 
   const movementControls = useNpcMovement(bodyRef, npcData.behavior);
-  const { animationName } = useNpcAnimation(bodyRef);
+  const npcAnimation = useNpcAnimation(bodyRef);
 
   const handleCollisionEnter = React.useCallback(() => {
     collisionCountRef.current += 1;
     movementControls.pause();
   }, [movementControls]);
 
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <this useEffect does not need to re-run when npcAnimation or bodyRef changes>
+  React.useEffect(() => {
+    // compute the vector from the NPC to the player and make the NPC look in that direction
+const isTalkingToThisNpc = dialogStore.npcId === npcData.id;
+if (!playerPosition || !isTalkingToThisNpc) return;
+
+const npcPosition = bodyRef.current?.translation();
+if (!npcPosition) return;
+
+    const directionToPlayer = new THREE.Vector3(
+      playerPosition[0] - npcPosition.x,
+      0,
+      playerPosition[2] - npcPosition.z,
+    );
+
+    npcAnimation.lookAt(directionToPlayer);
+    
+    // if player starts a dialog with the npc, pause the npc movement so it doesn't interfere with the dialog
+    movementControls.pause();
+
+  }, [dialogStore.isOnDialog]);
+
   const handleCollisionExit = React.useCallback(() => {
     collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
 
     if (collisionCountRef.current === 0) {
       movementControls.resume();
+      npcAnimation.clearLookAt();
     }
-  }, [movementControls]);
+  }, [movementControls, npcAnimation]);
 
-  const handleStartDialog = () => {
+  const handleSetIntentionDialog = () => {
     dialogStore.setNpcDialogIntention({
       npcId: npcData.id,
       dialogId: npcData.dialogId,
@@ -59,6 +85,7 @@ export function Npc(props: NpcProps) {
   };
   const handlePlayerExit = () => {
     dialogStore.setDialogNull();
+    npcAnimation.clearLookAt();
   };
 
   return (
@@ -73,7 +100,7 @@ export function Npc(props: NpcProps) {
     >
       <InteractionSphere
         asChild
-        onPlayerEnter={handleStartDialog}
+        onPlayerEnter={handleSetIntentionDialog}
         onPlayerExit={handlePlayerExit}
       />
 
@@ -84,7 +111,7 @@ export function Npc(props: NpcProps) {
       <SpritePlaneAnimator
         texturePath={npcData.sprite.sheet}
         spriteDataUrl={npcData.sprite.data}
-        animationName={animationName}
+        animationName={npcAnimation.animationName}
         fps={6}
         scale={[1, 1, 1]}
         position={[0, 0, 0]}

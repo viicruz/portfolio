@@ -3,7 +3,7 @@ import type { NPCData } from "@/schemas/npc";
 import { NPC_SPRITES } from "@/utils/npc-sprites";
 
 export const PROFESSOR_ELM_DATA: NPCData = {
-  id: "professor-elm",
+  id: "npc1",
   name: "Professor Elm",
   dialogId: "dialog1",
   position: [0, 0, 0],

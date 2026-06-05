@@ -63,6 +63,9 @@ export function Npc(props: NpcProps) {
     npcAnimation.lookAt(directionToPlayer);
     console.log("NPC looking at player, direction:", directionToPlayer);
 
+    // if player starts a dialog with the npc, pause the npc movement so it doesn't interfere with the dialog
+    movementControls.pause();
+
   }, [dialogStore.isOnDialog]);
 
   const handleCollisionExit = React.useCallback(() => {
@@ -70,8 +73,9 @@ export function Npc(props: NpcProps) {
 
     if (collisionCountRef.current === 0) {
       movementControls.resume();
+      npcAnimation.clearLookAt();
     }
-  }, [movementControls]);
+  }, [movementControls, npcAnimation]);
 
   const handleSetIntentionDialog = () => {
     dialogStore.setNpcDialogIntention({

@@ -49,10 +49,11 @@ export function Npc(props: NpcProps) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <this useEffect does not need to re-run when npcAnimation or bodyRef changes>
   React.useEffect(() => {
     // compute the vector from the NPC to the player and make the NPC look in that direction
-    if (!playerPosition) return;
-    const npcPosition = bodyRef.current?.translation();
-    if (!npcPosition) return;
-    if (dialogStore.npcId !== npcData.id) return; // only look at player if currently in dialog with this NPC
+const isTalkingToThisNpc = dialogStore.npcId === npcData.id;
+if (!playerPosition || !isTalkingToThisNpc) return;
+
+const npcPosition = bodyRef.current?.translation();
+if (!npcPosition) return;
 
     const directionToPlayer = new THREE.Vector3(
       playerPosition[0] - npcPosition.x,

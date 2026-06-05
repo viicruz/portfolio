@@ -105,9 +105,9 @@ export default function Home() {
           <FollowerPkm scale={[1, 0.8, 1]} playerBodyRef={playerBodyRef} />
         </CharacterControls>
         {/* <Npc npcId="npc1" dialogId="dialog1" /> */}
-        <Npc playerBodyRef={playerBodyRef} name="PROFESSOR_ELM" />
+        <Npc name="PROFESSOR_ELM" />
         {/* Example NPC with patrol behavior (local square route) */}
-        <Npc playerBodyRef={playerBodyRef} name="FATGUY" />
+        <Npc name="FATGUY" />
 
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />

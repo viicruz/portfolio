@@ -148,6 +148,6 @@
 		"format": "RGBA8888",
 		"size": { "w": 96, "h": 128 },
 		"scale": "1",
-		"smartupdate": "$TexturePacker:SmartUpdate:professor-elm$"
+		"smartupdate": "$TexturePacker:SmartUpdate:npc$"
 	}
 }

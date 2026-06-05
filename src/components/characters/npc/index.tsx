@@ -6,6 +6,7 @@ import {
   type RapierRigidBody,
   CapsuleCollider,
 } from "@react-three/rapier";
+import * as THREE from "three";
 
 //* Components imports
 import { InteractionSphere } from "@/components/interactionSphere";
@@ -27,6 +28,7 @@ type NpcProps = {
 
 export function Npc(props: NpcProps) {
   const dialogStore = useDialogStore();
+  const playerPosition = useDialogStore((state) => state.globalPlayerPosition);
   const bodyRef = React.useRef<RapierRigidBody | null>(null);
   const collisionCountRef = React.useRef(0);
   const npcData = React.useMemo(() => NPC[props.name], [props.name]);
@@ -36,12 +38,30 @@ export function Npc(props: NpcProps) {
   }, []);
 
   const movementControls = useNpcMovement(bodyRef, npcData.behavior);
-  const { animationName } = useNpcAnimation(bodyRef);
+  const { animationName, lookAt } = useNpcAnimation(bodyRef);
 
   const handleCollisionEnter = React.useCallback(() => {
     collisionCountRef.current += 1;
     movementControls.pause();
   }, [movementControls]);
+
+  React.useEffect(() => {
+    // compute the vector from the NPC to the player and make the NPC look in that direction
+    if (!playerPosition) return;
+    const npcPosition = bodyRef.current?.translation();
+    if (!npcPosition) return;
+    if(dialogStore.npcId !== npcData.id) return; // only look at player if currently in dialog with this NPC
+
+    const directionToPlayer = new THREE.Vector3(
+      playerPosition[0] - npcPosition.x,
+      0,
+      playerPosition[2] - npcPosition.z,
+    );
+
+    lookAt(directionToPlayer);
+    console.log("NPC looking at player, direction:", directionToPlayer);
+
+  }, [dialogStore.isOnDialog]);
 
   const handleCollisionExit = React.useCallback(() => {
     collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
@@ -51,7 +71,7 @@ export function Npc(props: NpcProps) {
     }
   }, [movementControls]);
 
-  const handleStartDialog = () => {
+  const handleSetIntentionDialog = () => {
     dialogStore.setNpcDialogIntention({
       npcId: npcData.id,
       dialogId: npcData.dialogId,
@@ -73,7 +93,7 @@ export function Npc(props: NpcProps) {
     >
       <InteractionSphere
         asChild
-        onPlayerEnter={handleStartDialog}
+        onPlayerEnter={handleSetIntentionDialog}
         onPlayerExit={handlePlayerExit}
       />
 

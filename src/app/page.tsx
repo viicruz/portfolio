@@ -104,28 +104,10 @@ export default function Home() {
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm scale={[1, 0.8, 1]} playerBodyRef={playerBodyRef} />
         </CharacterControls>
-        <Npc npcId="npc1" dialogId="dialog1" />
-
+        {/* <Npc npcId="npc1" dialogId="dialog1" /> */}
+        <Npc name="PROFESSOR_ELM" />
         {/* Example NPC with patrol behavior (local square route) */}
-        <Npc
-          npcId="npc2"
-          dialogId="dialog1"
-          position={[8, 0, 0]}
-          behavior={{
-            kind: "patrol",
-            route: {
-              localSpace: true,
-              loop: true,
-              startIndex: 0,
-              points: [
-                { position: [0, 0, 0], waitMs: 500 },
-                { position: [0, 0, 3], waitMs: 500 },
-                { position: [2, 0, 3], waitMs: 500 },
-                { position: [2, 0, 0], waitMs: 500 },
-              ],
-            },
-          }}
-        />
+        <Npc name="FATGUY" />
 
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />

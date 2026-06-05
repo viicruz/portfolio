@@ -16,7 +16,7 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 import { useDialogStore } from "@/store";
 
 //* Hooks imports
-import { useNpcMovement,  } from "@/hooks/use-npc-movement";
+import { useNpcMovement, } from "@/hooks/use-npc-movement";
 import { useNpcAnimation } from "@/hooks/use-npc-animation";
 
 //* Utils imports
@@ -38,19 +38,21 @@ export function Npc(props: NpcProps) {
   }, []);
 
   const movementControls = useNpcMovement(bodyRef, npcData.behavior);
-  const { animationName, lookAt } = useNpcAnimation(bodyRef);
+  const npcAnimation = useNpcAnimation(bodyRef);
 
   const handleCollisionEnter = React.useCallback(() => {
     collisionCountRef.current += 1;
     movementControls.pause();
   }, [movementControls]);
 
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <this useEffect does not need to re-run when npcAnimation or bodyRef changes>
   React.useEffect(() => {
     // compute the vector from the NPC to the player and make the NPC look in that direction
     if (!playerPosition) return;
     const npcPosition = bodyRef.current?.translation();
     if (!npcPosition) return;
-    if(dialogStore.npcId !== npcData.id) return; // only look at player if currently in dialog with this NPC
+    if (dialogStore.npcId !== npcData.id) return; // only look at player if currently in dialog with this NPC
 
     const directionToPlayer = new THREE.Vector3(
       playerPosition[0] - npcPosition.x,
@@ -58,7 +60,7 @@ export function Npc(props: NpcProps) {
       playerPosition[2] - npcPosition.z,
     );
 
-    lookAt(directionToPlayer);
+    npcAnimation.lookAt(directionToPlayer);
     console.log("NPC looking at player, direction:", directionToPlayer);
 
   }, [dialogStore.isOnDialog]);
@@ -79,6 +81,7 @@ export function Npc(props: NpcProps) {
   };
   const handlePlayerExit = () => {
     dialogStore.setDialogNull();
+    npcAnimation.clearLookAt();
   };
 
   return (
@@ -104,7 +107,7 @@ export function Npc(props: NpcProps) {
       <SpritePlaneAnimator
         texturePath={npcData.sprite.sheet}
         spriteDataUrl={npcData.sprite.data}
-        animationName={animationName}
+        animationName={npcAnimation.animationName}
         fps={6}
         scale={[1, 1, 1]}
         position={[0, 0, 0]}

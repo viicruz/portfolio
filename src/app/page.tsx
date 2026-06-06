@@ -89,7 +89,7 @@ export default function Home() {
           </mesh>
         </RigidBody>
 
-        <PkmCenter position={[0, -0.75, -10]} scale={0.25} />
+        <PkmCenter position={[0, -0.75, -5]} scale={0.25} />
 
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />

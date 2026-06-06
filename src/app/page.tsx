@@ -1,7 +1,7 @@
 "use client";
 
 //* Libraries imports
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, Fragment } from "react";
 import { useHelper } from "@react-three/drei";
 import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import {
@@ -20,6 +20,7 @@ import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
 import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
+import { PkmCenter } from "@/components/pkm-center";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
 function DirectionalLightWithHelper() {
@@ -88,18 +89,8 @@ export default function Home() {
           </mesh>
         </RigidBody>
 
-        <mesh position={[2, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1, 2, 1]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
-        <mesh position={[4, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1, 2, 1]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
-        <mesh position={[6, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1, 2, 1]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
+        <PkmCenter position={[0, -0.75, -10]} scale={0.25} />
+
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm scale={[1, 0.8, 1]} playerBodyRef={playerBodyRef} />
@@ -114,26 +105,30 @@ export default function Home() {
 
         {effectToggles.postprocessing && (
           <EffectComposer>
-            <>
-              {effectToggles.depthOfField && (
-                <DepthOfField
-                  focusDistance={10}
-                  focalLength={5}
-                  bokehScale={1}
-                  height={480}
-                />
-              )}
-              {effectToggles.bloom && (
-                <Bloom
-                  luminanceThreshold={0.2}
-                  luminanceSmoothing={0.3}
-                  height={300}
-                />
-              )}
-              {effectToggles.vignette && (
-                <Vignette eskil={false} offset={0.1} darkness={0.6} />
-              )}
-            </>
+            {effectToggles.depthOfField ? (
+              <DepthOfField
+                focusDistance={10}
+                focalLength={5}
+                bokehScale={1}
+                height={480}
+              />
+            ) : (
+              <Fragment />
+            )}
+            {effectToggles.bloom ? (
+              <Bloom
+                luminanceThreshold={0.2}
+                luminanceSmoothing={0.3}
+                height={300}
+              />
+            ) : (
+              <Fragment />
+            )}
+            {effectToggles.vignette ? (
+              <Vignette eskil={false} offset={0.1} darkness={0.6} />
+            ) : (
+              <Fragment />
+            )}
           </EffectComposer>
         )}
       </Scene>

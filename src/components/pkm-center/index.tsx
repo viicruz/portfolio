@@ -7,6 +7,7 @@ import * as THREE from "three";
 
 const MODEL_PATH = "/assets/models/pkm-center/pkm-center.glb";
 const MODEL_SCALE = 1 / 16;
+const ALPHA_TEST = 0.01;
 const DEFAULT_POSITION: [number, number, number] = [0, 2, -10];
 const DEFAULT_ROTATION: [number, number, number] = [0, 0, 0];
 
@@ -21,7 +22,7 @@ function configureMeshes(object: THREE.Object3D) {
     if (!(child instanceof THREE.Mesh)) return;
 
     child.castShadow = true;
-    child.receiveShadow = true;
+    child.receiveShadow = false;
 
     const materials = Array.isArray(child.material)
       ? child.material
@@ -30,9 +31,30 @@ function configureMeshes(object: THREE.Object3D) {
     for (const material of materials) {
       material.transparent = false;
       material.opacity = 1;
-      material.alphaTest = 0;
+      material.alphaTest = ALPHA_TEST;
       material.depthWrite = true;
+
+      if (material.map) {
+        material.map.minFilter = THREE.NearestFilter;
+        material.map.magFilter = THREE.NearestFilter;
+        material.map.generateMipmaps = false;
+        material.map.needsUpdate = true;
+      }
+
       material.needsUpdate = true;
+    }
+
+    const primaryMaterial = Array.isArray(child.material)
+      ? child.material[0]
+      : child.material;
+
+    if (primaryMaterial.map) {
+      child.customDepthMaterial = new THREE.MeshDepthMaterial({
+        depthPacking: THREE.RGBADepthPacking,
+        alphaTest: ALPHA_TEST,
+        map: primaryMaterial.map,
+        side: THREE.DoubleSide,
+      });
     }
   });
 }

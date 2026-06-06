@@ -3,7 +3,7 @@
 //* Libraries imports
 import { useMemo, useRef, Fragment } from "react";
 import { useHelper } from "@react-three/drei";
-import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
+import type { RapierRigidBody } from "@react-three/rapier";
 import {
   Bloom,
   DepthOfField,
@@ -21,6 +21,7 @@ import { Player } from "@/components/characters/player";
 import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
 import { PkmCenter } from "@/components/pkm-center";
+import { GrassFloor } from "@/components/grass-floor";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
 function DirectionalLightWithHelper() {
@@ -82,12 +83,7 @@ export default function Home() {
   return (
     <main className="w-full h-svh">
       <Scene>
-        <RigidBody type="fixed">
-          <mesh position={[0, -1, 0]} receiveShadow>
-            <boxGeometry args={[200, 0.5, 200]} />
-            <meshStandardMaterial color="gray" />
-          </mesh>
-        </RigidBody>
+        <GrassFloor />
 
         <PkmCenter position={[-1, -1, -5]} scale={0.25} />
 

@@ -47,7 +47,8 @@ function DirectionalLightWithHelper() {
 export default function Home() {
   const hardwareInfo = useHardwareThreeSupport();
   const playerBodyRef = useRef<RapierRigidBody | null>(null);
-  const activePokemon = useGameMenuStore((state) => state.activePokemon);
+  const partyOrder = useGameMenuStore((state) => state.partyOrder);
+  const leadPokemon = partyOrder[0];
 
   const effectToggles = useMemo(() => {
     const effectiveTier =
@@ -107,10 +108,10 @@ export default function Home() {
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm
-            key={activePokemon}
+            key={leadPokemon}
             scale={[1, 0.8, 1]}
             playerBodyRef={playerBodyRef}
-            pokemonKey={activePokemon}
+            pokemonKey={leadPokemon}
           />
         </CharacterControls>
         {/* <Npc npcId="npc1" dialogId="dialog1" /> */}

@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 
 //* Store imports
 import {
-  getOrderedPokemonList,
   POKEMON_MENU_ITEM_INDEX,
   useGameMenuStore,
 } from "@/store/game-menu";
@@ -34,8 +33,6 @@ export function GameMenu() {
 
   if (gameMenuStore.screen === "closed") return null;
 
-  const orderedPokemonList = getOrderedPokemonList(gameMenuStore.activePokemon);
-
   function handleMainMenuClick(index: number) {
     gameMenuStore.setMainCursorIndex(index);
 
@@ -46,7 +43,7 @@ export function GameMenu() {
 
   function handlePokemonMenuClick(index: number) {
     gameMenuStore.setPokemonCursorIndex(index);
-    gameMenuStore.confirmSelection();
+    gameMenuStore.togglePokemonShift(index);
   }
 
   return (
@@ -81,9 +78,10 @@ export function GameMenu() {
 
           {gameMenuStore.screen === "pokemon" && (
             <div className="flex flex-col gap-1">
-              {orderedPokemonList.map((pokemonKey, index) => {
+              {gameMenuStore.partyOrder.map((pokemonKey, index) => {
                 const isSelected = gameMenuStore.pokemonCursorIndex === index;
-                const isActive = pokemonKey === gameMenuStore.activePokemon;
+                const isShifting = gameMenuStore.pokemonShiftIndex === index;
+                const isLead = index === 0;
                 const labelKey = POKEMON_LABEL_KEYS[pokemonKey];
 
                 return (
@@ -92,16 +90,21 @@ export function GameMenu() {
                     id={`game-menu-pokemon-${pokemonKey.toLowerCase()}`}
                     type="button"
                     className={`flex items-center gap-2 text-left w-full p-1 rounded cursor-pointer ${
-                      isSelected ? "bg-blue-100" : ""
+                      isShifting ? "bg-yellow-100" : isSelected ? "bg-blue-100" : ""
                     }`}
                     onClick={() => handlePokemonMenuClick(index)}
                   >
                     <span className="w-3 shrink-0">
-                      {isSelected ? "▶" : ""}
+                      {isShifting ? "⇅" : isSelected ? "▶" : ""}
                     </span>
-                    <span className={isActive ? "text-blue-700" : ""}>
+                    <span className={isLead ? "text-blue-700" : ""}>
                       {t(labelKey)}
                     </span>
+                    {isLead ? (
+                      <span className="text-blue-700 ml-auto">
+                        {t("active")}
+                      </span>
+                    ) : null}
                   </button>
                 );
               })}

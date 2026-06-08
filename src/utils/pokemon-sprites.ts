@@ -5,7 +5,11 @@ type PokemonSpriteData = {
 
 const POKEMONS = ["chikorita", "cyndaquil", "totodile"] as const;
 
-export const POKEMON_SPRITES: Record<Uppercase<typeof POKEMONS[number]>, PokemonSpriteData> = {
+export type PokemonKey = Uppercase<typeof POKEMONS[number]>;
+
+export const POKEMON_KEYS: PokemonKey[] = ["CHIKORITA", "CYNDAQUIL", "TOTODILE"];
+
+export const POKEMON_SPRITES: Record<PokemonKey, PokemonSpriteData> = {
   CHIKORITA: {
     SPRITE_SHEET: "/assets/sprites/pkm/pokemon_gen_2_sprites.png",
     SPRITE_DATA: "/assets/sprites/pkm/chikorita.json",

@@ -1,4 +1,16 @@
 {
+  "menu": {
+    "pokemon": "POKéMON",
+    "pack": "PACK",
+    "player": "PLAYER",
+    "save": "SAVE",
+    "option": "OPTION",
+    "exit": "EXIT",
+    "chikorita": "CHIKORITA",
+    "cyndaquil": "CYNDAQUIL",
+    "totodile": "TOTODILE",
+    "active": "ACTIVE"
+  },
   "dialogs": {
     "npc1": {
       "dialog1": {

@@ -9,7 +9,11 @@
     "chikorita": "CHIKORITA",
     "cyndaquil": "CYNDAQUIL",
     "totodile": "TOTODILE",
-    "active": "ATIVO"
+    "active": "ATIVO",
+    "choosePokemon": "Escolha um Pokémon.",
+    "shiftPokemon": "Mova para cima ou para baixo para reordenar.",
+    "cancel": "CANCELAR",
+    "hp": "HP"
   },
   "dialogs": {
     "npc1": {

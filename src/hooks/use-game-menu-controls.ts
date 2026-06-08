@@ -64,6 +64,26 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
       },
     );
 
+    const unsubscribeLeft = subscribeKeys(
+      (state) => state[Controls.Left],
+      (pressed) => {
+        if (!pressed) return;
+        const menuState = useGameMenuStore.getState();
+        if (menuState.screen === "closed") return;
+        menuState.moveCursor("left");
+      },
+    );
+
+    const unsubscribeRight = subscribeKeys(
+      (state) => state[Controls.Right],
+      (pressed) => {
+        if (!pressed) return;
+        const menuState = useGameMenuStore.getState();
+        if (menuState.screen === "closed") return;
+        menuState.moveCursor("right");
+      },
+    );
+
     const unsubscribeInteract = subscribeKeys(
       (state) => state[Controls.Interact],
       (pressed) => {
@@ -98,6 +118,8 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
       unsubscribeMenu();
       unsubscribeUp();
       unsubscribeDown();
+      unsubscribeLeft();
+      unsubscribeRight();
       unsubscribeInteract();
       window.removeEventListener("keydown", handleKeyDown);
     };

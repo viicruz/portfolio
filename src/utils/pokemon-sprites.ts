@@ -23,3 +23,27 @@ export const POKEMON_SPRITES: Record<PokemonKey, PokemonSpriteData> = {
     SPRITE_DATA: "/assets/sprites/pkm/totodile.json",
   },
 };
+
+export const POKEMON_PORTRAITS: Record<PokemonKey, string> = {
+  CHIKORITA: "/assets/sprites/pkm/chikorita.png",
+  CYNDAQUIL: "/assets/sprites/pkm/cyndaquil.png",
+  TOTODILE: "/assets/sprites/pkm/totodile.png",
+};
+
+export const POKEMON_PARTY_STATS: Record<PokemonKey, { hp: number }> = {
+  CHIKORITA: { hp: 100 },
+  CYNDAQUIL: { hp: 100 },
+  TOTODILE: { hp: 100 },
+};
+
+export const POKEMON_LABEL_KEYS: Record<
+  PokemonKey,
+  "chikorita" | "cyndaquil" | "totodile"
+> = {
+  CHIKORITA: "chikorita",
+  CYNDAQUIL: "cyndaquil",
+  TOTODILE: "totodile",
+};
+
+export const PARTY_GRID_COLS = 2;
+export const PARTY_DISPLAY_SLOTS = 6;

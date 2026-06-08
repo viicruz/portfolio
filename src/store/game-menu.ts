@@ -5,6 +5,7 @@ import { create } from "zustand";
 
 //* Utils imports
 import {
+  PARTY_GRID_COLS,
   POKEMON_KEYS,
   type PokemonKey,
 } from "@/utils/pokemon-sprites";
@@ -22,6 +23,8 @@ export type MenuScreen = "closed" | "main" | "pokemon";
 
 export const MAIN_MENU_ITEM_COUNT = 6;
 export const POKEMON_MENU_ITEM_INDEX = 0;
+
+export type CursorDirection = "up" | "down" | "left" | "right";
 
 function isValidPokemonKey(value: string): value is PokemonKey {
   return POKEMON_KEYS.includes(value as PokemonKey);
@@ -115,6 +118,31 @@ function swapAdjacentPartyMember(
   return nextPartyOrder;
 }
 
+function movePokemonGridCursor(
+  currentIndex: number,
+  direction: CursorDirection,
+  partySize: number,
+): number {
+  const row = Math.floor(currentIndex / PARTY_GRID_COLS);
+  const col = currentIndex % PARTY_GRID_COLS;
+
+  let nextRow = row;
+  let nextCol = col;
+
+  if (direction === "up") nextRow -= 1;
+  if (direction === "down") nextRow += 1;
+  if (direction === "left") nextCol -= 1;
+  if (direction === "right") nextCol += 1;
+
+  const nextIndex = nextRow * PARTY_GRID_COLS + nextCol;
+
+  if (nextIndex < 0 || nextIndex >= partySize) {
+    return currentIndex;
+  }
+
+  return nextIndex;
+}
+
 type GameMenuStore = {
   screen: MenuScreen;
   partyOrder: PokemonKey[];
@@ -126,7 +154,7 @@ type GameMenuStore = {
   closeMenu: () => void;
   goBack: () => void;
   enterPokemonMenu: () => void;
-  moveCursor: (direction: "up" | "down") => void;
+  moveCursor: (direction: CursorDirection) => void;
   setMainCursorIndex: (index: number) => void;
   setPokemonCursorIndex: (index: number) => void;
   confirmSelection: () => void;
@@ -197,6 +225,10 @@ export const useGameMenuStore = create<GameMenuStore>((set, get) => ({
 
     if (state.screen === "pokemon") {
       if (state.pokemonShiftIndex !== null) {
+        if (direction !== "up" && direction !== "down") {
+          return;
+        }
+
         const shiftIndex = state.pokemonShiftIndex;
         const targetIndex = direction === "up" ? shiftIndex - 1 : shiftIndex + 1;
 
@@ -220,10 +252,11 @@ export const useGameMenuStore = create<GameMenuStore>((set, get) => ({
         return;
       }
 
-      const delta = direction === "up" ? -1 : 1;
-      const nextIndex =
-        (state.pokemonCursorIndex + delta + POKEMON_KEYS.length) %
-        POKEMON_KEYS.length;
+      const nextIndex = movePokemonGridCursor(
+        state.pokemonCursorIndex,
+        direction,
+        state.partyOrder.length,
+      );
 
       set({ pokemonCursorIndex: nextIndex });
     }

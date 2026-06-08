@@ -36,9 +36,13 @@ function DirectionalLightWithHelper() {
     <directionalLight
       ref={lightRef}
       castShadow
-      position={[-2, 5, 5]}
-      shadow-mapSize-width={2048}
-      shadow-mapSize-height={2048}
+      position={[-100, 200, 200]}
+      shadow-mapSize-width={2048*5}
+      shadow-mapSize-height={2048*5}
+      shadow-camera-left={-100}
+      shadow-camera-right={100}
+      shadow-camera-top={100}
+      shadow-camera-bottom={-100}
     />
   );
 }

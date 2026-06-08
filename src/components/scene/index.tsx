@@ -5,6 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
 import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
+import FPSCounter from '@/components/fps/fps-counter';
 
 //*Store import
 import { useDialogStore } from '@/store';
@@ -23,6 +24,7 @@ export function Scene(props: SceneProps) {
   const line = `${dialogStore.npcId}.${dialogStore.dialogId}.${dialogStore.dialogLine}`;
   return (
     <div className='relative w-full h-svh'>
+      <FPSCounter />
       <div className='absolute bottom-0 left-0 w-full z-10 flex justify-center pb-8'>
         {dialogStore.isOnDialog && (
           <div className='items-center justify-cente w-full max-w-5xl border py-1 px-2 rounded-2xl bg-black/50 pr-8 relative'>

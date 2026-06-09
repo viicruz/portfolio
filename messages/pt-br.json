@@ -10,8 +10,7 @@
     "cyndaquil": "CYNDAQUIL",
     "totodile": "TOTODILE",
     "active": "ATIVO",
-    "choosePokemon": "Escolha um Pokémon.",
-    "shiftPokemon": "Mova para cima ou para baixo para reordenar.",
+    "choosePokemon": "Arraste para reordenar.",
     "cancel": "CANCELAR",
     "hp": "HP"
   },

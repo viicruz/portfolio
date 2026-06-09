@@ -16,10 +16,8 @@ import {
 type PokemonPartySlotProps = {
   slotIndex: number;
   pokemonKey: PokemonKey | null;
-  isSelected: boolean;
-  isShifting: boolean;
   isLead: boolean;
-  onClick: () => void;
+  isDragging?: boolean;
 };
 
 function PokeballIcon() {
@@ -52,20 +50,12 @@ export function PokemonPartySlot(props: PokemonPartySlotProps) {
   const labelKey = POKEMON_LABEL_KEYS[pokemonKey];
   const hp = POKEMON_PARTY_STATS[pokemonKey].hp;
 
-  let borderClass = "border-[#1a4a1a] border-2";
-
-  if (props.isShifting) {
-    borderClass = "border-yellow-400 border-4";
-  } else if (props.isSelected) {
-    borderClass = "border-red-600 border-4";
-  }
+  const cursorClass = props.isDragging ? "cursor-grabbing" : "cursor-grab";
 
   return (
-    <button
+    <div
       id={`game-menu-pokemon-slot-${props.slotIndex}`}
-      type="button"
-      className={`flex h-24 w-full cursor-pointer flex-col rounded bg-[#4a8c4a] p-2 text-left font-pixel text-[8px] text-white ${borderClass}`}
-      onClick={props.onClick}
+      className={`flex h-24 w-full flex-col rounded border-2 border-[#1a4a1a] bg-[#4a8c4a] p-2 text-left font-pixel text-[8px] text-white ${cursorClass}`}
     >
       <div className="flex items-start gap-1">
         <PokeballIcon />
@@ -73,9 +63,6 @@ export function PokemonPartySlot(props: PokemonPartySlotProps) {
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <div className="flex items-center gap-1">
             <span className="truncate text-[9px]">{t(labelKey)}</span>
-            {props.isShifting ? (
-              <span className="shrink-0 text-yellow-200">⇅</span>
-            ) : null}
             {props.isLead ? (
               <span className="ml-auto shrink-0 text-[7px] text-blue-200">
                 {t("active")}
@@ -95,6 +82,6 @@ export function PokemonPartySlot(props: PokemonPartySlotProps) {
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }

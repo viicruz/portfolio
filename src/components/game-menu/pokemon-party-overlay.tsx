@@ -1,11 +1,15 @@
 "use client";
 
 //* Libraries imports
-import { useId } from "react";
+import { useId, useState, type ComponentProps } from "react";
 import { useTranslations } from "next-intl";
+import { move } from "@dnd-kit/helpers";
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
+import { isSortable } from "@dnd-kit/react/sortable";
 
 //* Components imports
 import { PokemonPartySlot } from "@/components/game-menu/pokemon-party-slot";
+import { SortablePokemonPartySlot } from "@/components/game-menu/sortable-pokemon-party-slot";
 import {
   Dialog,
   DialogContent,
@@ -18,15 +22,14 @@ import {
 import { useGameMenuStore } from "@/store/game-menu";
 
 //* Utils imports
-import { PARTY_DISPLAY_SLOTS } from "@/utils/pokemon-sprites";
+import { PARTY_DISPLAY_SLOTS, type PokemonKey } from "@/utils/pokemon-sprites";
 
 export function PokemonPartyOverlay() {
   const t = useTranslations("menu");
   const gameMenuStore = useGameMenuStore();
   const cancelButtonId = useId();
-
-  const messageKey =
-    gameMenuStore.pokemonShiftIndex !== null ? "shiftPokemon" : "choosePokemon";
+  const [activeDragKey, setActiveDragKey] = useState<PokemonKey | null>(null);
+  const pkmList = useGameMenuStore((state) => state.partyOrder);
 
   const isOpen = gameMenuStore.screen === "pokemon";
 
@@ -36,18 +39,48 @@ export function PokemonPartyOverlay() {
     }
   }
 
-  function handleSlotClick(index: number) {
-    if (index >= gameMenuStore.partyOrder.length) return;
+  function handleDragStart(
+    event: Parameters<
+      NonNullable<ComponentProps<typeof DragDropProvider>["onDragStart"]>
+    >[0],
+  ) {
+    const source = event.operation.source;
 
-    gameMenuStore.setPokemonCursorIndex(index);
-    gameMenuStore.togglePokemonShift(index);
+    if (isSortable(source)) {
+      setActiveDragKey(source.id as PokemonKey);
+    }
   }
+
+  function handleDragEnd(
+    event: Parameters<
+      NonNullable<ComponentProps<typeof DragDropProvider>["onDragEnd"]>
+    >[0],
+  ) {
+    setActiveDragKey(null);
+
+    if (event.canceled) return;
+
+    const source = event.operation.source;
+
+    if (!isSortable(source)) {
+      return;
+    }
+
+    const nextOrder = move(gameMenuStore.partyOrder, event);
+
+    gameMenuStore.reorderPartyAfterDrag(nextOrder);
+  }
+
+  const activeDragSlotIndex =
+    activeDragKey !== null
+      ? gameMenuStore.partyOrder.indexOf(activeDragKey)
+      : -1;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-lg gap-3 border-[#1a1a1a] bg-[#a8e6e6] p-4 sm:max-w-lg"
+        className="max-w-lg gap-3 border-[#1a1a1a] bg-[#a8e6e6] p-4 sm:max-w-lg h-104 max-h-104 overflow-y-hidden flex flex-col"
         style={{
           backgroundImage:
             "repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.08) 8px, rgba(255,255,255,0.08) 16px)",
@@ -57,36 +90,58 @@ export function PokemonPartyOverlay() {
       >
         <DialogHeader className="sr-only">
           <DialogTitle>{t("pokemon")}</DialogTitle>
-          <DialogDescription>{t(messageKey)}</DialogDescription>
+          <DialogDescription>{t("choosePokemon")}</DialogDescription>
         </DialogHeader>
 
-        <div className="grid w-full grid-cols-2 gap-3">
-          {Array.from({ length: PARTY_DISPLAY_SLOTS }, (_, slotIndex) => {
-            const pokemonKey = gameMenuStore.partyOrder[slotIndex] ?? null;
-            const isFilled = pokemonKey !== null;
-            const slotId = `game-menu-pokemon-slot-${slotIndex}`;
+        <div className="flex flex-col bg-red-200 h-80 max-h-80 overflow-y-hidden">
+          <DragDropProvider
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="grid grid-cols-2 w-full gap-3">
+              {pkmList.map((pkm, index) => {
+                return (
+                  <SortablePokemonPartySlot
+                    key={pkm}
+                    slotIndex={index}
+                    pokemonKey={pkm}
+                    isLead={index === 0}
+                  />
+                );
+              })}
 
-            return (
-              <PokemonPartySlot
-                key={slotId}
-                slotIndex={slotIndex}
-                pokemonKey={pokemonKey}
-                isSelected={
-                  isFilled && gameMenuStore.pokemonCursorIndex === slotIndex
-                }
-                isShifting={
-                  isFilled && gameMenuStore.pokemonShiftIndex === slotIndex
-                }
-                isLead={slotIndex === 0 && isFilled}
-                onClick={() => handleSlotClick(slotIndex)}
-              />
-            );
-          })}
+              {Array.from(
+                { length: PARTY_DISPLAY_SLOTS - pkmList.length },
+                (_, index) => {
+                  const key = `empty-slot-${index}`;
+                  return (
+                    <PokemonPartySlot
+                      key={key}
+                      slotIndex={index}
+                      pokemonKey={null}
+                      isLead={false}
+                    />
+                  );
+                },
+              )}
+            </div>
+
+            <DragOverlay>
+              {activeDragKey !== null && activeDragSlotIndex >= 0 ? (
+                <PokemonPartySlot
+                  slotIndex={activeDragSlotIndex}
+                  pokemonKey={activeDragKey}
+                  isLead={activeDragSlotIndex === 0}
+                  isDragging
+                />
+              ) : null}
+            </DragOverlay>
+          </DragDropProvider>
         </div>
 
-        <div className="flex items-stretch gap-2">
+        <div className="flex flex-row gap-2">
           <div className="flex flex-1 items-center rounded border-2 border-[#1a1a1a] bg-[#d8d8d8] px-4 py-3 font-pixel text-[10px] text-[#1a1a1a]">
-            {t(messageKey)}
+            {t("choosePokemon")}
           </div>
           <button
             id={cancelButtonId}

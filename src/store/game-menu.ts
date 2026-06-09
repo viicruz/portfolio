@@ -4,11 +4,7 @@
 import { create } from "zustand";
 
 //* Utils imports
-import {
-  PARTY_GRID_COLS,
-  POKEMON_KEYS,
-  type PokemonKey,
-} from "@/utils/pokemon-sprites";
+import { POKEMON_KEYS, type PokemonKey } from "@/utils/pokemon-sprites";
 
 const LEGACY_ACTIVE_POKEMON_STORAGE_KEY = "portfolio:active-pokemon:v1";
 const PARTY_ORDER_STORAGE_KEY = "portfolio:pokemon-party:v1";
@@ -99,56 +95,10 @@ export function getLeadPokemon(partyOrder: PokemonKey[]): PokemonKey {
   return partyOrder[0] ?? DEFAULT_PARTY_ORDER[0];
 }
 
-function swapAdjacentPartyMember(
-  partyOrder: PokemonKey[],
-  index: number,
-  direction: "up" | "down",
-): PokemonKey[] {
-  const targetIndex = direction === "up" ? index - 1 : index + 1;
-
-  if (targetIndex < 0 || targetIndex >= partyOrder.length) {
-    return partyOrder;
-  }
-
-  const nextPartyOrder = [...partyOrder];
-  const currentPokemon = nextPartyOrder[index];
-  nextPartyOrder[index] = nextPartyOrder[targetIndex];
-  nextPartyOrder[targetIndex] = currentPokemon;
-
-  return nextPartyOrder;
-}
-
-function movePokemonGridCursor(
-  currentIndex: number,
-  direction: CursorDirection,
-  partySize: number,
-): number {
-  const row = Math.floor(currentIndex / PARTY_GRID_COLS);
-  const col = currentIndex % PARTY_GRID_COLS;
-
-  let nextRow = row;
-  let nextCol = col;
-
-  if (direction === "up") nextRow -= 1;
-  if (direction === "down") nextRow += 1;
-  if (direction === "left") nextCol -= 1;
-  if (direction === "right") nextCol += 1;
-
-  const nextIndex = nextRow * PARTY_GRID_COLS + nextCol;
-
-  if (nextIndex < 0 || nextIndex >= partySize) {
-    return currentIndex;
-  }
-
-  return nextIndex;
-}
-
 type GameMenuStore = {
   screen: MenuScreen;
   partyOrder: PokemonKey[];
   mainCursorIndex: number;
-  pokemonCursorIndex: number;
-  pokemonShiftIndex: number | null;
 
   openMenu: () => void;
   closeMenu: () => void;
@@ -156,18 +106,15 @@ type GameMenuStore = {
   enterPokemonMenu: () => void;
   moveCursor: (direction: CursorDirection) => void;
   setMainCursorIndex: (index: number) => void;
-  setPokemonCursorIndex: (index: number) => void;
   confirmSelection: () => void;
-  togglePokemonShift: (index: number) => void;
   setPartyOrder: (partyOrder: PokemonKey[]) => void;
+  reorderPartyAfterDrag: (nextOrder: PokemonKey[]) => void;
 };
 
 export const useGameMenuStore = create<GameMenuStore>((set, get) => ({
   screen: "closed",
   partyOrder: loadPartyOrder(),
   mainCursorIndex: 0,
-  pokemonCursorIndex: 0,
-  pokemonShiftIndex: null,
 
   openMenu: () => {
     set({
@@ -180,8 +127,6 @@ export const useGameMenuStore = create<GameMenuStore>((set, get) => ({
     set({
       screen: "closed",
       mainCursorIndex: POKEMON_MENU_ITEM_INDEX,
-      pokemonCursorIndex: 0,
-      pokemonShiftIndex: null,
     });
   },
 
@@ -189,11 +134,7 @@ export const useGameMenuStore = create<GameMenuStore>((set, get) => ({
     const screen = get().screen;
 
     if (screen === "pokemon") {
-      set({
-        screen: "main",
-        pokemonCursorIndex: 0,
-        pokemonShiftIndex: null,
-      });
+      set({ screen: "main" });
       return;
     }
 
@@ -203,100 +144,34 @@ export const useGameMenuStore = create<GameMenuStore>((set, get) => ({
   },
 
   enterPokemonMenu: () => {
-    set({
-      screen: "pokemon",
-      pokemonCursorIndex: 0,
-      pokemonShiftIndex: null,
-    });
+    set({ screen: "pokemon" });
   },
 
   moveCursor: (direction) => {
     const state = get();
 
-    if (state.screen === "main") {
-      const delta = direction === "up" ? -1 : 1;
-      const nextIndex =
-        (state.mainCursorIndex + delta + MAIN_MENU_ITEM_COUNT) %
-        MAIN_MENU_ITEM_COUNT;
+    if (state.screen !== "main") return;
 
-      set({ mainCursorIndex: nextIndex });
-      return;
-    }
+    const delta = direction === "up" ? -1 : 1;
+    const nextIndex =
+      (state.mainCursorIndex + delta + MAIN_MENU_ITEM_COUNT) %
+      MAIN_MENU_ITEM_COUNT;
 
-    if (state.screen === "pokemon") {
-      if (state.pokemonShiftIndex !== null) {
-        if (direction !== "up" && direction !== "down") {
-          return;
-        }
-
-        const shiftIndex = state.pokemonShiftIndex;
-        const targetIndex = direction === "up" ? shiftIndex - 1 : shiftIndex + 1;
-
-        if (targetIndex < 0 || targetIndex >= state.partyOrder.length) {
-          return;
-        }
-
-        const nextPartyOrder = swapAdjacentPartyMember(
-          state.partyOrder,
-          shiftIndex,
-          direction,
-        );
-
-        savePartyOrder(nextPartyOrder);
-        set({
-          partyOrder: nextPartyOrder,
-          pokemonCursorIndex: targetIndex,
-          pokemonShiftIndex: targetIndex,
-        });
-
-        return;
-      }
-
-      const nextIndex = movePokemonGridCursor(
-        state.pokemonCursorIndex,
-        direction,
-        state.partyOrder.length,
-      );
-
-      set({ pokemonCursorIndex: nextIndex });
-    }
+    set({ mainCursorIndex: nextIndex });
   },
 
   setMainCursorIndex: (index) => {
     set({ mainCursorIndex: index });
   },
 
-  setPokemonCursorIndex: (index) => {
-    set({ pokemonCursorIndex: index });
-  },
-
   confirmSelection: () => {
     const state = get();
 
-    if (state.screen === "main") {
-      if (state.mainCursorIndex === POKEMON_MENU_ITEM_INDEX) {
-        get().enterPokemonMenu();
-      }
-      return;
+    if (state.screen !== "main") return;
+
+    if (state.mainCursorIndex === POKEMON_MENU_ITEM_INDEX) {
+      get().enterPokemonMenu();
     }
-
-    if (state.screen === "pokemon") {
-      get().togglePokemonShift(state.pokemonCursorIndex);
-    }
-  },
-
-  togglePokemonShift: (index) => {
-    const state = get();
-
-    if (state.pokemonShiftIndex === index) {
-      set({ pokemonShiftIndex: null });
-      return;
-    }
-
-    set({
-      pokemonCursorIndex: index,
-      pokemonShiftIndex: index,
-    });
   },
 
   setPartyOrder: (partyOrder) => {
@@ -304,5 +179,12 @@ export const useGameMenuStore = create<GameMenuStore>((set, get) => ({
 
     savePartyOrder(partyOrder);
     set({ partyOrder });
+  },
+
+  reorderPartyAfterDrag: (nextOrder) => {
+    if (!isValidPartyOrder(nextOrder)) return;
+
+    savePartyOrder(nextOrder);
+    set({ partyOrder: nextOrder });
   },
 }));

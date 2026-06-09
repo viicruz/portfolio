@@ -49,7 +49,7 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
       (pressed) => {
         if (!pressed) return;
         const menuState = useGameMenuStore.getState();
-        if (menuState.screen === "closed") return;
+        if (menuState.screen !== "main") return;
         menuState.moveCursor("up");
       },
     );
@@ -59,7 +59,7 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
       (pressed) => {
         if (!pressed) return;
         const menuState = useGameMenuStore.getState();
-        if (menuState.screen === "closed") return;
+        if (menuState.screen !== "main") return;
         menuState.moveCursor("down");
       },
     );
@@ -69,7 +69,7 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
       (pressed) => {
         if (!pressed) return;
         const menuState = useGameMenuStore.getState();
-        if (menuState.screen === "closed") return;
+        if (menuState.screen !== "main") return;
         menuState.moveCursor("left");
       },
     );
@@ -79,7 +79,7 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
       (pressed) => {
         if (!pressed) return;
         const menuState = useGameMenuStore.getState();
-        if (menuState.screen === "closed") return;
+        if (menuState.screen !== "main") return;
         menuState.moveCursor("right");
       },
     );
@@ -89,7 +89,7 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
       (pressed) => {
         if (!pressed) return;
         const menuState = useGameMenuStore.getState();
-        if (menuState.screen === "closed") return;
+        if (menuState.screen !== "main") return;
         menuState.confirmSelection();
       },
     );
@@ -107,7 +107,7 @@ export function useGameMenuControls(options?: GameMenuControlsOptions) {
         return;
       }
 
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && menuState.screen === "main") {
         menuState.confirmSelection();
       }
     };

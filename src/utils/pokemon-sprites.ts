@@ -25,9 +25,9 @@ export const POKEMON_SPRITES: Record<PokemonKey, PokemonSpriteData> = {
 };
 
 export const POKEMON_PORTRAITS: Record<PokemonKey, string> = {
-  CHIKORITA: "/assets/sprites/pkm/chikorita.png",
-  CYNDAQUIL: "/assets/sprites/pkm/cyndaquil.png",
-  TOTODILE: "/assets/sprites/pkm/totodile.png",
+  CHIKORITA: "/assets/sprites/pkm/chikorita.gif",
+  CYNDAQUIL: "/assets/sprites/pkm/cyndaquil.gif",
+  TOTODILE: "/assets/sprites/pkm/totodile.gif",
 };
 
 export const POKEMON_PARTY_STATS: Record<PokemonKey, { hp: number }> = {

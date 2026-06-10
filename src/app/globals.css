@@ -124,3 +124,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.pokemon-slot-border{
+  border-radius: 1.5rem 0.5rem 0.5rem 0.5rem;
+  corner-shape: bevel round round round;
+}

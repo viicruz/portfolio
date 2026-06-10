@@ -30,10 +30,10 @@ export const POKEMON_PORTRAITS: Record<PokemonKey, string> = {
   TOTODILE: "/assets/sprites/pkm/totodile.gif",
 };
 
-export const POKEMON_PARTY_STATS: Record<PokemonKey, { hp: number }> = {
-  CHIKORITA: { hp: 100 },
-  CYNDAQUIL: { hp: 100 },
-  TOTODILE: { hp: 100 },
+export const POKEMON_PARTY_STATS: Record<PokemonKey, { hp: number, gender: "male" | "female" }> = {
+  CHIKORITA: { hp: 21, gender: "female" },
+  CYNDAQUIL: { hp: 20, gender: "male" },
+  TOTODILE: { hp: 20, gender: "male" },
 };
 
 export const POKEMON_LABEL_KEYS: Record<

@@ -2,6 +2,8 @@
 
 //* Libraries imports
 import { useTranslations } from "next-intl";
+import { MarsIcon, VenusIcon } from "lucide-react";
+import Image from "next/image";
 
 //* Components imports
 import { PokemonPortrait } from "@/components/game-menu/pokemon-portrait";
@@ -12,6 +14,7 @@ import {
   POKEMON_PARTY_STATS,
   type PokemonKey,
 } from "@/utils/pokemon-sprites";
+import { cn } from "@/lib/utils";
 
 type PokemonPartySlotProps = {
   slotIndex: number;
@@ -20,28 +23,17 @@ type PokemonPartySlotProps = {
   isDragging?: boolean;
 };
 
-function PokeballIcon() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 16 16"
-      className="size-4 shrink-0"
-    >
-      <circle cx="8" cy="8" r="7" fill="#e53935" stroke="#1a1a1a" strokeWidth="1" />
-      <rect x="1" y="7" width="14" height="2" fill="#1a1a1a" />
-      <circle cx="8" cy="8" r="2.5" fill="#fff" stroke="#1a1a1a" strokeWidth="1" />
-    </svg>
-  );
-}
-
 export function PokemonPartySlot(props: PokemonPartySlotProps) {
   const t = useTranslations("menu");
   const pokemonKey = props.pokemonKey;
+  const lv = 5;
+  const isPair = props.slotIndex % 2 === 0;
+  const marginTop = !props.isLead ? isPair ? "-mt-4" : "mt-0" : undefined;
 
   if (pokemonKey === null) {
     return (
       <div
-        className="flex h-24 items-center justify-center rounded border-2 border-[#2d5a2d]/40 bg-[#4a8c4a]/30 opacity-50"
+        className={cn("flex h-36 sm:h-20 items-center justify-center rounded border-2 border-[#2d5a2d]/40 bg-[#4a8c4a]/30 opacity-50 pokemon-slot-border", marginTop)}
         aria-hidden
       />
     );
@@ -55,30 +47,57 @@ export function PokemonPartySlot(props: PokemonPartySlotProps) {
   return (
     <div
       id={`game-menu-pokemon-slot-${props.slotIndex}`}
-      className={`flex h-24 w-full flex-col rounded border-2 border-[#1a4a1a] bg-[#4a8c4a] p-2 text-left font-pixel text-[8px] text-white ${cursorClass}`}
+      className={cn("flex h-36 sm:h-20 w-full border-2 border-black bg-linear-to-b from-emerald-800 to-green-400 p-2 font-pixel text-white pokemon-slot-border", cursorClass)}
     >
-      <div className="flex items-start gap-1">
-        <PokeballIcon />
-        <PokemonPortrait pokemonKey={pokemonKey} className="size-8" />
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <div className="flex items-center gap-1">
-            <span className="truncate text-[9px]">{t(labelKey)}</span>
-            {props.isLead ? (
-              <span className="ml-auto shrink-0 text-[7px] text-blue-200">
-                {t("active")}
-              </span>
-            ) : null}
+      <div className="flex flex-col sm:flex-row w-full gap-2 justify-center items-center sm:items-start relative">
+        <div className="absolute left-4 top-2 -translate-x-1/2 -translate-y-1/2">
+          {props.isLead ? (
+            <Image
+              width={20}
+              height={20}
+              src="/assets/sprites/menu/open-pokeball.png"
+              alt={t("active")}
+              className="size-20 object-contain [image-rendering:pixelated] aspect-square"
+            />
+          ) : <Image
+            width={20}
+            height={20}
+            src="/assets/sprites/menu/closed-pokeball.png"
+            alt={t("active")}
+            className="size-20 object-contain [image-rendering:pixelated] aspect-square"
+          />}
+        </div>
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center pl-4">
+          <PokemonPortrait pokemonKey={pokemonKey} className="size-12 z-10" />
+        </div>
+
+        <div className="flex min-w-0 flex-1 flex-col w-full">
+          <div className="flex items-center justify-between">
+            <span className="truncate text-xs">
+              {t(labelKey)}
+            </span>
+            {POKEMON_PARTY_STATS[pokemonKey].gender === "male" ? <MarsIcon className="size-4 text-blue-500" /> : <VenusIcon className="size-4 text-pink-500" />}
           </div>
-          <div className="flex items-center gap-1">
-            <span className="rounded bg-orange-500 px-0.5 text-[6px] text-white">
-              {t("hp")}
-            </span>
-            <div className="h-2 flex-1 overflow-hidden rounded-sm border border-[#1a4a1a] bg-[#2d5a2d]">
-              <div className="h-full w-full bg-[#78c850]" />
+
+          <div className="pt-2 flex flex-col">
+            <div className="flex items-center border bg-black border-black rounded px-1 gap-1">
+              <span className="shrink-0 rounded text-orange-500 text-[0.5rem] leading-none font-bold">
+                {t("hp")}
+              </span>
+
+              <div className="h-2 flex-1 overflow-hidden rounded-sm">
+                <div className="h-full bg-[#39d353]" />
+              </div>
             </div>
-            <span className="shrink-0 text-[7px]">
-              {hp} / {hp}
-            </span>
+
+            <div className="flex flex-row w-full gap-2 sm:gap-4">
+              <span className="pt-2 text-center text-[0.6rem] font-bold leading-none tracking-wider text-white drop-shadow-[1px_1px_0_#000]">
+                {"Lv"}.{lv}
+              </span>
+              <span className="pt-2 text-center text-[0.6rem] font-bold leading-none tracking-wider text-white drop-shadow-[1px_1px_0_#000]">
+                {hp} / {hp}
+              </span>
+            </div>
           </div>
         </div>
       </div>

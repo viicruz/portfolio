@@ -8,6 +8,7 @@ import { PokemonPartySlot } from "@/components/game-menu/pokemon-party-slot";
 
 //* Utils imports
 import type { PokemonKey } from "@/utils/pokemon-sprites";
+import { cn } from "@/lib/utils";
 
 type SortablePokemonPartySlotProps = {
   slotIndex: number;
@@ -22,10 +23,13 @@ export function SortablePokemonPartySlot(props: SortablePokemonPartySlotProps) {
     group: "party",
   });
 
+  const isPair = props.slotIndex % 2 === 0;
+  const marginTop = !props.isLead ? isPair ? "-mt-4" : "mt-4" : undefined;
+
   return (
     <div
       ref={sortable.ref}
-      className={sortable.isDragging ? "opacity-50" : undefined}
+      className={cn(sortable.isDragging ? "opacity-50" : undefined, marginTop)}
     >
       <PokemonPartySlot
         slotIndex={props.slotIndex}

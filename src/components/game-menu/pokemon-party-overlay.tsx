@@ -80,7 +80,7 @@ export function PokemonPartyOverlay() {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-lg gap-3 border-[#1a1a1a] bg-[#a8e6e6] p-4 sm:max-w-lg h-104 max-h-104 overflow-y-hidden flex flex-col"
+        className="max-w-lg gap-3 border-black bg-teal-300 p-4 sm:max-w-lg sm:h-100 sm:max-h-100 overflow-y-hidden flex flex-col"
         style={{
           backgroundImage:
             "repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.08) 8px, rgba(255,255,255,0.08) 16px)",
@@ -93,7 +93,7 @@ export function PokemonPartyOverlay() {
           <DialogDescription>{t("choosePokemon")}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col bg-red-200 h-80 max-h-80 overflow-y-hidden">
+        <div className="flex flex-col sm:h-80 sm:max-h-80 h-120 max-h-120">
           <DragDropProvider
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -117,7 +117,7 @@ export function PokemonPartyOverlay() {
                   return (
                     <PokemonPartySlot
                       key={key}
-                      slotIndex={index}
+                      slotIndex={index + pkmList.length}
                       pokemonKey={null}
                       isLead={false}
                     />
@@ -140,13 +140,13 @@ export function PokemonPartyOverlay() {
         </div>
 
         <div className="flex flex-row gap-2">
-          <div className="flex flex-1 items-center rounded border-2 border-[#1a1a1a] bg-[#d8d8d8] px-4 py-3 font-pixel text-[10px] text-[#1a1a1a]">
+          <div className="flex flex-1 items-center rounded border-2 border-black bg-neutral-100 px-4 py-3 font-pixel text-xs text-black">
             {t("choosePokemon")}
           </div>
           <button
             id={cancelButtonId}
             type="button"
-            className="cursor-pointer rounded border-2 border-white bg-[#3080c8] px-6 py-3 font-pixel text-[10px] text-white"
+            className="cursor-pointer rounded bg-sky-600 px-6 py-3 font-pixel text-[10px] text-white"
             onClick={() => gameMenuStore.goBack()}
           >
             {t("cancel")}

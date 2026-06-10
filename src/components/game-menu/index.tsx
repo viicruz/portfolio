@@ -8,10 +8,7 @@ import { cn } from "@/lib/utils";
 import { PokemonPartyOverlay } from "@/components/game-menu/pokemon-party-overlay";
 
 //* Store imports
-import {
-  POKEMON_MENU_ITEM_INDEX,
-  useGameMenuStore,
-} from "@/store/game-menu";
+import { POKEMON_MENU_ITEM_INDEX, useGameMenuStore } from "@/store/game-menu";
 
 const MAIN_MENU_ITEMS = [
   "pokemon",
@@ -57,13 +54,11 @@ export function GameMenu() {
                   className={cn(
                     "flex w-full items-center gap-2 rounded py-1 px-1 text-left",
                     isEnabled ? "cursor-pointer" : "cursor-default opacity-40",
-                    isSelected ? "bg-blue-100" : ""
+                    isSelected ? "bg-blue-100" : "",
                   )}
                   onClick={() => handleMainMenuClick(index)}
                 >
-                  <span className="w-3 shrink-0">
-                    {isSelected ? "▶" : ""}
-                  </span>
+                  <span className="w-3 shrink-0">{isSelected ? "▶" : ""}</span>
                   <span>{t(itemKey)}</span>
                 </button>
               );

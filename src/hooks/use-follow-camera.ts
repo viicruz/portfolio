@@ -7,10 +7,12 @@ type FollowCameraOptions = {
   offset?: THREE.Vector3;
   lerp?: number;
   lookAtOffset?: THREE.Vector3;
-}
+};
 
-export function useFollowCamera(targetRef: React.RefObject<THREE.Object3D> | null, options?: FollowCameraOptions) {
-  
+export function useFollowCamera(
+  targetRef: React.RefObject<THREE.Object3D> | null,
+  options?: FollowCameraOptions,
+) {
   // get real state of threejs camera
   const camera = useThree((state) => state.camera);
   const offset = options?.offset ?? new THREE.Vector3(0, 4, 8);
@@ -22,8 +24,8 @@ export function useFollowCamera(targetRef: React.RefObject<THREE.Object3D> | nul
   const lookAtPosition = new THREE.Vector3();
   const worldTarget = new THREE.Vector3();
 
-  useFrame(()=>{
-    if(!targetRef?.current) return;
+  useFrame(() => {
+    if (!targetRef?.current) return;
 
     // Use world position so it works when the target is a child of a moving parent (e.g., Rapier RigidBody)
     targetRef.current.getWorldPosition(worldTarget);
@@ -33,5 +35,5 @@ export function useFollowCamera(targetRef: React.RefObject<THREE.Object3D> | nul
     lookAtPosition.copy(worldTarget).add(lookAtOffset);
 
     camera.lookAt(lookAtPosition);
-  })
-};
+  });
+}

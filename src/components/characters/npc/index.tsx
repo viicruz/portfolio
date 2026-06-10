@@ -16,7 +16,7 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 import { useDialogStore } from "@/store";
 
 //* Hooks imports
-import { useNpcMovement, } from "@/hooks/use-npc-movement";
+import { useNpcMovement } from "@/hooks/use-npc-movement";
 import { useNpcAnimation } from "@/hooks/use-npc-animation";
 
 //* Utils imports
@@ -45,15 +45,14 @@ export function Npc(props: NpcProps) {
     movementControls.pause();
   }, [movementControls]);
 
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: <this useEffect does not need to re-run when npcAnimation or bodyRef changes>
   React.useEffect(() => {
     // compute the vector from the NPC to the player and make the NPC look in that direction
-const isTalkingToThisNpc = dialogStore.npcId === npcData.id;
-if (!playerPosition || !isTalkingToThisNpc) return;
+    const isTalkingToThisNpc = dialogStore.npcId === npcData.id;
+    if (!playerPosition || !isTalkingToThisNpc) return;
 
-const npcPosition = bodyRef.current?.translation();
-if (!npcPosition) return;
+    const npcPosition = bodyRef.current?.translation();
+    if (!npcPosition) return;
 
     const directionToPlayer = new THREE.Vector3(
       playerPosition[0] - npcPosition.x,
@@ -62,10 +61,9 @@ if (!npcPosition) return;
     );
 
     npcAnimation.lookAt(directionToPlayer);
-    
+
     // if player starts a dialog with the npc, pause the npc movement so it doesn't interfere with the dialog
     movementControls.pause();
-
   }, [dialogStore.isOnDialog]);
 
   const handleCollisionExit = React.useCallback(() => {

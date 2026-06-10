@@ -1,5 +1,7 @@
-import { KeyboardControls, type KeyboardControlsEntry } from "@react-three/drei";
-
+import {
+  KeyboardControls,
+  type KeyboardControlsEntry,
+} from "@react-three/drei";
 
 export enum Controls {
   Up = "up",
@@ -23,7 +25,7 @@ const keyboardControls: { name: Controls; keys: string | string[] }[] = [
 
 type KeyboardControlsProps = {
   children: React.ReactNode;
-}
+};
 
 export function CharacterControls(props: KeyboardControlsProps) {
   return (
@@ -33,5 +35,4 @@ export function CharacterControls(props: KeyboardControlsProps) {
       {props.children}
     </KeyboardControls>
   );
-
 }

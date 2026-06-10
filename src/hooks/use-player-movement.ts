@@ -7,7 +7,6 @@ import { usePageVisibility } from "@/hooks/use-page-visibility";
 import { useDialogStore } from "@/store";
 import { useGameMenuStore } from "@/store/game-menu";
 
-
 export type PlayerMovementOptions = {
   speed?: number;
 };
@@ -19,7 +18,9 @@ export function usePlayerMovement(
   const speed = options?.speed ?? 2.5;
   const [, getKeys] = useKeyboardControls<Controls>();
   const isActiveRef = useRef(true);
-  const setGlobalPlayerPosition = useDialogStore((state) => state.setGlobalPlayerPosition);
+  const setGlobalPlayerPosition = useDialogStore(
+    (state) => state.setGlobalPlayerPosition,
+  );
   const menuScreen = useGameMenuStore((state) => state.screen);
   const isOnDialog = useDialogStore((state) => state.isOnDialog);
 
@@ -83,6 +84,10 @@ export function usePlayerMovement(
     const currentY = body.linvel().y;
 
     body.setLinvel({ x, y: currentY, z }, true);
-    setGlobalPlayerPosition([body.translation().x, body.translation().y, body.translation().z]);
+    setGlobalPlayerPosition([
+      body.translation().x,
+      body.translation().y,
+      body.translation().z,
+    ]);
   });
 }

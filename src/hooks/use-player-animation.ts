@@ -29,7 +29,7 @@ export function usePlayerAnimation(bodyRef: RefObject<RapierRigidBody | null>) {
   );
   const menuScreen = useGameMenuStore((state) => state.screen);
   const isOnDialog = useDialogStore((state) => state.isOnDialog);
-  
+
   useFrame(() => {
     if (!bodyRef.current) return;
 

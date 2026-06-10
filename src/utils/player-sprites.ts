@@ -1,11 +1,14 @@
 type PlayerSpriteData = {
-    SPRITE_SHEET: string;
-    SPRITE_DATA: string;
+  SPRITE_SHEET: string;
+  SPRITE_DATA: string;
 };
 
 const PLAYER_GENDERS = ["boy", "girl"] as const;
 
-export const PLAYER_SPRITES: Record<Uppercase<typeof PLAYER_GENDERS[number]>, PlayerSpriteData> = {
+export const PLAYER_SPRITES: Record<
+  Uppercase<(typeof PLAYER_GENDERS)[number]>,
+  PlayerSpriteData
+> = {
   BOY: {
     SPRITE_SHEET: "/assets/sprites/player/main-char-transparent.png",
     SPRITE_DATA: "/assets/sprites/player/main-char.json",

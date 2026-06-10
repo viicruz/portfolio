@@ -4,6 +4,9 @@ import { useKeyboardControls } from "@react-three/drei";
 import type { RapierRigidBody } from "@react-three/rapier";
 import { Controls } from "@/contexts/controls";
 import { usePageVisibility } from "@/hooks/use-page-visibility";
+import { useDialogStore } from "@/store";
+import { useGameMenuStore } from "@/store/game-menu";
+
 
 export type PlayerMovementOptions = {
   speed?: number;
@@ -16,6 +19,9 @@ export function usePlayerMovement(
   const speed = options?.speed ?? 2.5;
   const [, getKeys] = useKeyboardControls<Controls>();
   const isActiveRef = useRef(true);
+  const setGlobalPlayerPosition = useDialogStore((state) => state.setGlobalPlayerPosition);
+  const menuScreen = useGameMenuStore((state) => state.screen);
+  const isOnDialog = useDialogStore((state) => state.isOnDialog);
 
   const zeroVelocity = () => {
     const body = ref.current;
@@ -54,6 +60,14 @@ export function usePlayerMovement(
       zeroVelocity();
       return;
     }
+
+    if (menuScreen !== "closed" || isOnDialog) {
+      const currentY = body.linvel().y;
+      body.setLinvel({ x: 0, y: currentY, z: 0 }, true);
+      zeroVelocity();
+      return;
+    }
+
     const key = getKeys();
 
     const sprint = key[Controls.Sprint] ? 2 : 1;
@@ -69,5 +83,6 @@ export function usePlayerMovement(
     const currentY = body.linvel().y;
 
     body.setLinvel({ x, y: currentY, z }, true);
+    setGlobalPlayerPosition([body.translation().x, body.translation().y, body.translation().z]);
   });
 }

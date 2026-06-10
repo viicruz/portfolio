@@ -11,6 +11,7 @@ import { useDialogStore } from '@/store';
 
 //*Components imports
 import PlayIcon from '@/components/icons/play-icon';
+import { GameMenu } from '@/components/game-menu';
 
 
 type SceneProps = {
@@ -23,6 +24,7 @@ export function Scene(props: SceneProps) {
   const line = `${dialogStore.npcId}.${dialogStore.dialogId}.${dialogStore.dialogLine}`;
   return (
     <div className='relative w-full h-svh'>
+      <GameMenu />
       <div className='absolute bottom-0 left-0 w-full z-10 flex justify-center pb-8'>
         {dialogStore.isOnDialog && (
           <div className='items-center justify-cente w-full max-w-5xl border py-1 px-2 rounded-2xl bg-black/50 pr-8 relative'>

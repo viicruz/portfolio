@@ -1,4 +1,19 @@
 {
+  "menu": {
+    "pokemon": "POKéMON",
+    "pack": "MOCHILA",
+    "player": "JOGADOR",
+    "save": "SALVAR",
+    "option": "OPÇÃO",
+    "exit": "SAIR",
+    "chikorita": "CHIKORITA",
+    "cyndaquil": "CYNDAQUIL",
+    "totodile": "TOTODILE",
+    "active": "ATIVO",
+    "choosePokemon": "Arraste para reordenar.",
+    "cancel": "CANCELAR",
+    "hp": "HP"
+  },
   "dialogs": {
     "npc1": {
       "dialog1": {

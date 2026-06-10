@@ -8,6 +8,7 @@ export enum Controls {
   Right = "right",
   Sprint = "sprint",
   Interact = "interact",
+  Menu = "menu",
 }
 
 const keyboardControls: { name: Controls; keys: string | string[] }[] = [
@@ -17,6 +18,7 @@ const keyboardControls: { name: Controls; keys: string | string[] }[] = [
   { name: Controls.Right, keys: ["KeyD", "ArrowRight"] },
   { name: Controls.Sprint, keys: ["ShiftLeft", "ShiftRight"] },
   { name: Controls.Interact, keys: ["Space"] },
+  { name: Controls.Menu, keys: ["KeyX"] },
 ];
 
 type KeyboardControlsProps = {

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useKeyboardControls } from "@react-three/drei";
 import { Controls } from "@/contexts/controls";
 import { useDialogStore } from "@/store";
+import { useGameMenuStore } from "@/store/game-menu";
 
 type DialogAdvanceOptions = {
   enabled?: boolean;
@@ -13,6 +14,7 @@ export function useDialogAdvance(options?: DialogAdvanceOptions) {
   const [subscribeKeys] = useKeyboardControls<Controls>();
   const dialogStore = useDialogStore();
   const dialogIntention = dialogStore.npcDialogIntention;
+  const menuScreen = useGameMenuStore((state) => state.screen);
 
   useEffect(() => {
     if (!enabled) return;
@@ -20,15 +22,13 @@ export function useDialogAdvance(options?: DialogAdvanceOptions) {
       (state) => state[Controls.Interact],
       (pressed) => {
         if (!pressed) return;
-        console.log("Apertou space")
+        if (menuScreen !== "closed") return;
         if(dialogIntention) {
-          console.log("caiu no if")
           dialogStore.startDialog(dialogIntention.npcId, dialogIntention.dialogId);
         }else{
-          console.log("caiu no else")
           advanceDialog();
         }
       },
     );
-  }, [subscribeKeys, advanceDialog, enabled, dialogIntention, dialogStore]);
+  }, [subscribeKeys, advanceDialog, enabled, dialogIntention, dialogStore, menuScreen]);
 }

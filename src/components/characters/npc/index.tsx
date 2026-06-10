@@ -1,87 +1,123 @@
-'use client';
-
+"use client";
 //* Libraries imports
-import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
-import { useCallback, useRef } from "react";
-import { useNpcMovement, type NpcBehavior } from "@/hooks/use-npc-movement";
+import React from "react";
+import {
+  RigidBody,
+  type RapierRigidBody,
+  CapsuleCollider,
+} from "@react-three/rapier";
+import * as THREE from "three";
 
 //* Components imports
-// import { SpriteAnimator } from "@/components/sprite-animator";
 import { InteractionSphere } from "@/components/interactionSphere";
+import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
 //* Store imports
 import { useDialogStore } from "@/store";
 
+//* Hooks imports
+import { useNpcMovement, } from "@/hooks/use-npc-movement";
+import { useNpcAnimation } from "@/hooks/use-npc-animation";
+
+//* Utils imports
+import { NPC, type NPCName } from "@/utils/npcs";
+
 type NpcProps = {
-  npcId: string;
-  dialogId: string;
-  behavior?: NpcBehavior;
-  position?: [number, number, number];
-}
+  name: NPCName;
+};
 
 export function Npc(props: NpcProps) {
   const dialogStore = useDialogStore();
-  const bodyRef = useRef<RapierRigidBody | null>(null);
-  const collisionCountRef = useRef(0);
+  const playerPosition = useDialogStore((state) => state.globalPlayerPosition);
+  const bodyRef = React.useRef<RapierRigidBody | null>(null);
+  const collisionCountRef = React.useRef(0);
+  const npcData = React.useMemo(() => NPC[props.name], [props.name]);
 
-  const setBodyRef = useCallback((b: RapierRigidBody | null) => {
+  const setBodyRef = React.useCallback((b: RapierRigidBody | null) => {
     bodyRef.current = b;
   }, []);
 
-  const movementControls = useNpcMovement(bodyRef, props.behavior);
+  const movementControls = useNpcMovement(bodyRef, npcData.behavior);
+  const npcAnimation = useNpcAnimation(bodyRef);
 
-  const handleCollisionEnter = useCallback(() => {
+  const handleCollisionEnter = React.useCallback(() => {
     collisionCountRef.current += 1;
     movementControls.pause();
   }, [movementControls]);
 
-  const handleCollisionExit = useCallback(() => {
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <this useEffect does not need to re-run when npcAnimation or bodyRef changes>
+  React.useEffect(() => {
+    // compute the vector from the NPC to the player and make the NPC look in that direction
+const isTalkingToThisNpc = dialogStore.npcId === npcData.id;
+if (!playerPosition || !isTalkingToThisNpc) return;
+
+const npcPosition = bodyRef.current?.translation();
+if (!npcPosition) return;
+
+    const directionToPlayer = new THREE.Vector3(
+      playerPosition[0] - npcPosition.x,
+      0,
+      playerPosition[2] - npcPosition.z,
+    );
+
+    npcAnimation.lookAt(directionToPlayer);
+    
+    // if player starts a dialog with the npc, pause the npc movement so it doesn't interfere with the dialog
+    movementControls.pause();
+
+  }, [dialogStore.isOnDialog]);
+
+  const handleCollisionExit = React.useCallback(() => {
     collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
 
     if (collisionCountRef.current === 0) {
       movementControls.resume();
+      npcAnimation.clearLookAt();
     }
-  }, [movementControls]);
+  }, [movementControls, npcAnimation]);
 
-  const handleStartDialog = () => {
+  const handleSetIntentionDialog = () => {
     dialogStore.setNpcDialogIntention({
-      npcId: props.npcId,
-      dialogId: props.dialogId,
+      npcId: npcData.id,
+      dialogId: npcData.dialogId,
     });
-  }
+  };
   const handlePlayerExit = () => {
     dialogStore.setDialogNull();
-  }
+    npcAnimation.clearLookAt();
+  };
+
   return (
     <RigidBody
       ref={setBodyRef}
       colliders="cuboid"
       mass={1}
-      type={props.behavior?.kind === "patrol" ? "kinematicPosition" : "fixed"}
-      position={props.position ?? [0, 0, 0]}
+      type={npcData.behavior.kind === "patrol" ? "kinematicPosition" : "fixed"}
+      position={npcData.position ?? [0, 0, 0]}
       onCollisionEnter={handleCollisionEnter}
       onCollisionExit={handleCollisionExit}
     >
-      <InteractionSphere asChild onPlayerEnter={handleStartDialog} onPlayerExit={handlePlayerExit} />
+      <InteractionSphere
+        asChild
+        onPlayerEnter={handleSetIntentionDialog}
+        onPlayerExit={handlePlayerExit}
+      />
 
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color="blue" />
+        <CapsuleCollider args={[0.5, 0.5]} />
       </mesh>
 
-      {/* <SpriteAnimator
-          scale={[4, 4, 4]}
-          position={[0, 0, 0]}
-          frameName="idle"
-          fps={24}
-          animationNames={["idle", "celebration"]}
-          autoPlay={true}
-          loop={true}
-          alphaTest={0.01}
-          textureImageURL={"/assets/boy-hash.png"}
-          textureDataURL={"/assets/boy-hash.json"}
-        /> */}
-
+      <SpritePlaneAnimator
+        texturePath={npcData.sprite.sheet}
+        spriteDataUrl={npcData.sprite.data}
+        animationName={npcAnimation.animationName}
+        fps={6}
+        scale={[1, 1, 1]}
+        position={[0, 0, 0]}
+        alphaTest={0.01}
+        brightness={1}
+      />
     </RigidBody>
   );
 }

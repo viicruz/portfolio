@@ -5,49 +5,91 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import type { RapierRigidBody } from "@react-three/rapier";
 
+//* Components imports
+import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
+
+//* Utils imports
+import { POKEMON_SPRITES, type PokemonKey } from "@/utils/pokemon-sprites";
+
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
+const HOP_ANIMATION_SPEED = 16;
+const HOP_ANIMATION_HEIGHT = 0.03;
+
+enum FOLLOWER_ANIMATIONS {
+  WALK_UP = "walk_up",
+  WALK_DOWN = "walk_down",
+  WALK_LEFT = "walk_left",
+  WALK_RIGHT = "walk_right",
+}
+
+function getAnimationNameFromDelta(delta: THREE.Vector3) {
+  const absX = Math.abs(delta.x);
+  const absZ = Math.abs(delta.z);
+
+  if (absX >= absZ) {
+    return delta.x >= 0
+      ? FOLLOWER_ANIMATIONS.WALK_RIGHT
+      : FOLLOWER_ANIMATIONS.WALK_LEFT;
+  }
+
+  return delta.z >= 0
+    ? FOLLOWER_ANIMATIONS.WALK_DOWN
+    : FOLLOWER_ANIMATIONS.WALK_UP;
+}
 
 type FollowerPkmProps = {
   playerBodyRef: React.RefObject<RapierRigidBody | null>;
+  pokemonKey: PokemonKey;
   delayFrames?: number;
   followStrength?: number;
   minDistance?: number;
-  color?: string;
-  size?: number;
+  scale: [number, number, number];
 };
 
 export function FollowerPkm({
   playerBodyRef,
+  pokemonKey,
   delayFrames = 36,
   followStrength = 6,
   minDistance = 1.25,
-  color = "crimson",
-  size = 0.5,
+  scale,
 }: FollowerPkmProps) {
-  const meshRef = React.useRef<THREE.Mesh>(null);
+  const meshRef = React.useRef<THREE.Group>(null);
   const trailRef = React.useRef<THREE.Vector3[]>([]);
   const playerPositionRef = React.useRef(new THREE.Vector3());
   const followDirectionRef = React.useRef(new THREE.Vector3());
   const desiredDirectionRef = React.useRef(new THREE.Vector3());
 
   const targetPositionRef = React.useRef(new THREE.Vector3());
+  const previousPositionRef = React.useRef(new THREE.Vector3());
+  const [animationFps, setAnimationFps] = React.useState(2);
+  const animationNameRef = React.useRef<FOLLOWER_ANIMATIONS>(
+    FOLLOWER_ANIMATIONS.WALK_DOWN,
+  );
+  const [, forceRender] = React.useState(0);
 
   const stopTargetRef = React.useRef(new THREE.Vector3());
   const stopStartPositionRef = React.useRef(new THREE.Vector3());
 
   const stopElapsedRef = React.useRef(0);
   const stopDurationRef = React.useRef(0);
+  const hopElapsedRef = React.useRef(0);
 
   const wasMovingRef = React.useRef(false);
 
+  const pokemonSprites = POKEMON_SPRITES[pokemonKey];
+
   const groundTopY = -0.75;
-  const groundY = groundTopY + size / 2;
+  const groundY = groundTopY + scale[1] / 2;
 
   useFrame((_, delta) => {
     const playerBody = playerBodyRef.current;
     const mesh = meshRef.current;
 
     if (!playerBody || !mesh) return;
+
+    previousPositionRef.current.copy(mesh.position);
+    hopElapsedRef.current += delta;
 
     const playerPos = playerBody.translation();
 
@@ -66,6 +108,10 @@ export function FollowerPkm({
       playerVelocity.z,
     );
 
+    const nextAnimationFps = horizontalSpeed > 3.5 ? 6 : 3.2;
+    if (animationFps !== nextAnimationFps) {
+      setAnimationFps(nextAnimationFps);
+    }
     const isMoving = horizontalSpeed > 0.01;
 
     //when the player stops, we want the pkm to smoothly come to a stop at the last position, rather than snapping to the player or continuing to follow the trail
@@ -127,7 +173,21 @@ export function FollowerPkm({
         progress,
       );
 
-      mesh.position.y = groundY;
+      mesh.position.y = groundY + Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) * HOP_ANIMATION_HEIGHT;
+
+      const movementDelta = mesh.position
+        .clone()
+        .sub(previousPositionRef.current);
+      movementDelta.y = 0;
+
+      if (movementDelta.lengthSq() > 0.000001) {
+        const nextAnimationName = getAnimationNameFromDelta(movementDelta);
+
+        if (animationNameRef.current !== nextAnimationName) {
+          animationNameRef.current = nextAnimationName;
+          forceRender((value) => value + 1);
+        }
+      }
 
       return;
     }
@@ -194,19 +254,45 @@ export function FollowerPkm({
       smoothing,
     );
 
-    mesh.position.y = groundY;
+    mesh.position.y = groundY + Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) * HOP_ANIMATION_HEIGHT;
+
+    const movementDelta = mesh.position
+      .clone()
+      .sub(previousPositionRef.current);
+    movementDelta.y = 0;
+
+    if (movementDelta.lengthSq() > 0.000001) {
+      const nextAnimationName = getAnimationNameFromDelta(movementDelta);
+
+      if (animationNameRef.current !== nextAnimationName) {
+        animationNameRef.current = nextAnimationName;
+        forceRender((value) => value + 1);
+      }
+    }
   });
 
   return (
-    <mesh
+    <group
       ref={meshRef}
       castShadow
       receiveShadow
       position={[0, groundY, 0]}
     >
-      <boxGeometry args={[size, size, size]} />
-
-      <meshStandardMaterial color={color} />
-    </mesh>
+      <React.Suspense fallback={null}>
+        <SpritePlaneAnimator
+          key={pokemonKey}
+          texturePath={pokemonSprites.SPRITE_SHEET}
+          spriteDataUrl={pokemonSprites.SPRITE_DATA}
+          animationName={animationNameRef.current}
+          // animationName="walk_right"
+          fps={animationFps}
+          // fps={1}
+          scale={scale}
+          position={[0, 0, 0]}
+          alphaTest={0.01}
+          brightness={1}
+        />
+      </React.Suspense>
+    </group>
   );
 }

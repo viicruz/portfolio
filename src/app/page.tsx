@@ -15,6 +15,9 @@ import * as THREE from "three";
 //* Context imports
 import { CharacterControls } from "@/contexts/controls";
 
+//* Store imports
+import { useGameMenuStore } from "@/store/game-menu";
+
 //* Components imports
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
@@ -44,6 +47,8 @@ function DirectionalLightWithHelper() {
 export default function Home() {
   const hardwareInfo = useHardwareThreeSupport();
   const playerBodyRef = useRef<RapierRigidBody | null>(null);
+  const partyOrder = useGameMenuStore((state) => state.partyOrder);
+  const leadPokemon = partyOrder[0];
 
   const effectToggles = useMemo(() => {
     const effectiveTier =
@@ -102,30 +107,17 @@ export default function Home() {
         </mesh>
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
-          <FollowerPkm playerBodyRef={playerBodyRef} />
+          <FollowerPkm
+            key={leadPokemon}
+            scale={[1, 0.8, 1]}
+            playerBodyRef={playerBodyRef}
+            pokemonKey={leadPokemon}
+          />
         </CharacterControls>
-        <Npc npcId="npc1" dialogId="dialog1" />
-
+        {/* <Npc npcId="npc1" dialogId="dialog1" /> */}
+        <Npc name="PROFESSOR_ELM" />
         {/* Example NPC with patrol behavior (local square route) */}
-        <Npc
-          npcId="npc2"
-          dialogId="dialog1"
-          position={[8, 0, 0]}
-          behavior={{
-            kind: "patrol",
-            route: {
-              localSpace: true,
-              loop: true,
-              startIndex: 0,
-              points: [
-                { position: [0, 0, 0], waitMs: 500 },
-                { position: [0, 0, 3], waitMs: 500 },
-                { position: [2, 0, 3], waitMs: 500 },
-                { position: [2, 0, 0], waitMs: 500 },
-              ],
-            },
-          }}
-        />
+        <Npc name="FATGUY" />
 
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />

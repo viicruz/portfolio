@@ -1,8 +1,15 @@
+'use client';
+
+//* Libaries imports
 import { useState, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
 import type { RapierRigidBody } from "@react-three/rapier";
+
+//* Context imports
 import { Controls } from "@/contexts/controls";
+
+//* Store imports
 import { useGameMenuStore } from "@/store/game-menu";
 import { useDialogStore } from "@/store";
 
@@ -29,7 +36,7 @@ export function usePlayerAnimation(bodyRef: RefObject<RapierRigidBody | null>) {
   );
   const menuScreen = useGameMenuStore((state) => state.screen);
   const isOnDialog = useDialogStore((state) => state.isOnDialog);
-  
+
   useFrame(() => {
     if (!bodyRef.current) return;
 

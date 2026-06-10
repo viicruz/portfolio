@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { create } from "zustand";
 
@@ -37,7 +37,7 @@ type DialogStore = {
   canDialogAdvance: boolean;
   translationObject: Translation;
   isLastDialogLine: boolean;
-  npcDialogIntention: {npcId: string, dialogId: string} | null;
+  npcDialogIntention: { npcId: string; dialogId: string } | null;
   globalPlayerPosition: [number, number, number] | null;
 
   setNpcId: (npcId: string | null) => void;
@@ -46,7 +46,9 @@ type DialogStore = {
   setIsOnDialog: (isOnDialog: boolean) => void;
   advanceDialog: () => void;
   setCanDialogAdvance: (canDialogAdvance: boolean) => void;
-  setNpcDialogIntention: (npcDialogIntention: {npcId: string, dialogId: string} | null) => void;
+  setNpcDialogIntention: (
+    npcDialogIntention: { npcId: string; dialogId: string } | null,
+  ) => void;
   startDialog: (npcId: string, dialogId: string) => void;
   setDialogNull: () => void;
   setGlobalPlayerPosition: (position: [number, number, number] | null) => void;
@@ -64,9 +66,10 @@ export const useDialogStore = create<DialogStore>((set) => ({
   globalPlayerPosition: null,
   setCanDialogAdvance: (canDialogAdvance) => set({ canDialogAdvance }),
   setNpcDialogIntention: (npcDialogIntention) => set({ npcDialogIntention }),
-  setGlobalPlayerPosition: (position) => set({ globalPlayerPosition: position }),
+  setGlobalPlayerPosition: (position) =>
+    set({ globalPlayerPosition: position }),
   startDialog: (npcId, dialogId) => {
-    if(!npcId || !dialogId) return;
+    if (!npcId || !dialogId) return;
     set({
       npcId,
       dialogId,
@@ -121,7 +124,10 @@ export const useDialogStore = create<DialogStore>((set) => ({
           isOnDialog: false,
           canDialogAdvance: true,
           isLastDialogLine: false,
-          npcDialogIntention: {npcId: actualNpcId as string, dialogId: state.dialogId as string}
+          npcDialogIntention: {
+            npcId: actualNpcId as string,
+            dialogId: state.dialogId as string,
+          },
         };
       }
     });
@@ -134,7 +140,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
       isOnDialog: false,
       canDialogAdvance: false,
       isLastDialogLine: false,
-      npcDialogIntention: null
+      npcDialogIntention: null,
     });
-  }
+  },
 }));

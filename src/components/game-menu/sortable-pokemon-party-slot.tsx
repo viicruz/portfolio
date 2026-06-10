@@ -24,7 +24,7 @@ export function SortablePokemonPartySlot(props: SortablePokemonPartySlotProps) {
   });
 
   const isPair = props.slotIndex % 2 === 0;
-  const marginTop = !props.isLead ? isPair ? "-mt-4" : "mt-4" : undefined;
+  const marginTop = !props.isLead ? (isPair ? "-mt-4" : "mt-4") : undefined;
 
   return (
     <div

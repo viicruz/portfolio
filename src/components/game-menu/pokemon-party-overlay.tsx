@@ -146,8 +146,8 @@ export function PokemonPartyOverlay() {
           <button
             id={cancelButtonId}
             type="button"
-            className="cursor-pointer rounded bg-sky-600 px-6 py-3 font-pixel text-[10px] text-white"
-            onClick={() => gameMenuStore.goBack()}
+            className="cursor-pointer rounded bg-sky-600 px-6 py-3 font-pixel text-[0.625rem] text-white"
+            onClick={gameMenuStore.goBack}
           >
             {t("cancel")}
           </button>

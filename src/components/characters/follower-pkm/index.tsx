@@ -9,7 +9,7 @@ import type { RapierRigidBody } from "@react-three/rapier";
 import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
 //* Utils imports
-import { POKEMON_SPRITES } from "@/utils/pokemon-sprites";
+import { POKEMON_SPRITES, type PokemonKey } from "@/utils/pokemon-sprites";
 
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
 const HOP_ANIMATION_SPEED = 16;
@@ -39,6 +39,7 @@ function getAnimationNameFromDelta(delta: THREE.Vector3) {
 
 type FollowerPkmProps = {
   playerBodyRef: React.RefObject<RapierRigidBody | null>;
+  pokemonKey: PokemonKey;
   delayFrames?: number;
   followStrength?: number;
   minDistance?: number;
@@ -47,6 +48,7 @@ type FollowerPkmProps = {
 
 export function FollowerPkm({
   playerBodyRef,
+  pokemonKey,
   delayFrames = 36,
   followStrength = 6,
   minDistance = 1.25,
@@ -74,6 +76,8 @@ export function FollowerPkm({
   const hopElapsedRef = React.useRef(0);
 
   const wasMovingRef = React.useRef(false);
+
+  const pokemonSprites = POKEMON_SPRITES[pokemonKey];
 
   const groundTopY = -0.75;
   const groundY = groundTopY + scale[1] / 2;
@@ -276,8 +280,9 @@ export function FollowerPkm({
     >
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath={POKEMON_SPRITES.CYNDAQUIL.SPRITE_SHEET}
-          spriteDataUrl={POKEMON_SPRITES.CYNDAQUIL.SPRITE_DATA}
+          key={pokemonKey}
+          texturePath={pokemonSprites.SPRITE_SHEET}
+          spriteDataUrl={pokemonSprites.SPRITE_DATA}
           animationName={animationNameRef.current}
           // animationName="walk_right"
           fps={animationFps}

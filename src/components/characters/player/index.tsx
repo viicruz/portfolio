@@ -17,6 +17,7 @@ import { PLAYER_SPRITES } from "@/utils/player-sprites";
 //* Hooks imports
 import { useFollowCamera } from "@/hooks/use-follow-camera";
 import { useDialogAdvance } from "@/hooks/use-dialog-advance";
+import { useGameMenuControls } from "@/hooks/use-game-menu-controls";
 import { usePlayerMovement } from "@/hooks/use-player-movement";
 import {
   usePlayerAnimation,
@@ -118,6 +119,7 @@ export function Player({ playerBodyRef }: PlayerProps) {
   });
 
   useDialogAdvance();
+  useGameMenuControls();
   usePlayerMovement(playerBodyRef, { speed: SPEED });
 
   return (

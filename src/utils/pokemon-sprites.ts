@@ -1,13 +1,17 @@
 type PokemonSpriteData = {
-    SPRITE_SHEET: string;
-    SPRITE_DATA: string;
+  SPRITE_SHEET: string;
+  SPRITE_DATA: string;
 };
 
 const POKEMONS = ["chikorita", "cyndaquil", "totodile"] as const;
 
-export type PokemonKey = Uppercase<typeof POKEMONS[number]>;
+export type PokemonKey = Uppercase<(typeof POKEMONS)[number]>;
 
-export const POKEMON_KEYS: PokemonKey[] = ["CHIKORITA", "CYNDAQUIL", "TOTODILE"];
+export const POKEMON_KEYS: PokemonKey[] = [
+  "CHIKORITA",
+  "CYNDAQUIL",
+  "TOTODILE",
+];
 
 export const POKEMON_SPRITES: Record<PokemonKey, PokemonSpriteData> = {
   CHIKORITA: {
@@ -30,7 +34,11 @@ export const POKEMON_PORTRAITS: Record<PokemonKey, string> = {
   TOTODILE: "/assets/sprites/pkm/totodile.gif",
 };
 
-export const POKEMON_PARTY_STATS: Record<PokemonKey, { hp: number, gender: "male" | "female" }> = {
+type PokemonStats = {
+  hp: number;
+  gender: "male" | "female";
+};
+export const POKEMON_PARTY_STATS: Record<PokemonKey, PokemonStats> = {
   CHIKORITA: { hp: 21, gender: "female" },
   CYNDAQUIL: { hp: 20, gender: "male" },
   TOTODILE: { hp: 20, gender: "male" },

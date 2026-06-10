@@ -2,6 +2,7 @@
 
 //* Libraries imports
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 //* Components imports
 import { PokemonPartyOverlay } from "@/components/game-menu/pokemon-party-overlay";
@@ -53,9 +54,11 @@ export function GameMenu() {
                   key={itemKey}
                   id={`game-menu-main-${itemKey}`}
                   type="button"
-                  className={`flex w-full items-center gap-2 rounded py-1 px-1 text-left ${
-                    isEnabled ? "cursor-pointer" : "cursor-default opacity-40"
-                  } ${isSelected ? "bg-blue-100" : ""}`}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded py-1 px-1 text-left",
+                    isEnabled ? "cursor-pointer" : "cursor-default opacity-40",
+                    isSelected ? "bg-blue-100" : ""
+                  )}
                   onClick={() => handleMainMenuClick(index)}
                 >
                   <span className="w-3 shrink-0">

@@ -2,6 +2,7 @@
 
 //* Utils imports
 import { POKEMON_PORTRAITS, type PokemonKey } from "@/utils/pokemon-sprites";
+import { cn } from "@/lib/utils";
 
 type PokemonPortraitProps = {
   pokemonKey: PokemonKey;
@@ -17,7 +18,7 @@ export function PokemonPortrait(props: PokemonPortraitProps) {
     <img
       src={portraitSrc}
       alt={props.pokemonKey}
-      className={`${className} object-contain [image-rendering:pixelated]`}
+      className={cn("object-contain [image-rendering:pixelated]", className)}
       draggable={false}
     />
   );

@@ -1,9 +1,19 @@
+'use client';
+
+//* Libraries imports
+
 import { useRef, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
 import type { RapierRigidBody } from "@react-three/rapier";
+
+//* Context imports
 import { Controls } from "@/contexts/controls";
+
+//* Hooks imports
 import { usePageVisibility } from "@/hooks/use-page-visibility";
+
+//* Store imports
 import { useDialogStore } from "@/store";
 import { useGameMenuStore } from "@/store/game-menu";
 

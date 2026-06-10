@@ -1,3 +1,6 @@
+'use client';
+
+//* Libraries imports
 import { useEffect, useState } from "react";
 
 type GpuTier = "low" | "medium" | "high" | "unknown";

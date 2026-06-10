@@ -1,8 +1,15 @@
+'use client';
+
+//* Libaries imports
 import { useState, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
 import type { RapierRigidBody } from "@react-three/rapier";
+
+//* Context imports
 import { Controls } from "@/contexts/controls";
+
+//* Store imports
 import { useGameMenuStore } from "@/store/game-menu";
 import { useDialogStore } from "@/store";
 

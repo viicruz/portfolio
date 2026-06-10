@@ -1,6 +1,13 @@
+'use client';
+
+//* Libraries imports
 import { useEffect } from "react";
 import { useKeyboardControls } from "@react-three/drei";
+
+//* Context imports
 import { Controls } from "@/contexts/controls";
+
+//* Store imports
 import { useDialogStore } from "@/store";
 import { useGameMenuStore } from "@/store/game-menu";
 

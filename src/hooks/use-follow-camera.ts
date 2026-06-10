@@ -1,7 +1,9 @@
+'use client';
+
 //* Libraries imports
+import type React from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import type React from "react";
 
 type FollowCameraOptions = {
   offset?: THREE.Vector3;

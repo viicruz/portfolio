@@ -7,6 +7,7 @@ import { usePageVisibility } from "@/hooks/use-page-visibility";
 import { useDialogStore } from "@/store";
 import { useGameMenuStore } from "@/store/game-menu";
 
+
 export type PlayerMovementOptions = {
   speed?: number;
 };
@@ -20,6 +21,7 @@ export function usePlayerMovement(
   const isActiveRef = useRef(true);
   const setGlobalPlayerPosition = useDialogStore((state) => state.setGlobalPlayerPosition);
   const menuScreen = useGameMenuStore((state) => state.screen);
+  const isOnDialog = useDialogStore((state) => state.isOnDialog);
 
   const zeroVelocity = () => {
     const body = ref.current;
@@ -59,7 +61,7 @@ export function usePlayerMovement(
       return;
     }
 
-    if (menuScreen !== "closed") {
+    if (menuScreen !== "closed" || isOnDialog) {
       const currentY = body.linvel().y;
       body.setLinvel({ x: 0, y: currentY, z: 0 }, true);
       zeroVelocity();

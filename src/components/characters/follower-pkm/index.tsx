@@ -9,7 +9,7 @@ import type { RapierRigidBody } from "@react-three/rapier";
 import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
 //* Utils imports
-import { POKEMON_SPRITES } from "@/utils/pokemon-sprites";
+import { POKEMON_SPRITES, type PokemonKey } from "@/utils/pokemon-sprites";
 
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
 const HOP_ANIMATION_SPEED = 16;
@@ -39,6 +39,7 @@ function getAnimationNameFromDelta(delta: THREE.Vector3) {
 
 type FollowerPkmProps = {
   playerBodyRef: React.RefObject<RapierRigidBody | null>;
+  pokemonKey: PokemonKey;
   delayFrames?: number;
   followStrength?: number;
   minDistance?: number;
@@ -47,6 +48,7 @@ type FollowerPkmProps = {
 
 export function FollowerPkm({
   playerBodyRef,
+  pokemonKey,
   delayFrames = 36,
   followStrength = 6,
   minDistance = 1.25,
@@ -75,6 +77,8 @@ export function FollowerPkm({
 
   const wasMovingRef = React.useRef(false);
 
+  const pokemonSprites = POKEMON_SPRITES[pokemonKey];
+
   const groundTopY = -0.75;
   const groundY = groundTopY + scale[1] / 2;
 
@@ -89,20 +93,13 @@ export function FollowerPkm({
 
     const playerPos = playerBody.translation();
 
-    playerPositionRef.current.set(
-      playerPos.x,
-      playerPos.y,
-      playerPos.z,
-    );
+    playerPositionRef.current.set(playerPos.x, playerPos.y, playerPos.z);
 
-    //Player Movement   
+    //Player Movement
 
     const playerVelocity = playerBody.linvel();
 
-    const horizontalSpeed = Math.hypot(
-      playerVelocity.x,
-      playerVelocity.z,
-    );
+    const horizontalSpeed = Math.hypot(playerVelocity.x, playerVelocity.z);
 
     const nextAnimationFps = horizontalSpeed > 3.5 ? 6 : 3.2;
     if (animationFps !== nextAnimationFps) {
@@ -129,20 +126,16 @@ export function FollowerPkm({
 
       stopTargetRef.current
         .copy(playerPositionRef.current)
-        .addScaledVector(
-          followDirectionRef.current,
-          minDistance,
-        );
+        .addScaledVector(followDirectionRef.current, minDistance);
 
       stopTargetRef.current.y = groundY;
 
       stopStartPositionRef.current.copy(mesh.position);
       stopStartPositionRef.current.y = groundY;
 
-      const stopDistance =
-        stopStartPositionRef.current.distanceTo(
-          stopTargetRef.current,
-        );
+      const stopDistance = stopStartPositionRef.current.distanceTo(
+        stopTargetRef.current,
+      );
 
       stopElapsedRef.current = 0;
 
@@ -169,7 +162,10 @@ export function FollowerPkm({
         progress,
       );
 
-      mesh.position.y = groundY + Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) * HOP_ANIMATION_HEIGHT;
+      mesh.position.y =
+        groundY +
+        Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) *
+          HOP_ANIMATION_HEIGHT;
 
       const movementDelta = mesh.position
         .clone()
@@ -188,11 +184,10 @@ export function FollowerPkm({
       return;
     }
 
-
     //trail logic: we push the current player position to the trail, and if the trail is longer than the delay, we remove the oldest position. The pkm will then follow the oldest position in the trail, creating a delayed following effect
     const nextTrailPoint =
       trailRef.current.length >= delayFrames
-        ? trailRef.current.shift() ?? new THREE.Vector3()
+        ? (trailRef.current.shift() ?? new THREE.Vector3())
         : new THREE.Vector3();
 
     nextTrailPoint.copy(playerPositionRef.current);
@@ -203,14 +198,11 @@ export function FollowerPkm({
     if (!delayedPos) return;
 
     //desired direction is the direction from the current player position to the delayed player position (i.e., backwards along the player trail). We ignore the y component to keep the pkm on the ground plane
-    desiredDirectionRef.current
-      .copy(delayedPos)
-      .sub(playerPositionRef.current);
+    desiredDirectionRef.current.copy(delayedPos).sub(playerPositionRef.current);
 
     desiredDirectionRef.current.y = 0;
 
-    const rawDistance =
-      desiredDirectionRef.current.length();
+    const rawDistance = desiredDirectionRef.current.length();
 
     if (rawDistance < 0.0001) return;
 
@@ -224,33 +216,24 @@ export function FollowerPkm({
 
     followDirectionRef.current.normalize();
 
-    const desiredDistance = Math.max(
-      rawDistance,
-      minDistance,
-    );
-
+    const desiredDistance = Math.max(rawDistance, minDistance);
 
     // target position is the position the pkm should move towards, which is behind the player in the direction of followDirectionRef, at a distance of desiredDistance
     targetPositionRef.current
       .copy(playerPositionRef.current)
-      .addScaledVector(
-        followDirectionRef.current,
-        desiredDistance,
-      );
+      .addScaledVector(followDirectionRef.current, desiredDistance);
 
     targetPositionRef.current.y = groundY;
 
-
     //logic to smoothly move the pkm towards the target position. We use an exponential smoothing function to create a smooth following effect, where followStrength controls how quickly the pkm moves towards the target position. The pkm's position is then updated by linearly interpolating between its current position and the target position based on the calculated smoothing factor
-    const smoothing =
-      1 - Math.exp(-followStrength * delta);
+    const smoothing = 1 - Math.exp(-followStrength * delta);
 
-    mesh.position.lerp(
-      targetPositionRef.current,
-      smoothing,
-    );
+    mesh.position.lerp(targetPositionRef.current, smoothing);
 
-    mesh.position.y = groundY + Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) * HOP_ANIMATION_HEIGHT;
+    mesh.position.y =
+      groundY +
+      Math.sin(hopElapsedRef.current * HOP_ANIMATION_SPEED) *
+        HOP_ANIMATION_HEIGHT;
 
     const movementDelta = mesh.position
       .clone()
@@ -268,16 +251,12 @@ export function FollowerPkm({
   });
 
   return (
-    <group
-      ref={meshRef}
-      castShadow
-      receiveShadow
-      position={[0, groundY, 0]}
-    >
+    <group ref={meshRef} castShadow receiveShadow position={[0, groundY, 0]}>
       <React.Suspense fallback={null}>
         <SpritePlaneAnimator
-          texturePath={POKEMON_SPRITES.CYNDAQUIL.SPRITE_SHEET}
-          spriteDataUrl={POKEMON_SPRITES.CYNDAQUIL.SPRITE_DATA}
+          key={pokemonKey}
+          texturePath={pokemonSprites.SPRITE_SHEET}
+          spriteDataUrl={pokemonSprites.SPRITE_DATA}
           animationName={animationNameRef.current}
           // animationName="walk_right"
           fps={animationFps}

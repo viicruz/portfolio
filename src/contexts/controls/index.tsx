@@ -1,5 +1,7 @@
-import { KeyboardControls, type KeyboardControlsEntry } from "@react-three/drei";
-
+import {
+  KeyboardControls,
+  type KeyboardControlsEntry,
+} from "@react-three/drei";
 
 export enum Controls {
   Up = "up",
@@ -8,6 +10,7 @@ export enum Controls {
   Right = "right",
   Sprint = "sprint",
   Interact = "interact",
+  Menu = "menu",
 }
 
 const keyboardControls: { name: Controls; keys: string | string[] }[] = [
@@ -17,11 +20,12 @@ const keyboardControls: { name: Controls; keys: string | string[] }[] = [
   { name: Controls.Right, keys: ["KeyD", "ArrowRight"] },
   { name: Controls.Sprint, keys: ["ShiftLeft", "ShiftRight"] },
   { name: Controls.Interact, keys: ["Space"] },
+  { name: Controls.Menu, keys: ["KeyX"] },
 ];
 
 type KeyboardControlsProps = {
   children: React.ReactNode;
-}
+};
 
 export function CharacterControls(props: KeyboardControlsProps) {
   return (
@@ -31,5 +35,4 @@ export function CharacterControls(props: KeyboardControlsProps) {
       {props.children}
     </KeyboardControls>
   );
-
 }

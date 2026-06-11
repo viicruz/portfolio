@@ -1,0 +1,44 @@
+diff --git a/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js b/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js
+index f3834fa..257af5d 100644
+--- a/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js
++++ b/node_modules/@react-three/fiber/dist/events-583399dd.cjs.prod.js
+@@ -7597,7 +7597,7 @@ function createRoot(canvas) {
+         const oldType = gl.shadowMap.type;
+         gl.shadowMap.enabled = !!shadows;
+         if (is.boo(shadows)) {
+-          gl.shadowMap.type = THREE__namespace.PCFSoftShadowMap;
++          gl.shadowMap.type = THREE__namespace.PCFShadowMap;
+         } else if (is.str(shadows)) {
+           var _types$shadows;
+           const types = {
+@@ -7606,7 +7606,7 @@ function createRoot(canvas) {
+             soft: THREE__namespace.PCFSoftShadowMap,
+             variance: THREE__namespace.VSMShadowMap
+           };
+-          gl.shadowMap.type = (_types$shadows = types[shadows]) != null ? _types$shadows : THREE__namespace.PCFSoftShadowMap;
++          gl.shadowMap.type = (_types$shadows = types[shadows]) != null ? _types$shadows : THREE__namespace.PCFShadowMap;
+         } else if (is.obj(shadows)) {
+           Object.assign(gl.shadowMap, shadows);
+         }
+diff --git a/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js b/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js
+index 76f308c..c71cd8a 100644
+--- a/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js
++++ b/node_modules/@react-three/fiber/dist/events-b389eeca.esm.js
+@@ -15769,7 +15769,7 @@ function createRoot(canvas) {
+         const oldType = gl.shadowMap.type;
+         gl.shadowMap.enabled = !!shadows;
+         if (is.boo(shadows)) {
+-          gl.shadowMap.type = THREE.PCFSoftShadowMap;
++          gl.shadowMap.type = THREE.PCFShadowMap;
+         } else if (is.str(shadows)) {
+           var _types$shadows;
+           const types = {
+@@ -15778,7 +15778,7 @@ function createRoot(canvas) {
+             soft: THREE.PCFSoftShadowMap,
+             variance: THREE.VSMShadowMap
+           };
+-          gl.shadowMap.type = (_types$shadows = types[shadows]) != null ? _types$shadows : THREE.PCFSoftShadowMap;
++          gl.shadowMap.type = (_types$shadows = types[shadows]) != null ? _types$shadows : THREE.PCFShadowMap;
+         } else if (is.obj(shadows)) {
+           Object.assign(gl.shadowMap, shadows);
+         }

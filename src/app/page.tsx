@@ -15,6 +15,9 @@ import * as THREE from "three";
 //* Context imports
 import { CharacterControls } from "@/contexts/controls";
 
+//* Store imports
+import { useGameMenuStore } from "@/store/game-menu";
+
 //* Components imports
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
@@ -50,6 +53,8 @@ function DirectionalLightWithHelper() {
 export default function Home() {
   const hardwareInfo = useHardwareThreeSupport();
   const playerBodyRef = useRef<RapierRigidBody | null>(null);
+  const partyOrder = useGameMenuStore((state) => state.partyOrder);
+  const leadPokemon = partyOrder[0];
 
   const effectToggles = useMemo(() => {
     const effectiveTier =
@@ -93,7 +98,11 @@ export default function Home() {
 
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
-          <FollowerPkm scale={[1, 0.8, 1]} playerBodyRef={playerBodyRef} />
+          <FollowerPkm
+            scale={[1, 0.8, 1]}
+            playerBodyRef={playerBodyRef}
+            pokemonKey={leadPokemon}
+          />
         </CharacterControls>
         {/* <Npc npcId="npc1" dialogId="dialog1" /> */}
         <Npc name="PROFESSOR_ELM" />

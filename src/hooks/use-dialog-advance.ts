@@ -1,6 +1,13 @@
+'use client';
+
+//* Libraries imports
 import { useEffect } from "react";
 import { useKeyboardControls } from "@react-three/drei";
+
+//* Context imports
 import { Controls } from "@/contexts/controls";
+
+//* Store imports
 import { useDialogStore } from "@/store";
 import { useGameMenuStore } from "@/store/game-menu";
 
@@ -23,12 +30,22 @@ export function useDialogAdvance(options?: DialogAdvanceOptions) {
       (pressed) => {
         if (!pressed) return;
         if (menuScreen !== "closed") return;
-        if(dialogIntention) {
-          dialogStore.startDialog(dialogIntention.npcId, dialogIntention.dialogId);
-        }else{
+        if (dialogIntention) {
+          dialogStore.startDialog(
+            dialogIntention.npcId,
+            dialogIntention.dialogId,
+          );
+        } else {
           advanceDialog();
         }
       },
     );
-  }, [subscribeKeys, advanceDialog, enabled, dialogIntention, dialogStore, menuScreen]);
+  }, [
+    subscribeKeys,
+    advanceDialog,
+    enabled,
+    dialogIntention,
+    dialogStore,
+    menuScreen,
+  ]);
 }

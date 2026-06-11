@@ -1,3 +1,6 @@
+'use client';
+
+//* Libraries imports
 import { useEffect, useState } from "react";
 
 type GpuTier = "low" | "medium" | "high" | "unknown";
@@ -25,7 +28,9 @@ type HardwareInfo = {
   reason: string[];
 };
 
-function getDebugRendererInfo(gl: WebGLRenderingContext | WebGL2RenderingContext) {
+function getDebugRendererInfo(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+) {
   const ext = gl.getExtension("WEBGL_debug_renderer_info");
   if (!ext) {
     return {
@@ -202,9 +207,8 @@ export function useHardwareThreeSupport() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const reducedMotion = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)",
-    )?.matches ?? false;
+    const reducedMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 
     const canvas = document.createElement("canvas");
 
@@ -236,8 +240,9 @@ export function useHardwareThreeSupport() {
         maxFragmentUniformVectors: null,
         maxVaryingVectors: null,
         antialias: null,
-        deviceMemory: (navigator as Navigator & { deviceMemory?: number })
-          .deviceMemory ?? null,
+        deviceMemory:
+          (navigator as Navigator & { deviceMemory?: number }).deviceMemory ??
+          null,
         hardwareConcurrency: navigator.hardwareConcurrency ?? null,
         reducedMotion,
         score: 0,
@@ -270,8 +275,9 @@ export function useHardwareThreeSupport() {
       ) as number,
       maxVaryingVectors: gl.getParameter(gl.MAX_VARYING_VECTORS) as number,
       antialias: gl.getContextAttributes()?.antialias ?? null,
-      deviceMemory: (navigator as Navigator & { deviceMemory?: number })
-        .deviceMemory ?? null,
+      deviceMemory:
+        (navigator as Navigator & { deviceMemory?: number }).deviceMemory ??
+        null,
       hardwareConcurrency: navigator.hardwareConcurrency ?? null,
       reducedMotion,
     };

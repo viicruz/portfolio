@@ -34,7 +34,11 @@ function isValidPartyOrder(value: unknown): value is PokemonKey[] {
   const seen = new Set<PokemonKey>();
 
   for (const entry of value) {
-    if (typeof entry !== "string" || !isValidPokemonKey(entry) || seen.has(entry)) {
+    if (
+      typeof entry !== "string" ||
+      !isValidPokemonKey(entry) ||
+      seen.has(entry)
+    ) {
       return false;
     }
 
@@ -45,10 +49,7 @@ function isValidPartyOrder(value: unknown): value is PokemonKey[] {
 }
 
 function buildPartyOrderFromLead(leadPokemon: PokemonKey): PokemonKey[] {
-  return [
-    leadPokemon,
-    ...POKEMON_KEYS.filter((key) => key !== leadPokemon),
-  ];
+  return [leadPokemon, ...POKEMON_KEYS.filter((key) => key !== leadPokemon)];
 }
 
 function loadPartyOrder(): PokemonKey[] {

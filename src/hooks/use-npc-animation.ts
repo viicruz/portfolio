@@ -1,4 +1,5 @@
 "use client";
+
 //* Libraries imports
 import { useRef, useState, type RefObject } from "react";
 import * as THREE from "three";
@@ -55,7 +56,9 @@ export function useNpcAnimation(
 ): UseNpcAnimationResult {
   const previousPositionRef = useRef(new THREE.Vector3());
   const hasPreviousPositionRef = useRef(false);
-  const [lookAtDirection, setLookAtDirection] = useState<NPC_ANIMATIONS | null>(null);
+  const [lookAtDirection, setLookAtDirection] = useState<NPC_ANIMATIONS | null>(
+    null,
+  );
   const lastWalkAnimationRef = useRef<NPC_ANIMATIONS>(NPC_ANIMATIONS.WALK_DOWN);
   const [animationName, setAnimationName] = useState<NPC_ANIMATIONS>(
     NPC_ANIMATIONS.IDLE_DOWN,
@@ -65,7 +68,7 @@ export function useNpcAnimation(
   useFrame(() => {
     const body = bodyRef.current;
     if (!body) return;
-    if(lookAtDirection !== null) {
+    if (lookAtDirection !== null) {
       setAnimationName(lookAtDirection);
       return;
     }
@@ -132,7 +135,7 @@ export function useNpcAnimation(
 
   const clearLookAt = () => {
     setLookAtDirection(null);
-  }
+  };
 
   return { animationName, animationFps, lookAt, clearLookAt };
 }

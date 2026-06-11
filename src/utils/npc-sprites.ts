@@ -6,7 +6,10 @@ type NpcSpriteData = {
 const NPCs = ["elm", "silver", "fatguy"] as const;
 const SPRITE_DATA = "/assets/sprites/npcs/npc.json";
 
-export const NPC_SPRITES: Record<Uppercase<typeof NPCs[number]>, NpcSpriteData> = {
+export const NPC_SPRITES: Record<
+  Uppercase<(typeof NPCs)[number]>,
+  NpcSpriteData
+> = {
   ELM: {
     SPRITE_SHEET: "/assets/sprites/npcs/professor-elm.png",
     SPRITE_DATA,

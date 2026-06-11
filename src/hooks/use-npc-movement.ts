@@ -1,5 +1,6 @@
 "use client";
 
+//* Libraries imports
 import { useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
@@ -121,14 +122,16 @@ export function useNpcMovement(
       } else {
         if (route.pendulum) {
           if (forwardRef.current) {
-            if (routeIndexRef.current >= route.points.length - 1) forwardRef.current = false;
+            if (routeIndexRef.current >= route.points.length - 1)
+              forwardRef.current = false;
             else routeIndexRef.current++;
           } else {
             if (routeIndexRef.current <= 0) forwardRef.current = true;
             else routeIndexRef.current--;
           }
         } else if (route.loop) {
-          routeIndexRef.current = (routeIndexRef.current + 1) % route.points.length;
+          routeIndexRef.current =
+            (routeIndexRef.current + 1) % route.points.length;
         } else if (routeIndexRef.current < route.points.length - 1) {
           routeIndexRef.current++;
         }
@@ -146,16 +149,19 @@ export function useNpcMovement(
         // advance index for next target, same logic as above
         if (route.pendulum) {
           if (forwardRef.current) {
-            if (routeIndexRef.current >= route.points.length - 1) forwardRef.current = false;
+            if (routeIndexRef.current >= route.points.length - 1)
+              forwardRef.current = false;
             else routeIndexRef.current++;
           } else {
             if (routeIndexRef.current <= 0) forwardRef.current = true;
             else routeIndexRef.current--;
           }
         } else if (route.loop) {
-          routeIndexRef.current = (routeIndexRef.current + 1) % route.points.length;
+          routeIndexRef.current =
+            (routeIndexRef.current + 1) % route.points.length;
         } else {
-          if (routeIndexRef.current < route.points.length - 1) routeIndexRef.current++;
+          if (routeIndexRef.current < route.points.length - 1)
+            routeIndexRef.current++;
         }
       }
       return;
@@ -173,9 +179,16 @@ export function useNpcMovement(
 
     // set new position on the body (kinematic-style movement)
     if (typeof body.setNextKinematicTranslation === "function") {
-      body.setNextKinematicTranslation({ x: tmpVec.current.x, y: tmpVec.current.y, z: tmpVec.current.z });
+      body.setNextKinematicTranslation({
+        x: tmpVec.current.x,
+        y: tmpVec.current.y,
+        z: tmpVec.current.z,
+      });
     } else {
-      body.setTranslation({ x: tmpVec.current.x, y: tmpVec.current.y, z: tmpVec.current.z }, true);
+      body.setTranslation(
+        { x: tmpVec.current.x, y: tmpVec.current.y, z: tmpVec.current.z },
+        true,
+      );
     }
   });
 

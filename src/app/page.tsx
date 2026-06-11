@@ -108,7 +108,6 @@ export default function Home() {
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm
-            key={leadPokemon}
             scale={[1, 0.8, 1]}
             playerBodyRef={playerBodyRef}
             pokemonKey={leadPokemon}

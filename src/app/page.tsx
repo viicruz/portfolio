@@ -24,6 +24,7 @@ import { Player } from "@/components/characters/player";
 import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
 import { PkmCenter } from "@/components/pkm-center";
+import { Forest } from "@/components/forest";
 import { GrassFloor } from "@/components/grass-floor";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
@@ -95,6 +96,11 @@ export default function Home() {
         <GrassFloor />
 
         <PkmCenter position={[-1, -1, -5]} scale={0.25} />
+        {/* <Tree position={[2, -0.749, 0]} scale={1.25} /> */}
+        {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
+        {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}
+        {/* <Tree position={[3, -0.749, -6]} scale={1.25} /> */}
+        <Forest baseY={-0.749}/>
 
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
@@ -116,7 +122,7 @@ export default function Home() {
           <EffectComposer>
             {effectToggles.depthOfField ? (
               <DepthOfField
-                focusDistance={10}
+                focusDistance={16}
                 focalLength={5}
                 bokehScale={1}
                 height={480}

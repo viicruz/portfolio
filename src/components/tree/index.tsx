@@ -11,7 +11,7 @@ const ALPHA_TEST = 0.01;
 const DEFAULT_POSITION: [number, number, number] = [0, 2, -10];
 const DEFAULT_ROTATION: [number, number, number] = [0, 0, 0];
 
-type TreeProps = {
+export type TreeProps = {
   position?: [number, number, number];
   rotation?: [number, number, number];
   scale?: number;
@@ -21,8 +21,8 @@ function configureMeshes(object: THREE.Object3D) {
   object.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) return;
 
-    child.castShadow = true;
-    child.receiveShadow = false;
+    // child.castShadow = false;
+    // child.receiveShadow = false;
 
     const materials = Array.isArray(child.material)
       ? child.material
@@ -59,7 +59,7 @@ function configureMeshes(object: THREE.Object3D) {
   });
 }
 
-function TreeModel(props: TreeProps) {
+export function TreeModel(props: TreeProps) {
   const gltf = useGLTF(MODEL_PATH);
 
   React.useMemo(() => {
@@ -72,7 +72,7 @@ function TreeModel(props: TreeProps) {
 
   return (
     <group position={position} rotation={rotation} scale={scale}>
-      <Clone object={gltf.scene} />
+      <Clone object={gltf.scene} castShadow={false} receiveShadow={false} />
     </group>
   );
 }

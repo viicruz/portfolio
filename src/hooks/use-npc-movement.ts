@@ -24,10 +24,16 @@ export type NpcBehavior =
   | { kind: "patrol"; route: PatrolRoute }
   | { kind: "none" };
 
+export type NpcMovementSnapshot = {
+  state: "idle" | "moving" | "waiting";
+  direction: THREE.Vector3;
+};
+
 export type UseNpcMovementControls = {
   pause: () => void;
   resume: () => void;
   isPaused: () => boolean;
+  movementSnapshotRef: React.RefObject<NpcMovementSnapshot>;
 };
 
 type Options = {
@@ -54,6 +60,23 @@ export function useNpcMovement(
   const waitElapsedRef = useRef(0);
   const stateRef = useRef<"idle" | "moving" | "waiting">("idle");
   const spawnInitializedRef = useRef(false);
+  const movementDirectionRef = useRef(new THREE.Vector3());
+  const movementSnapshotRef = useRef<NpcMovementSnapshot>({
+    state: "idle",
+    direction: new THREE.Vector3(),
+  });
+
+  const setMovementSnapshot = (
+    state: NpcMovementSnapshot["state"],
+    direction?: THREE.Vector3,
+  ) => {
+    movementSnapshotRef.current.state = state;
+    if (direction) {
+      movementSnapshotRef.current.direction.copy(direction);
+    } else {
+      movementSnapshotRef.current.direction.set(0, 0, 0);
+    }
+  };
 
   // initialize spawn position once body becomes available
   useEffect(() => {
@@ -90,9 +113,15 @@ export function useNpcMovement(
         routeIndexRef.current = behavior.route.startIndex ?? 0;
       }
     }
-    if (pausedRef.current) return;
+    if (pausedRef.current) {
+      setMovementSnapshot("idle");
+      return;
+    }
     const body = bodyRef.current;
-    if (!body || !behavior || behavior.kind !== "patrol") return;
+    if (!body || !behavior || behavior.kind !== "patrol") {
+      setMovementSnapshot("idle");
+      return;
+    }
 
     const route = behavior.route;
     if (!route.points || route.points.length === 0) return;
@@ -119,6 +148,7 @@ export function useNpcMovement(
       if (waitMs > 0) {
         stateRef.current = "waiting";
         waitElapsedRef.current = 0;
+        setMovementSnapshot("waiting");
       } else {
         if (route.pendulum) {
           if (forwardRef.current) {
@@ -135,6 +165,7 @@ export function useNpcMovement(
         } else if (routeIndexRef.current < route.points.length - 1) {
           routeIndexRef.current++;
         }
+        setMovementSnapshot("idle");
       }
 
       return;
@@ -142,6 +173,7 @@ export function useNpcMovement(
 
     // waiting state
     if (stateRef.current === "waiting") {
+      setMovementSnapshot("waiting");
       waitElapsedRef.current += delta * 1000;
       const waitMs = point.waitMs ?? 0;
       if (waitElapsedRef.current >= waitMs) {
@@ -175,6 +207,12 @@ export function useNpcMovement(
     // move by speed * delta towards target
     const step = Math.min(1, (speed * delta) / Math.max(dist, 1e-6));
 
+    movementDirectionRef.current
+      .copy(targetRef.current)
+      .sub(tmpVec.current);
+    movementDirectionRef.current.y = 0;
+    setMovementSnapshot("moving", movementDirectionRef.current);
+
     tmpVec.current.lerp(targetRef.current, step);
 
     // set new position on the body (kinematic-style movement)
@@ -192,5 +230,5 @@ export function useNpcMovement(
     }
   });
 
-  return { pause, resume, isPaused };
+  return { pause, resume, isPaused, movementSnapshotRef };
 }

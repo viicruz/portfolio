@@ -38,7 +38,10 @@ export function Npc(props: NpcProps) {
   }, []);
 
   const movementControls = useNpcMovement(bodyRef, npcData.behavior);
-  const npcAnimation = useNpcAnimation(bodyRef);
+  const npcAnimation = useNpcAnimation(
+    bodyRef,
+    movementControls.movementSnapshotRef,
+  );
 
   const handleCollisionEnter = React.useCallback(() => {
     collisionCountRef.current += 1;

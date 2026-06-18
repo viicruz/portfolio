@@ -3,8 +3,11 @@
 //* Libraries imports
 import React, { Suspense } from "react";
 import { useGLTF, Clone } from "@react-three/drei";
-import { CapsuleCollider, CylinderCollider, RigidBody } from "@react-three/rapier";
+import { CylinderCollider, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
+
+//* Local imports
+import { TREE_COLLIDER_ARGS } from "@/components/tree/tree-collider";
 
 const MODEL_PATH = "/assets/models/tree/tree.gltf";
 const MODEL_SCALE = 1;
@@ -80,14 +83,15 @@ export function TreeModel(props: TreeProps) {
 
 export function Tree(props: TreeProps) {
   return (
-    <RigidBody type="fixed" colliders={false} position={props.position ?? DEFAULT_POSITION} rotation={props.rotation ?? DEFAULT_ROTATION}>
-        <CylinderCollider args={[1.5, 0.3]} />
+    <RigidBody
+      type="fixed"
+      colliders={false}
+      position={props.position ?? DEFAULT_POSITION}
+      rotation={props.rotation ?? DEFAULT_ROTATION}
+    >
+      <CylinderCollider args={[...TREE_COLLIDER_ARGS]} />
       <Suspense fallback={null}>
-        <TreeModel
-          position={[0, 0, 0]}
-          rotation={props.rotation ?? DEFAULT_ROTATION}
-          scale={props.scale ?? MODEL_SCALE}
-        />
+        <TreeModel position={[0, 0, 0]} scale={props.scale ?? MODEL_SCALE} />
       </Suspense>
     </RigidBody>
   );

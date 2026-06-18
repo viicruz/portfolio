@@ -27,7 +27,6 @@ import { PkmCenter } from "@/components/pkm-center";
 import { Forest } from "@/components/forest";
 import { GrassFloor } from "@/components/grass-floor";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
-import { Tree } from "@/components/tree";
 
 function DirectionalLightWithHelper() {
   const lightRef = useRef<THREE.DirectionalLight>(null);
@@ -102,8 +101,6 @@ export default function Home() {
         {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}
         {/* <Tree position={[3, -0.749, -6]} scale={1.25} /> */}
         <Forest baseY={-0.749}/>
-        <Tree position={[2, -0.749, 0]} scale={1.25} />
-
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm
@@ -113,7 +110,7 @@ export default function Home() {
           />
         </CharacterControls>
         {/* <Npc npcId="npc1" dialogId="dialog1" /> */}
-        {/* <Npc name="PROFESSOR_ELM" /> */}
+        <Npc name="PROFESSOR_ELM" />
         {/* Example NPC with patrol behavior (local square route) */}
         <Npc name="FATGUY" />
 

@@ -83,8 +83,8 @@ function computeCameraDistance(
   return { height, distance: newDistance };
 }
 
-const CAMERA_ANGLE = 60;
-const CAMERA_DISTANCE = 10;
+const CAMERA_ANGLE = 45;
+const CAMERA_DISTANCE = 14;
 const CAMERA_PARAMS = computeCameraDistance(CAMERA_ANGLE, CAMERA_DISTANCE);
 
 type PlayerProps = {
@@ -131,7 +131,7 @@ export function Player({ playerBodyRef }: PlayerProps) {
       type="dynamic"
       ccd={true}
       angularDamping={5}
-      position={[-3, 2, 0]}
+      position={[0, 2, 0]}
       onCollisionEnter={handleCollisionEnter}
     >
       <mesh ref={meshRef} position={[0, 0, 0]} />

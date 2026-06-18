@@ -3,6 +3,7 @@
 //* Libraries imports
 import React, { Suspense } from "react";
 import { useGLTF, Clone } from "@react-three/drei";
+import { CapsuleCollider, CylinderCollider, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
 const MODEL_PATH = "/assets/models/tree/tree.gltf";
@@ -79,13 +80,16 @@ export function TreeModel(props: TreeProps) {
 
 export function Tree(props: TreeProps) {
   return (
-    <Suspense fallback={null}>
-      <TreeModel
-        position={props.position}
-        rotation={props.rotation}
-        scale={props.scale}
-      />
-    </Suspense>
+    <RigidBody type="fixed" colliders={false} position={props.position ?? DEFAULT_POSITION} rotation={props.rotation ?? DEFAULT_ROTATION}>
+        <CylinderCollider args={[1.5, 0.3]} />
+      <Suspense fallback={null}>
+        <TreeModel
+          position={[0, 0, 0]}
+          rotation={props.rotation ?? DEFAULT_ROTATION}
+          scale={props.scale ?? MODEL_SCALE}
+        />
+      </Suspense>
+    </RigidBody>
   );
 }
 

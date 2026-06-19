@@ -15,16 +15,16 @@ export const POKEMON_KEYS: PokemonKey[] = [
 
 export const POKEMON_SPRITES: Record<PokemonKey, PokemonSpriteData> = {
   CHIKORITA: {
-    SPRITE_SHEET: "/assets/sprites/pkm/pokemon_gen_2_sprites.png",
-    SPRITE_DATA: "/assets/sprites/pkm/chikorita.json",
+    SPRITE_SHEET: "/assets/sprites/pkm/chikorita.png",
+    SPRITE_DATA: "/assets/sprites/pkm/pokemon.json",
   },
   CYNDAQUIL: {
-    SPRITE_SHEET: "/assets/sprites/pkm/pokemon_gen_2_sprites.png",
-    SPRITE_DATA: "/assets/sprites/pkm/cyndaquil.json",
+    SPRITE_SHEET: "/assets/sprites/pkm/cyndaquil.png",
+    SPRITE_DATA: "/assets/sprites/pkm/pokemon.json",
   },
   TOTODILE: {
-    SPRITE_SHEET: "/assets/sprites/pkm/pokemon_gen_2_sprites.png",
-    SPRITE_DATA: "/assets/sprites/pkm/totodile.json",
+    SPRITE_SHEET: "/assets/sprites/pkm/totodile.png",
+    SPRITE_DATA: "/assets/sprites/pkm/pokemon.json",
   },
 };
 

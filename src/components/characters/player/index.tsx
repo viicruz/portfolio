@@ -131,7 +131,7 @@ export function Player({ playerBodyRef }: PlayerProps) {
       type="dynamic"
       ccd={true}
       angularDamping={5}
-      position={[0, 2, 0]}
+      position={[0, 2, 30]}
       onCollisionEnter={handleCollisionEnter}
     >
       <mesh ref={meshRef} position={[0, 0, 0]} />

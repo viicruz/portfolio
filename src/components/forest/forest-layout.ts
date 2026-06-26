@@ -42,7 +42,7 @@ export function parseForestMap(
   config: ForestMapConfig,
   baseY: number,
 ): TreePlacement[] {
-  const rows = map.split("\n");
+  const rows = map.split("\n").map((row) => row.trim());
   const placements: TreePlacement[] = [];
 
   for (let row = 0; row < rows.length; row++) {

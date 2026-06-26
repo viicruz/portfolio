@@ -1,7 +1,6 @@
 import { expect, it, describe } from "bun:test";
 import {
   parseForestMap,
-  resolveForestPlacements,
   type TreePlacement,
 } from "@/components/forest/forest-layout";
 

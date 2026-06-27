@@ -1,9 +1,7 @@
 {
   "menu": {
     "pokemon": "POKéMON",
-    "pack": "PACK",
     "player": "PLAYER",
-    "save": "SAVE",
     "option": "OPTION",
     "exit": "EXIT",
     "chikorita": "CHIKORITA",
@@ -17,14 +15,18 @@
   "dialogs": {
     "npc1": {
       "dialog1": {
-        "1": "Hello there! Welcome to the world of Pokémon! My name is Oak. People call me the Pokémon Prof!",
-        "2": "This world is widely inhabited by creatures called Pokémon! For some people",
-        "3": "Pokémon are pets. Others use them for fights. Myself... I study Pokémon as a profession!"
+        "1": "Hello! Welcome to my portfolio! My name is Victor, I have been a web developer for 3 years.",
+        "2": "In reality, this is not exactly a game...",
+        "3": "It is an experience created with Three.js, inspired by the classic Pokémon games for the Nintendo DS.",
+        "4": "By exploring this world, you will find projects, technologies, and a bit of my journey as a developer.",
+        "5": "Oh, and a warning! This adventure is still under development. Therefore, new areas, projects, and features",
+        "6": "are being added gradually, so it's worth coming back from time to time to see the news!"
       }
     },
-    "npc2": {
+    "fat_guy": {
       "dialog1": {
-        "1": "Hello, im a patroller npc for testing purposes :D"
+        "1": "Hello, did you know that you can choose which Pokémon will follow you around?",
+        "2": "Just press the 'x' button, go to the Pokémon menu, and put first the Pokémon you want to follow you!"
       }
     }
   }

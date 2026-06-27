@@ -1,9 +1,7 @@
 {
   "menu": {
     "pokemon": "POKéMON",
-    "pack": "MOCHILA",
     "player": "JOGADOR",
-    "save": "SALVAR",
     "option": "OPÇÃO",
     "exit": "SAIR",
     "chikorita": "CHIKORITA",
@@ -17,13 +15,19 @@
   "dialogs": {
     "npc1": {
       "dialog1": {
-        "1": "Olá! Bem-vindo ao mundo dos Pokémon! Meu nome é Oak. As pessoas me chamam de Professor Pokémon!",
-        "2": "Este mundo é amplamente habitado por criaturas chamadas Pokémon! Para algumas pessoas",
-        "3": "Pokémon são animais de estimação. Outros os usam para batalhas. Eu... estudo Pokémon como profissão!"
-      },
-      "npc2": {
         "dialog1": {
-          "1": "Olá, eu sou um npc patrulheiro para fins de teste :D"
+        "1": "Olá! Bem-vindo ao meu portfólio! Me chamo Victor, sou desenvolvedor web fazem 3 anos.",
+        "2": "Na realidade isso não é exatamente um jogo...",
+        "3": "É uma experiência criada com Three.js, inspirada nos jogos clássicos de Pokémon do Nintendo DS.",
+        "4": "Ao explorar este mundo, você encontrará projetos, tecnologias e um pouco da minha trajetória como desenvolvedor.",
+        "5": "Ah, e um aviso! Esta aventura ainda está em desenvolvimento. Portanto Novas áreas, projetos e funcionalidades ",
+        "6": "estão sendo adicionados aos poucos então vale a pena voltar de vez em quando para ver as novidades!"
+      }
+      },
+      "fat_guy": {
+        "dialog1": {
+          "1": "Olá, você sabia que pode escolher qual pokémon vai te seguir por aí?",
+          "2": "É só apertar o botão 'x' ir no menu de Pokémon e colocar em primeiro o pokémon que você quer que te siga!"
         }
       }
     }

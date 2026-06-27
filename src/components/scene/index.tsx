@@ -33,7 +33,6 @@ export function Scene(props: SceneProps) {
             <div className="bg-white h-28 rounded-xl px-2 font-pixel text-2xl flex items-center ">
               {/* @ts-expect-error */}
               <ReactTyped strings={[t(line)]} typeSpeed={5} showCursor={false} />
-              {/* {t(line)} */}
             </div>
             <div className="absolute right-2 bottom-6 animate-bounce">
               {!dialogStore.isLastDialogLine && (

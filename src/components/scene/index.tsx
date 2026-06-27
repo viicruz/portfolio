@@ -6,6 +6,7 @@ import { Physics } from "@react-three/rapier";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import FPSCounter from '@/components/fps/fps-counter';
+import { ReactTyped } from "react-typed";
 
 //*Store import
 import { useDialogStore } from "@/store";
@@ -31,7 +32,8 @@ export function Scene(props: SceneProps) {
           <div className="items-center justify-cente w-full max-w-5xl border py-1 px-2 rounded-2xl bg-black/50 pr-8 relative">
             <div className="bg-white h-28 rounded-xl px-2 font-pixel text-2xl flex items-center ">
               {/* @ts-expect-error */}
-              {t(line)}
+              <ReactTyped strings={[t(line)]} typeSpeed={5} showCursor={false} />
+              {/* {t(line)} */}
             </div>
             <div className="absolute right-2 bottom-6 animate-bounce">
               {!dialogStore.isLastDialogLine && (

@@ -17,9 +17,7 @@ export const SILVER_DATA: NPCData = {
       localSpace: true,
       loop: true,
       startIndex: 0,
-      points: [
-        { position: [0.1, 0, 0], waitMs: Infinity},
-      ],
+      points: [{ position: [0.1, 0, 0], waitMs: Infinity }],
     },
   },
 };

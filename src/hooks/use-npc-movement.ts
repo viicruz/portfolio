@@ -207,9 +207,7 @@ export function useNpcMovement(
     // move by speed * delta towards target
     const step = Math.min(1, (speed * delta) / Math.max(dist, 1e-6));
 
-    movementDirectionRef.current
-      .copy(targetRef.current)
-      .sub(tmpVec.current);
+    movementDirectionRef.current.copy(targetRef.current).sub(tmpVec.current);
     movementDirectionRef.current.y = 0;
     setMovementSnapshot("moving", movementDirectionRef.current);
 

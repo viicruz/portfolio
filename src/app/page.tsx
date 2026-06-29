@@ -41,8 +41,8 @@ function DirectionalLightWithHelper() {
       ref={lightRef}
       castShadow
       position={[-100, 200, 200]}
-      shadow-mapSize-width={2048*5}
-      shadow-mapSize-height={2048*5}
+      shadow-mapSize-width={2048 * 5}
+      shadow-mapSize-height={2048 * 5}
       shadow-camera-left={-100}
       shadow-camera-right={100}
       shadow-camera-top={100}
@@ -100,7 +100,7 @@ export default function Home() {
         {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
         {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}
         {/* <Tree position={[3, -0.749, -6]} scale={1.25} /> */}
-        <Forest baseY={-0.749}/>
+        <Forest baseY={-0.749} />
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm

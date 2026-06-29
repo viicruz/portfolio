@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 //* Libraries imports
 import { useEffect } from "react";

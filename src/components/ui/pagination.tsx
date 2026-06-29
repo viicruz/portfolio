@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -11,6 +11,7 @@ import { buttonVariants, type Button } from "@/components/ui/button";
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
+      // biome-ignore lint/a11y/noRedundantRoles: <component from shadcn>
       role="navigation"
       aria-label="pagination"
       data-slot="pagination"

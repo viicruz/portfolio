@@ -10,12 +10,7 @@ import { PokemonPartyOverlay } from "@/components/game-menu/pokemon-party-overla
 //* Store imports
 import { POKEMON_MENU_ITEM_INDEX, useGameMenuStore } from "@/store/game-menu";
 
-const MAIN_MENU_ITEMS = [
-  "pokemon",
-  "player",
-  "option",
-  "exit",
-] as const;
+const MAIN_MENU_ITEMS = ["pokemon", "player", "option", "exit"] as const;
 
 export function GameMenu() {
   const t = useTranslations("menu");

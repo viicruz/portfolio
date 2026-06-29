@@ -61,7 +61,7 @@ describe("computeScore", () => {
       expect(result.tier).toBe("low");
     });
   });
-  
+
   describe("Given no WebGL support", () => {
     test("When computing the score, then it should return an unknown tier", () => {
       const params: ComputeScoreProps = {

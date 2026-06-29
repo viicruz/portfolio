@@ -68,11 +68,7 @@ function GrassFloorModel() {
       position={[0, FLOOR_SURFACE_Y, 0]}
     >
       <CuboidCollider
-        args={[
-          FLOOR_HALF_WIDTH,
-          FLOOR_COLLIDER_HALF_HEIGHT,
-          FLOOR_HALF_DEPTH,
-        ]}
+        args={[FLOOR_HALF_WIDTH, FLOOR_COLLIDER_HALF_HEIGHT, FLOOR_HALF_DEPTH]}
         position={[0, -FLOOR_COLLIDER_HALF_HEIGHT, 0]}
       />
       <primitive object={gltf.scene} />

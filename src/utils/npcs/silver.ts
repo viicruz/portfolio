@@ -3,7 +3,7 @@ import type { NPCData } from "@/schemas/npc";
 import { NPC_SPRITES } from "@/utils/npc-sprites";
 
 export const SILVER_DATA: NPCData = {
-  id: "silver",
+  id: "silver_devlog",
   name: "Silver",
   dialogId: "dialog1",
   position: [-12, 0, 0],

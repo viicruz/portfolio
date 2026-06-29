@@ -1,4 +1,4 @@
-import { expect, it, describe } from "bun:test";
+import { expect, test, describe } from "bun:test";
 import {
   parseForestMap,
   type TreePlacement,
@@ -6,7 +6,7 @@ import {
 
 describe("parseForestMap", () => {
   describe("Given a map with trees on the diagonal", () => {
-    it("Should return the tree placements for each tree", () => {
+    test("Then return the tree placements for each tree", () => {
       const map = `
       #..
       .#.

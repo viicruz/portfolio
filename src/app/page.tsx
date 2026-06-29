@@ -113,6 +113,8 @@ export default function Home() {
         <Npc name="PROFESSOR_ELM" />
         {/* Example NPC with patrol behavior (local square route) */}
         <Npc name="FATGUY" />
+        {/* Devlog npc */}
+        <Npc name="SILVER" />
 
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />

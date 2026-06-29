@@ -12,9 +12,7 @@ import { POKEMON_MENU_ITEM_INDEX, useGameMenuStore } from "@/store/game-menu";
 
 const MAIN_MENU_ITEMS = [
   "pokemon",
-  "pack",
   "player",
-  "save",
   "option",
   "exit",
 ] as const;

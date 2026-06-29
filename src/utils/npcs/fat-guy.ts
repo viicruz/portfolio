@@ -3,7 +3,7 @@ import type { NPCData } from "@/schemas/npc";
 import { NPC_SPRITES } from "@/utils/npc-sprites";
 
 export const FAT_GUY_DATA: NPCData = {
-  id: "fat-guy",
+  id: "fat_guy",
   name: "Fat Guy",
   dialogId: "dialog1",
   position: [2, 0, 0],

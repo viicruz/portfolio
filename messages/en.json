@@ -1,9 +1,7 @@
 {
   "menu": {
     "pokemon": "POKéMON",
-    "pack": "PACK",
     "player": "PLAYER",
-    "save": "SAVE",
     "option": "OPTION",
     "exit": "EXIT",
     "chikorita": "CHIKORITA",
@@ -17,14 +15,35 @@
   "dialogs": {
     "npc1": {
       "dialog1": {
-        "1": "Hello there! Welcome to the world of Pokémon! My name is Oak. People call me the Pokémon Prof!",
-        "2": "This world is widely inhabited by creatures called Pokémon! For some people",
-        "3": "Pokémon are pets. Others use them for fights. Myself... I study Pokémon as a profession!"
+        "1": "Hello! Welcome to my portfolio! My name is Victor, I have been a web developer for 3 years.",
+        "2": "In reality, this is not exactly a game...",
+        "3": "It is an experience created with Three.js, inspired by the classic Pokémon games for the Nintendo DS.",
+        "4": "By exploring this world, you will find projects, technologies, and a bit of my journey as a developer.",
+        "5": "Oh, and a warning! This adventure is still under development. Therefore, new areas, projects, and features",
+        "6": "are being added gradually, so it's worth coming back from time to time to see the news!"
       }
     },
-    "npc2": {
+    "fat_guy": {
       "dialog1": {
-        "1": "Hello, im a patroller npc for testing purposes :D"
+        "1": "Hello, did you know that you can choose which Pokémon will follow you around?",
+        "2": "Just press the 'x' button, go to the Pokémon menu, and put first the Pokémon you want to follow you!"
+      }
+    },
+    "silver_devlog": {
+      "dialog1": {
+        "1": "Hey, welcome to the Devlog.",
+        "2": "If you've been here before, this is the place to check out everything that has changed since the last update.",
+        "3": "You know, I spent the whole night recording the changes...",
+        "4": "Version 0.3.0 update:",
+        "5": "•Added interactive NPC system",
+        "6": "•Now you can choose which Pokémon accompanies the player.",
+        "7": "•Performance improvements and shaders based on the user's hardware.",
+        "8": "•Improved shadow rendering.",
+        "9": "•Addition of 3D models of trees and forest layout.",
+        "10": "•Construction of the city and scenery.",
+        "11": "Well, for now that's it, come here from time to time. Whenever there are news, I update this wall!",
+        "12": "Oh, and before I forget, I know this dialogue is already quite long hahaha,",
+        "13": "but if you find any problems, pretend it's part of the experience."
       }
     }
   }

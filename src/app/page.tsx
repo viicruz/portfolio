@@ -95,7 +95,7 @@ export default function Home() {
       <Scene>
         <GrassFloor />
 
-        <PkmCenter position={[0, -1, -4]} scale={0.25} />
+        <PkmCenter position={[-6, -1, 9.5]} scale={0.25} />
         {/* <Tree position={[2, -0.749, 0]} scale={1.25} /> */}
         {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
         {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}

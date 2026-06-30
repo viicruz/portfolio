@@ -2,15 +2,12 @@
 
 //* Libraries imports
 import React, { Suspense } from "react";
-import { useGLTF } from "@react-three/drei";
-import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { MeshCollider, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
 const MODEL_PATH = "/assets/models/terrain/terrain.gltf";
 const ALPHA_TEST = 0.01;
-const FLOOR_HALF_WIDTH = 112.5;
-const FLOOR_HALF_DEPTH = 112.5;
-const FLOOR_COLLIDER_HALF_HEIGHT = 0.25;
 const FLOOR_SURFACE_Y = -0.75;
 
 function configureMeshes(object: THREE.Object3D) {
@@ -55,11 +52,25 @@ function configureMeshes(object: THREE.Object3D) {
 }
 
 function GrassFloorModel() {
+  const groupRef = React.useRef<THREE.Group>(null);
   const gltf = useGLTF(MODEL_PATH);
+  const { actions } = useAnimations(gltf.animations, groupRef);
 
-  React.useMemo(() => {
-    configureMeshes(gltf.scene);
+  const scene = React.useMemo(() => {
+    const clone = gltf.scene.clone(true);
+    configureMeshes(clone);
+    return clone;
   }, [gltf.scene]);
+
+  React.useEffect(() => {
+    const action = actions.animation;
+    if (!action) return;
+
+    action.reset();
+    action.setLoop(THREE.LoopRepeat, Infinity);
+    action.setDuration(2);
+    action.play();
+  }, [actions]);
 
   return (
     <RigidBody
@@ -67,11 +78,11 @@ function GrassFloorModel() {
       colliders={false}
       position={[0, FLOOR_SURFACE_Y, 0]}
     >
-      <CuboidCollider
-        args={[FLOOR_HALF_WIDTH, FLOOR_COLLIDER_HALF_HEIGHT, FLOOR_HALF_DEPTH]}
-        position={[0, -FLOOR_COLLIDER_HALF_HEIGHT, 0]}
-      />
-      <primitive object={gltf.scene} />
+      <MeshCollider type="trimesh">
+        <group ref={groupRef}>
+          <primitive object={scene} />
+        </group>
+      </MeshCollider>
     </RigidBody>
   );
 }

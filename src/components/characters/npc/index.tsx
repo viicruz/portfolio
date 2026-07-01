@@ -49,11 +49,14 @@ export function Npc(props: NpcProps) {
     movementControls.movementSnapshotRef,
   );
 
-  const handleCollisionEnter = React.useCallback((payload: CollisionEnterLike) => {
-    if (isFloorCollision(payload)) return;
-    collisionCountRef.current += 1;
-    movementControls.pause();
-  }, [movementControls]);
+  const handleCollisionEnter = React.useCallback(
+    (payload: CollisionEnterLike) => {
+      if (isFloorCollision(payload)) return;
+      collisionCountRef.current += 1;
+      movementControls.pause();
+    },
+    [movementControls],
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <this useEffect does not need to re-run when npcAnimation or bodyRef changes>
   React.useEffect(() => {
@@ -76,15 +79,18 @@ export function Npc(props: NpcProps) {
     movementControls.pause();
   }, [dialogStore.isOnDialog]);
 
-  const handleCollisionExit = React.useCallback((payload: CollisionEnterLike) => {
-    if (isFloorCollision(payload)) return;
-    collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
+  const handleCollisionExit = React.useCallback(
+    (payload: CollisionEnterLike) => {
+      if (isFloorCollision(payload)) return;
+      collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
 
-    if (collisionCountRef.current === 0) {
-      movementControls.resume();
-      npcAnimation.clearLookAt();
-    }
-  }, [movementControls, npcAnimation]);
+      if (collisionCountRef.current === 0) {
+        movementControls.resume();
+        npcAnimation.clearLookAt();
+      }
+    },
+    [movementControls, npcAnimation],
+  );
 
   const handleSetIntentionDialog = () => {
     dialogStore.setNpcDialogIntention({

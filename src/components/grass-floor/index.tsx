@@ -6,10 +6,7 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { MeshCollider, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
-import {
-  COLLISION_GROUPS,
-  RIGID_BODY_NAMES,
-} from "@/lib/rapier-collision";
+import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 
 const MODEL_PATH = "/assets/models/terrain/terrain.gltf";
 const ALPHA_TEST = 0.01;

@@ -22,13 +22,17 @@ describe("rapier-collision helpers", () => {
   describe("Given a collision event with a rigid body or collider object", () => {
     test("When resolving the collision object name, then it should return the rigid body name when available", () => {
       expect(
-        getCollisionObjectName({ rigidBodyObject: { name: RIGID_BODY_NAMES.floor } }),
+        getCollisionObjectName({
+          rigidBodyObject: { name: RIGID_BODY_NAMES.floor },
+        }),
       ).toBe(RIGID_BODY_NAMES.floor);
     });
 
     test("When resolving the collision object name, then it should fall back to the collider name", () => {
       expect(
-        getCollisionObjectName({ colliderObject: { name: RIGID_BODY_NAMES.npc } }),
+        getCollisionObjectName({
+          colliderObject: { name: RIGID_BODY_NAMES.npc },
+        }),
       ).toBe(RIGID_BODY_NAMES.npc);
     });
   });
@@ -36,13 +40,17 @@ describe("rapier-collision helpers", () => {
   describe("Given a collision against the floor", () => {
     test("When checking if it is a floor collision, then it should return true", () => {
       expect(
-        isFloorCollision({ other: { rigidBodyObject: { name: RIGID_BODY_NAMES.floor } } }),
+        isFloorCollision({
+          other: { rigidBodyObject: { name: RIGID_BODY_NAMES.floor } },
+        }),
       ).toBe(true);
     });
 
     test("When checking whether to play the bumping sound, then it should return false", () => {
       expect(
-        shouldPlayBumpingSound({ other: { rigidBodyObject: { name: RIGID_BODY_NAMES.floor } } }),
+        shouldPlayBumpingSound({
+          other: { rigidBodyObject: { name: RIGID_BODY_NAMES.floor } },
+        }),
       ).toBe(false);
     });
   });
@@ -50,7 +58,9 @@ describe("rapier-collision helpers", () => {
   describe("Given a collision against an NPC", () => {
     test("When checking whether to play the bumping sound, then it should return true", () => {
       expect(
-        shouldPlayBumpingSound({ other: { rigidBodyObject: { name: RIGID_BODY_NAMES.npc } } }),
+        shouldPlayBumpingSound({
+          other: { rigidBodyObject: { name: RIGID_BODY_NAMES.npc } },
+        }),
       ).toBe(true);
     });
   });

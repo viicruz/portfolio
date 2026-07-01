@@ -13,7 +13,12 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 //* Utils imports
 import { playBumpingSound } from "@/store";
 import { PLAYER_SPRITES } from "@/utils/player-sprites";
-import { COLLISION_GROUPS, RIGID_BODY_NAMES, shouldPlayBumpingSound, type CollisionEnterLike } from "@/lib/rapier-collision";
+import {
+  COLLISION_GROUPS,
+  RIGID_BODY_NAMES,
+  shouldPlayBumpingSound,
+  type CollisionEnterLike,
+} from "@/lib/rapier-collision";
 
 //* Hooks imports
 import { useFollowCamera } from "@/hooks/use-follow-camera";
@@ -95,10 +100,13 @@ type PlayerProps = {
 export function Player({ playerBodyRef }: PlayerProps) {
   const meshRef = React.useRef<THREE.Mesh>(null);
 
-  const handleCollisionEnter = React.useCallback((payload: CollisionEnterLike) => {
-    if (!shouldPlayBumpingSound(payload)) return;
-    playBumpingSound();
-  }, []);
+  const handleCollisionEnter = React.useCallback(
+    (payload: CollisionEnterLike) => {
+      if (!shouldPlayBumpingSound(payload)) return;
+      playBumpingSound();
+    },
+    [],
+  );
 
   const setBodyRef = React.useCallback(
     (body: RapierRigidBody | null) => {

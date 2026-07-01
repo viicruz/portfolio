@@ -55,9 +55,7 @@ export const COLLISION_GROUPS = {
 } as const;
 
 export function getCollisionObjectName(target?: CollisionTargetLike | null) {
-  return (
-    target?.rigidBodyObject?.name ?? target?.colliderObject?.name ?? null
-  );
+  return target?.rigidBodyObject?.name ?? target?.colliderObject?.name ?? null;
 }
 
 export function isFloorCollision(payload: CollisionEnterLike) {

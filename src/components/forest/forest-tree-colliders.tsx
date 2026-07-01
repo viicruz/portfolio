@@ -6,10 +6,7 @@ import { CylinderCollider, RigidBody } from "@react-three/rapier";
 //* Local imports
 import type { TreePlacement } from "@/components/forest/forest-layout";
 import { TREE_COLLIDER_ARGS } from "@/components/tree/tree-collider";
-import {
-  COLLISION_GROUPS,
-  RIGID_BODY_NAMES,
-} from "@/lib/rapier-collision";
+import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 
 type ForestTreeCollidersProps = {
   placements: TreePlacement[];

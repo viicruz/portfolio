@@ -8,10 +8,7 @@ import * as THREE from "three";
 
 //* Local imports
 import { TREE_COLLIDER_ARGS } from "@/components/tree/tree-collider";
-import {
-  COLLISION_GROUPS,
-  RIGID_BODY_NAMES,
-} from "@/lib/rapier-collision";
+import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 
 const MODEL_PATH = "/assets/models/tree/tree.gltf";
 const MODEL_SCALE = 1;

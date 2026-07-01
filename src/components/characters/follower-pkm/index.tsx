@@ -196,11 +196,7 @@ function resolveBehindDirection(
     }
   } else {
     // Keep current relative side when the player is nearly stationary
-    output.set(
-      followerPos.x - playerPos.x,
-      0,
-      followerPos.z - playerPos.z,
-    );
+    output.set(followerPos.x - playerPos.x, 0, followerPos.z - playerPos.z);
 
     if (output.lengthSq() < 0.0001) {
       output.copy(currentDirection);
@@ -213,7 +209,10 @@ function resolveBehindDirection(
     output.normalize();
   }
 
-  currentDirection.lerp(output, 1 - Math.exp(-BEHIND_DIRECTION_SMOOTHING * delta));
+  currentDirection.lerp(
+    output,
+    1 - Math.exp(-BEHIND_DIRECTION_SMOOTHING * delta),
+  );
   currentDirection.normalize();
 
   output.copy(currentDirection);
@@ -318,10 +317,8 @@ export function FollowerPkm({
     const bodyPos = body.translation();
     const currentVel = body.linvel();
 
-    let velX =
-      (targetPositionRef.current.x - bodyPos.x) * followStrength;
-    let velZ =
-      (targetPositionRef.current.z - bodyPos.z) * followStrength;
+    let velX = (targetPositionRef.current.x - bodyPos.x) * followStrength;
+    let velZ = (targetPositionRef.current.z - bodyPos.z) * followStrength;
 
     // Radial push away from the player when inside the avoidance radius
     const playerPos = playerPositionRef.current;
@@ -355,7 +352,9 @@ export function FollowerPkm({
   const updateAnimationFromMovement = (delta: number) => {
     if (movementDeltaRef.current.lengthSq() <= 0.000001) return;
 
-    const nextAnimationName = getAnimationNameFromDelta(movementDeltaRef.current);
+    const nextAnimationName = getAnimationNameFromDelta(
+      movementDeltaRef.current,
+    );
 
     if (nextAnimationName === animationNameRef.current) {
       pendingAnimationRef.current = null;
@@ -371,7 +370,9 @@ export function FollowerPkm({
 
     pendingAnimationElapsedRef.current += delta;
 
-    if (pendingAnimationElapsedRef.current >= SPRITE_DIRECTION_DEBOUNCE_SECONDS) {
+    if (
+      pendingAnimationElapsedRef.current >= SPRITE_DIRECTION_DEBOUNCE_SECONDS
+    ) {
       animationNameRef.current = nextAnimationName;
       pendingAnimationRef.current = null;
       pendingAnimationElapsedRef.current = 0;

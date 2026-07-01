@@ -13,6 +13,7 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 //* Utils imports
 import { playBumpingSound } from "@/store";
 import { PLAYER_SPRITES } from "@/utils/player-sprites";
+import { COLLISION_GROUPS, RIGID_BODY_NAMES, shouldPlayBumpingSound, type CollisionEnterLike } from "@/lib/rapier-collision";
 
 //* Hooks imports
 import { useFollowCamera } from "@/hooks/use-follow-camera";
@@ -94,7 +95,8 @@ type PlayerProps = {
 export function Player({ playerBodyRef }: PlayerProps) {
   const meshRef = React.useRef<THREE.Mesh>(null);
 
-  const handleCollisionEnter = React.useCallback(() => {
+  const handleCollisionEnter = React.useCallback((payload: CollisionEnterLike) => {
+    if (!shouldPlayBumpingSound(payload)) return;
     playBumpingSound();
   }, []);
 
@@ -125,9 +127,11 @@ export function Player({ playerBodyRef }: PlayerProps) {
   return (
     <RigidBody
       ref={setBodyRef}
+      name={RIGID_BODY_NAMES.player}
       args={[0.5, 1, 1]}
       mass={1}
       colliders={false}
+      collisionGroups={COLLISION_GROUPS.player}
       type="dynamic"
       ccd={true}
       angularDamping={5}
@@ -135,7 +139,10 @@ export function Player({ playerBodyRef }: PlayerProps) {
       onCollisionEnter={handleCollisionEnter}
     >
       <mesh ref={meshRef} position={[0, 0, 0]} />
-      <CapsuleCollider args={[0.5, 0.5]} />
+      <CapsuleCollider
+        args={[0.5, 0.5]}
+        collisionGroups={COLLISION_GROUPS.player}
+      />
       <Suspense fallback={null}>
         <SpritePlaneAnimator
           texturePath={PLAYER_SPRITES.BOY.SPRITE_SHEET}

@@ -61,7 +61,7 @@ function configureMeshes(object: THREE.Object3D) {
 
 export function FlowerModel(props: GrassProps) {
   const groupRef = React.useRef<THREE.Group>(null);
-  const { scene, animations,  } = useGLTF(MODEL_PATH);
+  const { scene, animations } = useGLTF(MODEL_PATH);
   const { actions } = useAnimations(animations, groupRef);
 
   React.useMemo(() => {

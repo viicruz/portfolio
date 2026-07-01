@@ -28,7 +28,7 @@ export const FOREST_MAP = `
 
 export const FOREST_MAP_CONFIG = {
   treeChar: "#",
-  origin: { x: -10, z: 45},
+  origin: { x: -10, z: 45 },
   step: { x: 4, z: 4 },
 } as const satisfies ForestMapConfig;
 

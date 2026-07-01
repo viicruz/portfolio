@@ -2,19 +2,27 @@
 
 //* Libraries imports
 import React, { Suspense } from "react";
-import { useGLTF, useAnimations } from "@react-three/drei";
-import { MeshCollider, RigidBody } from "@react-three/rapier";
+import { useGLTF, Clone, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 
-const MODEL_PATH = "/assets/models/terrain/terrain.gltf";
+//* Local imports
+import { SPAWN_AREA_GRASS_PLACEMENTS } from "@/components/flower/flower-layout";
+
+const MODEL_PATH = "/assets/models/nature/flower.gltf";
+const ANIMATION_NAME = "sprite-1";
+const MODEL_SCALE = 1;
 const ALPHA_TEST = 0.01;
-const FLOOR_SURFACE_Y = -0.75;
+const DEFAULT_POSITION: [number, number, number] = [0, -0.749, 30];
+
+export type GrassProps = {
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+  scale?: number;
+};
 
 function configureMeshes(object: THREE.Object3D) {
   object.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) return;
-
-    child.receiveShadow = true;
 
     const materials = Array.isArray(child.material)
       ? child.material
@@ -51,19 +59,17 @@ function configureMeshes(object: THREE.Object3D) {
   });
 }
 
-function GrassFloorModel() {
+export function FlowerModel(props: GrassProps) {
   const groupRef = React.useRef<THREE.Group>(null);
-  const gltf = useGLTF(MODEL_PATH);
-  const { actions } = useAnimations(gltf.animations, groupRef);
+  const { scene, animations } = useGLTF(MODEL_PATH);
+  const { actions } = useAnimations(animations, groupRef);
 
-  const scene = React.useMemo(() => {
-    const clone = gltf.scene.clone(true);
-    configureMeshes(clone);
-    return clone;
-  }, [gltf.scene]);
+  React.useMemo(() => {
+    configureMeshes(scene);
+  }, [scene]);
 
   React.useEffect(() => {
-    const action = actions.animation;
+    const action = actions[ANIMATION_NAME];
     if (!action) return;
 
     action.reset();
@@ -72,25 +78,36 @@ function GrassFloorModel() {
     action.play();
   }, [actions]);
 
+  const position = props.position ?? DEFAULT_POSITION;
+  // const rotation = props.rotation ?? DEFAULT_ROTATION;
+  const scale = props.scale ?? MODEL_SCALE;
+
   return (
-    <RigidBody
-      type="fixed"
-      colliders={false}
-      position={[0, FLOOR_SURFACE_Y, 0]}
-    >
-      <MeshCollider type="trimesh">
-        <group ref={groupRef}>
-          <primitive object={scene} />
-        </group>
-      </MeshCollider>
-    </RigidBody>
+    <group ref={groupRef} position={position} scale={scale}>
+      <Clone object={scene} castShadow={false} receiveShadow={false} />
+    </group>
   );
 }
 
-export function GrassFloor() {
+function FlowerPatches() {
+  return (
+    <group>
+      {SPAWN_AREA_GRASS_PLACEMENTS.map((placement) => (
+        <FlowerModel
+          key={`${placement.position[0]}-${placement.position[2]}`}
+          position={placement.position}
+          rotation={placement.rotation}
+          scale={placement.scale}
+        />
+      ))}
+    </group>
+  );
+}
+
+export function Flower() {
   return (
     <Suspense fallback={null}>
-      <GrassFloorModel />
+      <FlowerPatches />
     </Suspense>
   );
 }

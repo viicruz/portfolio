@@ -6,6 +6,11 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { MeshCollider, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
+import {
+  COLLISION_GROUPS,
+  RIGID_BODY_NAMES,
+} from "@/lib/rapier-collision";
+
 const MODEL_PATH = "/assets/models/terrain/terrain.gltf";
 const ALPHA_TEST = 0.01;
 const FLOOR_SURFACE_Y = -0.75;
@@ -74,9 +79,11 @@ function GrassFloorModel() {
 
   return (
     <RigidBody
+      name={RIGID_BODY_NAMES.floor}
       type="fixed"
       colliders={false}
       position={[0, FLOOR_SURFACE_Y, 0]}
+      collisionGroups={COLLISION_GROUPS.floor}
     >
       <MeshCollider type="trimesh">
         <group ref={groupRef}>

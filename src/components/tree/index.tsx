@@ -8,6 +8,7 @@ import * as THREE from "three";
 
 //* Local imports
 import { TREE_COLLIDER_ARGS } from "@/components/tree/tree-collider";
+import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 
 const MODEL_PATH = "/assets/models/tree/tree.gltf";
 const MODEL_SCALE = 1;
@@ -84,12 +85,17 @@ export function TreeModel(props: TreeProps) {
 export function Tree(props: TreeProps) {
   return (
     <RigidBody
+      name={RIGID_BODY_NAMES.obstacle}
       type="fixed"
       colliders={false}
       position={props.position ?? DEFAULT_POSITION}
       rotation={props.rotation ?? DEFAULT_ROTATION}
+      collisionGroups={COLLISION_GROUPS.obstacle}
     >
-      <CylinderCollider args={[...TREE_COLLIDER_ARGS]} />
+      <CylinderCollider
+        args={[...TREE_COLLIDER_ARGS]}
+        collisionGroups={COLLISION_GROUPS.obstacle}
+      />
       <Suspense fallback={null}>
         <TreeModel position={[0, 0, 0]} scale={props.scale ?? MODEL_SCALE} />
       </Suspense>

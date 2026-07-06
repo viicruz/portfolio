@@ -321,23 +321,18 @@ export function FollowerPkm({
     body.setEnabledRotations(false, false, false, false);
   }, []);
 
-  
-/** The idea is to compute a vector from the player to the follower, normalize it,
- *  and then use that as the direction to place the follower at a minimum distance behind the player.
- *  If the follower is too close to the player, we can use this vector to push it away. 
- *  If it's too far, we can use it to pull it closer. This ensures that the follower
- *  maintains a consistent distance from the player while also avoiding collisions.
-* */ 
+  /** The idea is to compute a vector from the player to the follower, normalize it,
+   *  and then use that as the direction to place the follower at a minimum distance behind the player.
+   *  If the follower is too close to the player, we can use this vector to push it away.
+   *  If it's too far, we can use it to pull it closer. This ensures that the follower
+   *  maintains a consistent distance from the player while also avoiding collisions.
+   * */
   const startTeleportRecovery = (
     body: RapierRigidBody,
     bodyPos: { x: number; y: number; z: number },
     playerPos: { x: number; y: number; z: number },
   ) => {
-    tmpFollowerOffset.set(
-      bodyPos.x - playerPos.x,
-      0,
-      bodyPos.z - playerPos.z,
-    );
+    tmpFollowerOffset.set(bodyPos.x - playerPos.x, 0, bodyPos.z - playerPos.z);
 
     if (tmpFollowerOffset.lengthSq() < 0.0001) {
       tmpFollowerOffset.copy(followDirectionRef.current);

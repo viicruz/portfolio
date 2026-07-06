@@ -10,13 +10,7 @@ import { cn } from "@/lib/utils";
 
 const CONTROLS_HINT_STORAGE_KEY = "portfolio:controls-hint-dismissed:v1";
 
-function HintRow({
-  label,
-  keys,
-}: {
-  label: string;
-  keys: React.ReactNode;
-}) {
+function HintRow({ label, keys }: { label: string; keys: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3 rounded-xl bg-white/10 px-3 py-2">
       <span className="text-[0.7rem] text-white/80">{label}</span>

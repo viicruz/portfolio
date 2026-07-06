@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 //* Libraries imports
 
@@ -90,6 +90,13 @@ export function usePlayerMovement(
     if (key[Controls.Down] && isActiveRef.current) z += velocity;
     if (key[Controls.Left] && isActiveRef.current) x -= velocity;
     if (key[Controls.Right] && isActiveRef.current) x += velocity;
+
+    //* Normalize diagonal movement
+    const length = Math.sqrt(x * x + z * z);
+    if (length > 0) {
+      x = (x / length) * velocity;
+      z = (z / length) * velocity;
+    }
 
     const currentY = body.linvel().y;
 

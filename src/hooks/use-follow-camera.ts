@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 //* Libraries imports
 import type React from "react";

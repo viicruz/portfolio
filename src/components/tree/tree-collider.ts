@@ -1,0 +1,7 @@
+export const TREE_COLLIDER_HALF_HEIGHT = 1.5;
+export const TREE_COLLIDER_RADIUS = 0.3;
+
+export const TREE_COLLIDER_ARGS = [
+  TREE_COLLIDER_HALF_HEIGHT,
+  TREE_COLLIDER_RADIUS,
+] as const;

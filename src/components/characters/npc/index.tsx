@@ -14,6 +14,12 @@ import { SpritePlaneAnimator } from "@/components/sprite-plane-animator";
 
 //* Store imports
 import { useDialogStore } from "@/store";
+import {
+  COLLISION_GROUPS,
+  RIGID_BODY_NAMES,
+  isFloorCollision,
+  type CollisionEnterLike,
+} from "@/lib/rapier-collision";
 
 //* Hooks imports
 import { useNpcMovement } from "@/hooks/use-npc-movement";
@@ -38,12 +44,19 @@ export function Npc(props: NpcProps) {
   }, []);
 
   const movementControls = useNpcMovement(bodyRef, npcData.behavior);
-  const npcAnimation = useNpcAnimation(bodyRef);
+  const npcAnimation = useNpcAnimation(
+    bodyRef,
+    movementControls.movementSnapshotRef,
+  );
 
-  const handleCollisionEnter = React.useCallback(() => {
-    collisionCountRef.current += 1;
-    movementControls.pause();
-  }, [movementControls]);
+  const handleCollisionEnter = React.useCallback(
+    (payload: CollisionEnterLike) => {
+      if (isFloorCollision(payload)) return;
+      collisionCountRef.current += 1;
+      movementControls.pause();
+    },
+    [movementControls],
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <this useEffect does not need to re-run when npcAnimation or bodyRef changes>
   React.useEffect(() => {
@@ -66,14 +79,18 @@ export function Npc(props: NpcProps) {
     movementControls.pause();
   }, [dialogStore.isOnDialog]);
 
-  const handleCollisionExit = React.useCallback(() => {
-    collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
+  const handleCollisionExit = React.useCallback(
+    (payload: CollisionEnterLike) => {
+      if (isFloorCollision(payload)) return;
+      collisionCountRef.current = Math.max(0, collisionCountRef.current - 1);
 
-    if (collisionCountRef.current === 0) {
-      movementControls.resume();
-      npcAnimation.clearLookAt();
-    }
-  }, [movementControls, npcAnimation]);
+      if (collisionCountRef.current === 0) {
+        movementControls.resume();
+        npcAnimation.clearLookAt();
+      }
+    },
+    [movementControls, npcAnimation],
+  );
 
   const handleSetIntentionDialog = () => {
     dialogStore.setNpcDialogIntention({
@@ -89,7 +106,9 @@ export function Npc(props: NpcProps) {
   return (
     <RigidBody
       ref={setBodyRef}
+      name={RIGID_BODY_NAMES.npc}
       colliders="cuboid"
+      collisionGroups={COLLISION_GROUPS.npc}
       mass={1}
       type={npcData.behavior.kind === "patrol" ? "kinematicPosition" : "fixed"}
       position={npcData.position ?? [0, 0, 0]}
@@ -103,7 +122,10 @@ export function Npc(props: NpcProps) {
       />
 
       <mesh position={[0, 0, 0]}>
-        <CapsuleCollider args={[0.5, 0.5]} />
+        <CapsuleCollider
+          args={[0.5, 0.5]}
+          collisionGroups={COLLISION_GROUPS.npc}
+        />
       </mesh>
 
       <SpritePlaneAnimator

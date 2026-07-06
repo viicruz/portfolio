@@ -1,9 +1,7 @@
 {
   "menu": {
     "pokemon": "POKéMON",
-    "pack": "MOCHILA",
     "player": "JOGADOR",
-    "save": "SALVAR",
     "option": "OPÇÃO",
     "exit": "SAIR",
     "chikorita": "CHIKORITA",
@@ -14,16 +12,47 @@
     "cancel": "CANCELAR",
     "hp": "HP"
   },
+  "controls": {
+    "title": "CONTROLES BÁSICOS",
+    "subtitle": "Use estes atalhos para se mover e interagir com o mundo.",
+    "move": "Mover",
+    "interact": "Interagir",
+    "sprint": "Correr",
+    "menu": "Menu",
+    "close": "Fechar dica de controles",
+    "open": "Controles"
+  },
   "dialogs": {
     "npc1": {
       "dialog1": {
-        "1": "Olá! Bem-vindo ao mundo dos Pokémon! Meu nome é Oak. As pessoas me chamam de Professor Pokémon!",
-        "2": "Este mundo é amplamente habitado por criaturas chamadas Pokémon! Para algumas pessoas",
-        "3": "Pokémon são animais de estimação. Outros os usam para batalhas. Eu... estudo Pokémon como profissão!"
-      },
-      "npc2": {
         "dialog1": {
-          "1": "Olá, eu sou um npc patrulheiro para fins de teste :D"
+          "1": "Olá! Bem-vindo ao meu portfólio! Me chamo Victor, sou desenvolvedor web fazem 3 anos.",
+          "2": "Na realidade isso não é exatamente um jogo...",
+          "3": "É uma experiência criada com Three.js, inspirada nos jogos clássicos de Pokémon do Nintendo DS.",
+          "4": "Ao explorar este mundo, você encontrará projetos, tecnologias e um pouco da minha trajetória como desenvolvedor.",
+          "5": "Ah, e um aviso! Esta aventura ainda está em desenvolvimento. Portanto Novas áreas, projetos e funcionalidades ",
+          "6": "estão sendo adicionados aos poucos então vale a pena voltar de vez em quando para ver as novidades!"
+        }
+      },
+      "fat_guy": {
+        "dialog1": {
+          "1": "Olá, você sabia que pode escolher qual pokémon vai te seguir por aí?",
+          "2": "É só apertar o botão 'x' ir no menu de Pokémon e colocar em primeiro o pokémon que você quer que te siga!"
+        }
+      },
+      "silver_devlog": {
+        "dialog1": {
+          "1": "Eai bem vindo ao Devlog.",
+          "2": "Se você já passou por aqui antes, este é o lugar para conferir tudo o que mudou desde a última atualização.",
+          "3": "Sabe, passei um tempinho registrando as mudanças...",
+          "4": "Atualização da versão 0.3.1:",
+          "5": "•Agora é possível escolher qual Pokémon acompanha o jogador.",
+          "6": "•Melhorias de desempenho e shaders baseados no hardware do usuário.",
+          "7": "•Renderizaração de sombras melhorada.",
+          "8": "•Adição dos modelos 3D das árvores e layout da floresta.",
+          "9": "•Atualização do layout do mapa e do cenário(cercas, ruas e mar).",
+          "10": "•HUD de controles.",
+          "11": "Bom, por enquanto é isso, passe aqui de vez em quando. Sempre que houver novidades, eu atualizo este mural!"
         }
       }
     }

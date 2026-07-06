@@ -6,6 +6,9 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import type { RapierRigidBody } from "@react-three/rapier";
 
+//* Hooks imports
+import type { NpcMovementSnapshot } from "@/hooks/use-npc-movement";
+
 enum NPC_ANIMATIONS {
   IDLE_UP = "idle_up",
   IDLE_DOWN = "idle_down",
@@ -53,6 +56,7 @@ type UseNpcAnimationResult = {
 
 export function useNpcAnimation(
   bodyRef: RefObject<RapierRigidBody | null>,
+  movementSnapshotRef?: RefObject<NpcMovementSnapshot>,
 ): UseNpcAnimationResult {
   const previousPositionRef = useRef(new THREE.Vector3());
   const hasPreviousPositionRef = useRef(false);
@@ -70,6 +74,32 @@ export function useNpcAnimation(
     if (!body) return;
     if (lookAtDirection !== null) {
       setAnimationName(lookAtDirection);
+      return;
+    }
+
+    const movementSnapshot = movementSnapshotRef?.current;
+    if (movementSnapshot) {
+      if (movementSnapshot.state === "moving") {
+        const nextWalkAnimation = getWalkAnimationNameFromDelta(
+          movementSnapshot.direction,
+        );
+
+        lastWalkAnimationRef.current = nextWalkAnimation;
+        setAnimationFps((current) => (current === 6 ? current : 6));
+        setAnimationName((current) =>
+          current === nextWalkAnimation ? current : nextWalkAnimation,
+        );
+      } else {
+        const nextIdleAnimation = getIdleAnimationFromWalkAnimation(
+          lastWalkAnimationRef.current,
+        );
+
+        setAnimationFps((current) => (current === 1 ? current : 1));
+        setAnimationName((current) =>
+          current === nextIdleAnimation ? current : nextIdleAnimation,
+        );
+      }
+
       return;
     }
 

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
+    "lint:biome:fix": "biome check . --write",
     "format": "biome format --write",
     "postinstall": "patch-package"
   },
@@ -63,6 +63,7 @@
     "react-dom": "19.2.7",
     "react-hook-form": "^7.78.0",
     "react-resizable-panels": "^4.11.2",
+    "react-typed": "^2.0.12",
     "recharts": "2.15.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
@@ -73,6 +74,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.16",
+    "@types/bun": "^1.3.14",
     "@tailwindcss/postcss": "^4.3.0",
     "@types/node": "^20.19.42",
     "@types/react": "^19.2.17",
@@ -88,6 +90,8 @@
     "unrs-resolver"
   ],
   "trustedDependencies": [
+    "@parcel/watcher",
+    "@swc/core",
     "sharp",
     "unrs-resolver"
   ]

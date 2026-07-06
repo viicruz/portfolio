@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 //* Libraries imports
 import { useEffect, useState } from "react";
@@ -28,6 +28,18 @@ type HardwareInfo = {
   reason: string[];
 };
 
+export type ComputeScoreProps = {
+  webgl: boolean;
+  webgl2: boolean;
+  maxTextureSize: number | null;
+  maxRenderbufferSize: number | null;
+  maxVertexAttribs: number | null;
+  deviceMemory: number | null;
+  hardwareConcurrency: number | null;
+  reducedMotion: boolean;
+  renderer: string | null;
+};
+
 function getDebugRendererInfo(
   gl: WebGLRenderingContext | WebGL2RenderingContext,
 ) {
@@ -45,17 +57,7 @@ function getDebugRendererInfo(
   return { vendor, renderer };
 }
 
-function computeScore(params: {
-  webgl: boolean;
-  webgl2: boolean;
-  maxTextureSize: number | null;
-  maxRenderbufferSize: number | null;
-  maxVertexAttribs: number | null;
-  deviceMemory: number | null;
-  hardwareConcurrency: number | null;
-  reducedMotion: boolean;
-  renderer: string | null;
-}) {
+export function computeScore(params: ComputeScoreProps) {
   const reasons: string[] = [];
 
   if (!params.webgl) {

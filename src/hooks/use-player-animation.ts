@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 //* Libaries imports
 import { useState, type RefObject } from "react";

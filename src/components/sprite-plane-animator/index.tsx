@@ -119,6 +119,7 @@ export function SpritePlaneAnimator(props: SpritePlaneAnimatorProps) {
     <mesh
       ref={meshRef}
       position={props.position ?? [0, 0, 0]}
+      rotation={[-0.5, 0, 0]}
       scale={props.scale ?? [1, 1, 1]}
       castShadow
       customDepthMaterial={customDepthMaterial}

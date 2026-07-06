@@ -1,9 +1,9 @@
 "use client";
 
 //* Libraries imports
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, Fragment } from "react";
 import { useHelper } from "@react-three/drei";
-import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
+import type { RapierRigidBody } from "@react-three/rapier";
 import {
   Bloom,
   DepthOfField,
@@ -23,6 +23,10 @@ import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
 import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
+import { PkmCenter } from "@/components/pkm-center";
+import { Forest } from "@/components/forest";
+import { Flower } from "@/components/flower";
+import { GrassFloor } from "@/components/grass-floor";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
 function DirectionalLightWithHelper() {
@@ -37,9 +41,13 @@ function DirectionalLightWithHelper() {
     <directionalLight
       ref={lightRef}
       castShadow
-      position={[-2, 5, 5]}
-      shadow-mapSize-width={2048}
-      shadow-mapSize-height={2048}
+      position={[-100, 200, 200]}
+      shadow-mapSize-width={2048 * 5}
+      shadow-mapSize-height={2048 * 5}
+      shadow-camera-left={-100}
+      shadow-camera-right={100}
+      shadow-camera-top={100}
+      shadow-camera-bottom={-100}
     />
   );
 }
@@ -86,30 +94,19 @@ export default function Home() {
   return (
     <main className="w-full h-svh">
       <Scene>
-        <RigidBody type="fixed">
-          <mesh position={[0, -1, 0]} receiveShadow>
-            <boxGeometry args={[200, 0.5, 200]} />
-            <meshStandardMaterial color="gray" />
-          </mesh>
-        </RigidBody>
+        <GrassFloor />
 
-        <mesh position={[2, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1, 2, 1]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
-        <mesh position={[4, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1, 2, 1]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
-        <mesh position={[6, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1, 2, 1]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
+        <PkmCenter position={[-6, -1, 9.5]} scale={0.25} />
+        {/* <Tree position={[2, -0.749, 0]} scale={1.25} /> */}
+        {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
+        {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}
+        {/* <Tree position={[3, -0.749, -6]} scale={1.25} /> */}
+        <Forest baseY={-0.749} />
+        <Flower />
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm
-            key={leadPokemon}
-            scale={[1, 0.8, 1]}
+            scale={[1.5, 1.2, 1.5]}
             playerBodyRef={playerBodyRef}
             pokemonKey={leadPokemon}
           />
@@ -118,32 +115,38 @@ export default function Home() {
         <Npc name="PROFESSOR_ELM" />
         {/* Example NPC with patrol behavior (local square route) */}
         <Npc name="FATGUY" />
+        {/* Devlog npc */}
+        <Npc name="SILVER" />
 
         <ambientLight intensity={0.4} />
         <DirectionalLightWithHelper />
 
         {effectToggles.postprocessing && (
           <EffectComposer>
-            <>
-              {effectToggles.depthOfField && (
-                <DepthOfField
-                  focusDistance={10}
-                  focalLength={5}
-                  bokehScale={1}
-                  height={480}
-                />
-              )}
-              {effectToggles.bloom && (
-                <Bloom
-                  luminanceThreshold={0.2}
-                  luminanceSmoothing={0.3}
-                  height={300}
-                />
-              )}
-              {effectToggles.vignette && (
-                <Vignette eskil={false} offset={0.1} darkness={0.6} />
-              )}
-            </>
+            {effectToggles.depthOfField ? (
+              <DepthOfField
+                focusDistance={16}
+                focalLength={5}
+                bokehScale={1}
+                height={480}
+              />
+            ) : (
+              <Fragment />
+            )}
+            {effectToggles.bloom ? (
+              <Bloom
+                luminanceThreshold={0.2}
+                luminanceSmoothing={0.3}
+                height={300}
+              />
+            ) : (
+              <Fragment />
+            )}
+            {effectToggles.vignette ? (
+              <Vignette eskil={false} offset={0.1} darkness={0.6} />
+            ) : (
+              <Fragment />
+            )}
           </EffectComposer>
         )}
       </Scene>

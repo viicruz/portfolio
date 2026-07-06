@@ -39,22 +39,37 @@ import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 
 // Seconds of approach time per world unit when the player stops moving
 const STOP_APPROACH_SECONDS_PER_UNIT_DISTANCE = 0.3;
+
 // Sprite hop bob while walking
 const HOP_ANIMATION_SPEED = 16;
 const HOP_ANIMATION_HEIGHT = 0.03;
+
 // Minimum time a walk direction must stay stable before the sprite switches
 const SPRITE_DIRECTION_DEBOUNCE_SECONDS = 0.1;
+
 // Radius within which orbit steering and separation push activate
 const PLAYER_AVOIDANCE_RADIUS = 2;
+
 // Radians per second when orbiting around the player to avoid clipping
 const ORBIT_ANGULAR_SPEED = 5;
+
 // Outward push strength when too close to the player
 const SEPARATION_STRENGTH = 10;
+
 // Exponential smoothing for the "behind" direction vector
 const BEHIND_DIRECTION_SMOOTHING = 8;
+
 // Cap follower speed relative to player speed so it never outruns them
 const MAX_FOLLOW_SPEED_MULTIPLIER = 1.2;
 const MAX_FOLLOW_SPEED_BASE = 1.5;
+
+// If the follower drifts this far away, snap it back to the player
+const TELEPORT_DISTANCE_THRESHOLD = 15;
+
+// Smooth the reposition over a short time instead of snapping instantly
+const TELEPORT_RECOVERY_SECONDS_PER_UNIT_DISTANCE = 0.025;
+const TELEPORT_RECOVERY_MIN_SECONDS = 0.12;
+const TELEPORT_RECOVERY_MAX_SECONDS = 0.35;
 
 // Reused vectors to avoid per-frame allocations in hot paths
 const tmpFollowerOffset = new THREE.Vector3();
@@ -287,6 +302,13 @@ export function FollowerPkm({
   const stopElapsedRef = React.useRef(0);
   const stopDurationRef = React.useRef(0);
 
+  // Teleport recovery: when the follower drifts too far, snap it back to the player
+  const teleportStartPositionRef = React.useRef(new THREE.Vector3());
+  const teleportTargetPositionRef = React.useRef(new THREE.Vector3());
+  const teleportElapsedRef = React.useRef(0);
+  const teleportDurationRef = React.useRef(0);
+  const teleportRecoveryActiveRef = React.useRef(false);
+
   const hopElapsedRef = React.useRef(0);
   const wasMovingRef = React.useRef(false);
 
@@ -298,6 +320,60 @@ export function FollowerPkm({
 
     body.setEnabledRotations(false, false, false, false);
   }, []);
+
+  
+/** The idea is to compute a vector from the player to the follower, normalize it,
+ *  and then use that as the direction to place the follower at a minimum distance behind the player.
+ *  If the follower is too close to the player, we can use this vector to push it away. 
+ *  If it's too far, we can use it to pull it closer. This ensures that the follower
+ *  maintains a consistent distance from the player while also avoiding collisions.
+* */ 
+  const startTeleportRecovery = (
+    body: RapierRigidBody,
+    bodyPos: { x: number; y: number; z: number },
+    playerPos: { x: number; y: number; z: number },
+  ) => {
+    tmpFollowerOffset.set(
+      bodyPos.x - playerPos.x,
+      0,
+      bodyPos.z - playerPos.z,
+    );
+
+    if (tmpFollowerOffset.lengthSq() < 0.0001) {
+      tmpFollowerOffset.copy(followDirectionRef.current);
+    }
+
+    if (tmpFollowerOffset.lengthSq() < 0.0001) {
+      tmpFollowerOffset.set(0, 0, 1);
+    }
+
+    tmpFollowerOffset.normalize();
+
+    teleportStartPositionRef.current.set(bodyPos.x, bodyPos.y, bodyPos.z);
+    teleportTargetPositionRef.current
+      .copy(playerPos)
+      .addScaledVector(tmpFollowerOffset, minDistance);
+
+    const recoveryDistance = Math.hypot(
+      teleportTargetPositionRef.current.x - teleportStartPositionRef.current.x,
+      teleportTargetPositionRef.current.z - teleportStartPositionRef.current.z,
+    );
+
+    teleportElapsedRef.current = 0;
+    teleportDurationRef.current = THREE.MathUtils.clamp(
+      recoveryDistance * TELEPORT_RECOVERY_SECONDS_PER_UNIT_DISTANCE,
+      TELEPORT_RECOVERY_MIN_SECONDS,
+      TELEPORT_RECOVERY_MAX_SECONDS,
+    );
+    teleportRecoveryActiveRef.current = true;
+
+    body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    stopElapsedRef.current = 0;
+    stopDurationRef.current = 0;
+    wasMovingRef.current = false;
+    pendingAnimationRef.current = null;
+    pendingAnimationElapsedRef.current = 0;
+  };
 
   // Vertical sine bob on the sprite group (body Y stays physics-driven)
   const applyHopAnimation = () => {
@@ -393,6 +469,58 @@ export function FollowerPkm({
 
     followerPositionRef.current.set(bodyPos.x, bodyPos.y, bodyPos.z);
     playerPositionRef.current.set(playerPos.x, playerPos.y, playerPos.z);
+
+    if (teleportRecoveryActiveRef.current) {
+      teleportElapsedRef.current += delta;
+
+      const recoveryProgress = Math.min(
+        teleportElapsedRef.current / teleportDurationRef.current,
+        1,
+      );
+      const easedProgress =
+        recoveryProgress * recoveryProgress * (3 - 2 * recoveryProgress);
+
+      followerPositionRef.current.lerpVectors(
+        teleportStartPositionRef.current,
+        teleportTargetPositionRef.current,
+        easedProgress,
+      );
+
+      body.setTranslation(
+        {
+          x: followerPositionRef.current.x,
+          y: followerPositionRef.current.y,
+          z: followerPositionRef.current.z,
+        },
+        true,
+      );
+      body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+      applyHopAnimation();
+
+      if (recoveryProgress >= 1) {
+        teleportRecoveryActiveRef.current = false;
+        body.setTranslation(
+          {
+            x: teleportTargetPositionRef.current.x,
+            y: teleportTargetPositionRef.current.y,
+            z: teleportTargetPositionRef.current.z,
+          },
+          true,
+        );
+      }
+
+      return;
+    }
+
+    const distanceToPlayer = Math.hypot(
+      bodyPos.x - playerPos.x,
+      bodyPos.z - playerPos.z,
+    );
+
+    if (distanceToPlayer > TELEPORT_DISTANCE_THRESHOLD) {
+      startTeleportRecovery(body, bodyPos, playerPositionRef.current);
+      return;
+    }
 
     const playerVelocity = playerBody.linvel();
     const horizontalSpeed = Math.hypot(playerVelocity.x, playerVelocity.z);

@@ -90,6 +90,8 @@
     "unrs-resolver"
   ],
   "trustedDependencies": [
+    "@parcel/watcher",
+    "@swc/core",
     "sharp",
     "unrs-resolver"
   ]

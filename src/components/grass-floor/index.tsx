@@ -11,6 +11,43 @@ import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 const MODEL_PATH = "/assets/models/terrain/terrain.gltf";
 const ALPHA_TEST = 0.01;
 const FLOOR_SURFACE_Y = -0.75;
+const COLLISION_EXCLUDED_NAME_TERMS = ["fence", "chain"] as const;
+
+function shouldExcludeFromCollision(object: THREE.Object3D) {
+  let current: THREE.Object3D | null = object;
+
+  while (current) {
+    const name = current.name.toLowerCase();
+
+    for (const term of COLLISION_EXCLUDED_NAME_TERMS) {
+      if (name.includes(term)) return true;
+    }
+
+    current = current.parent;
+  }
+
+  return false;
+}
+
+function prepareSceneWithCollisionExclusions(scene: THREE.Object3D) {
+  const decorativeGroup = new THREE.Group();
+  decorativeGroup.name = "decorative";
+
+  const meshesToDetach: THREE.Mesh[] = [];
+
+  scene.traverse((child) => {
+    if (!(child instanceof THREE.Mesh)) return;
+    if (!shouldExcludeFromCollision(child)) return;
+
+    meshesToDetach.push(child);
+  });
+
+  for (const mesh of meshesToDetach) {
+    decorativeGroup.attach(mesh);
+  }
+
+  return { scene, decorativeGroup };
+}
 
 function configureMeshes(object: THREE.Object3D) {
   object.traverse((child) => {
@@ -58,10 +95,10 @@ function GrassFloorModel() {
   const gltf = useGLTF(MODEL_PATH);
   const { actions } = useAnimations(gltf.animations, groupRef);
 
-  const scene = React.useMemo(() => {
+  const { scene, decorativeGroup } = React.useMemo(() => {
     const clone = gltf.scene.clone(true);
     configureMeshes(clone);
-    return clone;
+    return prepareSceneWithCollisionExclusions(clone);
   }, [gltf.scene]);
 
   React.useEffect(() => {
@@ -82,11 +119,12 @@ function GrassFloorModel() {
       position={[0, FLOOR_SURFACE_Y, 0]}
       collisionGroups={COLLISION_GROUPS.floor}
     >
-      <MeshCollider type="trimesh">
-        <group ref={groupRef}>
+      <group ref={groupRef}>
+        <MeshCollider type="trimesh">
           <primitive object={scene} />
-        </group>
-      </MeshCollider>
+        </MeshCollider>
+        <primitive object={decorativeGroup} />
+      </group>
     </RigidBody>
   );
 }

@@ -14,12 +14,14 @@ export type FlowerMapConfig = {
 // each "#" character becomes a flower. Use "." for empty space.
 // "." indicates white spaces.
 export const FLOWER_MAP = `
+...........
+...........
 .#......#..
-...#...#...
-..#.#....#.
+#.........#
+##.......#.
 ...#.#....#
-....###...###
-...##......##
+....###....###
+......##....##
 `.trim();
 
 export const FLOWER_MAP_CONFIG = {

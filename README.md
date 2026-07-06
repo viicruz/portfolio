@@ -90,7 +90,7 @@ The objective is not to recreate Pokémon, but to capture the feeling of explori
 
 ## 📸 Preview
 
-
+<img width="2486" height="904" alt="image" src="https://github.com/user-attachments/assets/a28e4acf-81c9-4fee-84b1-de35ccf34ff0" />
 
 ## 🤝 Feedback
 

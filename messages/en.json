@@ -12,6 +12,16 @@
     "cancel": "CANCEL",
     "hp": "HP"
   },
+  "controls": {
+    "title": "BASIC CONTROLS",
+    "subtitle": "Use these shortcuts to move around and interact with the world.",
+    "move": "Move",
+    "interact": "Interact",
+    "sprint": "Sprint",
+    "menu": "Menu",
+    "close": "Close controls hint",
+    "open": "Controls"
+  },
   "dialogs": {
     "npc1": {
       "dialog1": {

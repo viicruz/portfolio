@@ -12,6 +12,16 @@
     "cancel": "CANCELAR",
     "hp": "HP"
   },
+  "controls": {
+    "title": "CONTROLES BÁSICOS",
+    "subtitle": "Use estes atalhos para se mover e interagir com o mundo.",
+    "move": "Mover",
+    "interact": "Interagir",
+    "sprint": "Correr",
+    "menu": "Menu",
+    "close": "Fechar dica de controles",
+    "open": "Controles"
+  },
   "dialogs": {
     "npc1": {
       "dialog1": {

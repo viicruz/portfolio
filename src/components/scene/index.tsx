@@ -12,6 +12,7 @@ import { ReactTyped } from "react-typed";
 import { useDialogStore } from "@/store";
 
 //*Components imports
+import { ControlsHint } from "@/components/controls-hint";
 import PlayIcon from "@/components/icons/play-icon";
 import { GameMenu } from "@/components/game-menu";
 
@@ -26,6 +27,7 @@ export function Scene(props: SceneProps) {
   return (
     <div className="relative w-full h-svh">
       <GameMenu />
+      <ControlsHint />
       <FPSCounter />
       <div className="absolute bottom-0 left-0 w-full z-10 flex justify-center pb-8">
         {dialogStore.isOnDialog && (

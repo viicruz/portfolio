@@ -17,7 +17,7 @@ const DEFAULT_PARTY_ORDER: PokemonKey[] = [
 
 export type MenuScreen = "closed" | "main" | "pokemon";
 
-export const MAIN_MENU_ITEM_COUNT = 6;
+export const MAIN_MENU_ITEM_COUNT = 4;
 export const POKEMON_MENU_ITEM_INDEX = 0;
 
 export type CursorDirection = "up" | "down" | "left" | "right";

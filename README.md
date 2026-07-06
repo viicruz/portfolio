@@ -1,37 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Interactive Dev Portfolio
 
-## Getting Started
+> **🚧 Work in Progress**
+>
+> This project is currently under active development and is not yet feature-complete. New areas, interactions, mechanics, and content are continuously being added.
 
-First, run the development server:
+An interactive portfolio built with **Next.js**, **React Three Fiber**, **Three.js**, and **Drei**, inspired by the classic **Nintendo DS Pokémon** games.
+
+Rather than navigating a traditional website, visitors explore a 3D world, interact with the environment, and discover my experience, skills, projects, and career as a software developer through gameplay.
+
+## ✨ Vision
+
+The goal of this project is to transform a conventional developer portfolio into a interactive experience. Instead of scrolling through pages, users can freely explore the world, talk to NPCs, discover projects, and learn about my professional journey in a fun and engaging way.
+
+## 🚧 Current Status
+
+The project is still in development.
+
+Current progress includes:
+
+- ✅ Basic player movement
+- ✅ 3D world rendering
+- ✅ Interactive map
+- ✅ Collision system
+- ✅ Camera controls
+- ✅ NPC interactions
+- ✅ Sound effects
+- 🚧 Career and project areas
+- 🚧 UI improvements
+- 🚧 Additional gameplay mechanics
+
+More features will be added over time.
+
+## 🛠️ Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Three.js
+- React Three Fiber
+- Drei
+- React Three Rapier
+- Bun
+
+## 🚀 Getting Started
+
+### Requirements
+
+- Bun
+
+### Installation
+
+Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+git clone <repository-url>
+```
+
+Install dependencies:
+
+```bash
+bun install
+```
+
+Run the development server:
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎮 Controls
 
-## Learn More
+| Action | Key |
+|---------|-----|
+| Move | WASD / Arrow Keys |
 
-To learn more about Next.js, take a look at the following resources:
+> Controls may change as the project evolves.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 💡 Inspiration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This portfolio draws heavy inspiration from the exploration, progression, and visual style of the Pokémon games released for the Nintendo DS.
 
-## Deploy on Vercel
+The objective is not to recreate Pokémon, but to capture the feeling of exploring a small world full of discoveries while presenting my work as a software developer.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📸 Preview
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+
+## 🤝 Feedback
+
+Since this project is still under development, feedback and suggestions are always welcome.
+
+Feel free to open an issue or start a discussion if you'd like to share ideas or report bugs.
+
+## 📄 License
+
+Licensed under the MIT License.

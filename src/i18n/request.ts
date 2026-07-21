@@ -27,6 +27,7 @@ const defaultLocale: Locale = "en" as const;
 function isCookieLocaleValid(cookieLocale: string | undefined): Locale | false {
   if (cookieLocale === null) return false;
   if (cookieLocale === undefined) return false;
+  console.log("[request.ts] is cookieLocale valid", cookieLocale);
 
   const locale = cookieLocale.split(",")[0].toLocaleLowerCase() as Locale;
   const isValid = locales.includes(locale);
@@ -37,6 +38,7 @@ function isCookieLocaleValid(cookieLocale: string | undefined): Locale | false {
 function isHeaderLocaleValid(headerLocale: string | null): Locale | false {
   if (headerLocale === null) return false;
   if (headerLocale === undefined) return false;
+  console.log("[request.ts] is headerLocale valid", headerLocale);
 
   const locale = headerLocale.split(",")[0].toLocaleLowerCase() as Locale;
   const isValid = locales.includes(locale);
@@ -59,6 +61,8 @@ function getLocaleFromCookieOrHeader(
     locale = headerLocaleValid;
   }
 
+  console.log("[request.ts] locale determined from cookie or header", locale);
+
   return locale;
 }
 
@@ -79,6 +83,14 @@ export default getRequestConfig(async () => {
     cookieLocale,
     headerLocale,
   );
+
+  console.log("[request.ts] final locale determined", locale);
+
+  console.log("[request.ts] final config", {
+    locale,
+    formats,
+    messages: (await import(`../../messages/${locale}.json`)).default,
+  });
 
   return {
     locale,

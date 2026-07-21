@@ -24,6 +24,15 @@ export function Scene(props: SceneProps) {
   const t = useTranslations("dialogs");
   const showPhysicsDebug = process.env.NODE_ENV === "development";
   const line = `${dialogStore.npcId}.${dialogStore.dialogId}.${dialogStore.dialogLine}`;
+  console.log("[scene] dialogStore", {
+    npcId: dialogStore.npcId,
+    dialogId: dialogStore.dialogId,
+    dialogLine: dialogStore.dialogLine,
+    isOnDialog: dialogStore.isOnDialog,
+    canDialogAdvance: dialogStore.canDialogAdvance,
+    isLastDialogLine: dialogStore.isLastDialogLine,
+  });
+  console.log("[scene] line", line);
   return (
     <div className="relative w-full h-svh">
       <GameMenu />

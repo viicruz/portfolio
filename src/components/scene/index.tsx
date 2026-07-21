@@ -24,6 +24,7 @@ export function Scene(props: SceneProps) {
   const t = useTranslations("dialogs");
   const showPhysicsDebug = process.env.NODE_ENV === "development";
   const line = `${dialogStore.npcId}.${dialogStore.dialogId}.${dialogStore.dialogLine}`;
+
   return (
     <div className="relative w-full h-svh">
       <GameMenu />

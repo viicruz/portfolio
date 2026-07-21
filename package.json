@@ -8,7 +8,8 @@
     "start": "next start",
     "lint:biome:fix": "biome check . --write",
     "format": "biome format --write",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "check-messages": "bun run scripts/check-messages-parity.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

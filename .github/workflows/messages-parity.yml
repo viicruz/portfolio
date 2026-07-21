@@ -1,0 +1,21 @@
+name: i18n messages parity
+
+on:
+  pull_request:
+    branches: [main, preview, "preview-*"]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Compare locale JSON keys to en.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install
+      - name: Verify translation key parity
+        run: bun run check-messages

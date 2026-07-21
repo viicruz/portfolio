@@ -110,11 +110,6 @@ export const useDialogStore = create<DialogStore>((set) => ({
       if (canDialogAdvance) {
         dialogAdvanceSfx.currentTime = 0;
         dialogAdvanceSfx.play();
-        console.log("[dialog-store] advancing dialog if (canDialogAdvance)", {
-          dialogLine: nextDialogLine,
-          canDialogAdvance,
-          isLastDialogLine,
-        });
         return {
           dialogLine: nextDialogLine,
           canDialogAdvance,
@@ -122,13 +117,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
         };
       } else {
         const actualNpcId = state.npcId;
-        console.log("[dialog-store] advancing dialog else (cannot advance)", {
-          npcId: actualNpcId,
-          dialogId: state.dialogId,
-          dialogLine: state.dialogLine,
-          canDialogAdvance,
-          isLastDialogLine,
-        });
+        
         return {
           npcId: null,
           dialogId: null,

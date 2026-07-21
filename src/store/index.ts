@@ -117,7 +117,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
         };
       } else {
         const actualNpcId = state.npcId;
-        
+
         return {
           npcId: null,
           dialogId: null,

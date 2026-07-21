@@ -59,7 +59,6 @@ function getLocaleFromCookieOrHeader(
     locale = headerLocaleValid;
   }
 
-
   return locale;
 }
 

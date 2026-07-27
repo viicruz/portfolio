@@ -4,6 +4,10 @@
 import React, { Suspense } from "react";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { RigidBody } from "@react-three/rapier";
+
+//* Utils imports
+import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 
 const MODEL_PATH = "/assets/models/pkm-center/pkm-center.glb";
 const MODEL_SCALE = 1 / 16;
@@ -66,25 +70,31 @@ function PkmCenterModel(props: PkmCenterProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  const position = props.position ?? DEFAULT_POSITION;
-  const rotation = props.rotation ?? DEFAULT_ROTATION;
-  const scale = props.scale ?? MODEL_SCALE;
+  // const position = props.position ?? DEFAULT_POSITION;
+  // const rotation = props.rotation ?? DEFAULT_ROTATION;
+  // const scale = props.scale ?? MODEL_SCALE;
 
   return (
-    <group position={position} rotation={rotation} scale={scale}>
-      <primitive object={gltf.scene} />
-    </group>
+    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE}/>
   );
 }
 
 export function PkmCenter(props: PkmCenterProps) {
   return (
     <Suspense fallback={null}>
-      <PkmCenterModel
-        position={props.position}
-        rotation={props.rotation}
-        scale={props.scale}
-      />
+      <RigidBody
+        type="fixed"
+        colliders="trimesh"
+        position={props.position ?? DEFAULT_POSITION}
+        rotation={props.rotation ?? DEFAULT_ROTATION}
+        scale={props.scale ?? MODEL_SCALE}
+        name={RIGID_BODY_NAMES.obstacle}
+        collisionGroups={COLLISION_GROUPS.obstacle}
+      >
+        <PkmCenterModel
+          scale={props.scale}
+        />
+      </RigidBody>
     </Suspense>
   );
 }

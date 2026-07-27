@@ -112,7 +112,7 @@ export default function Home() {
         <Archway position={[0, -1, 26.8]} scale={0.28} />
         <CityStation position={[-9.5, -1, -7]} scale={0.25} />
         <TrainTracks position={[-1.2, -1, -7]} scale={0.06} />
-        <Yacht position={[-45, -1.5, -20]} scale={0.06} />
+        <Yacht position={[-45, -1.5, -20]} scale={0.08} />
         {/* <Tree position={[2, -0.749, 0]} scale={1.25} /> */}
         {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
         {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}

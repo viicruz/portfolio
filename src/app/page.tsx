@@ -28,6 +28,9 @@ import { Museum } from "@/components/museum";
 import { Building1, Building2 } from "@/components/buildings";
 import { Lamp } from "@/components/lamp";
 import { Archway } from "@/components/archway";
+import { CityStation } from "@/components/city-station";
+import { TrainTracks } from "@/components/train-tracks";
+import { Yacht } from "@/components/yacht";
 import { Forest } from "@/components/forest";
 import { Flower } from "@/components/flower";
 import { GrassFloor } from "@/components/grass-floor";
@@ -107,6 +110,9 @@ export default function Home() {
         <Museum position={[10, -1, 8]} scale={0.25} />
         <Lamp position={[4, -1, 11]} scale={0.25} />
         <Archway position={[0, -1, 26.8]} scale={0.28} />
+        <CityStation position={[-9.5, -1, -7]} scale={0.25} />
+        <TrainTracks position={[-1.2, -1, -7]} scale={0.06} />
+        <Yacht position={[-45, -1.5, -20]} scale={0.06} />
         {/* <Tree position={[2, -0.749, 0]} scale={1.25} /> */}
         {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
         {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}

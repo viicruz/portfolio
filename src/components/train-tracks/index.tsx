@@ -5,7 +5,6 @@ import React, { Suspense } from "react";
 import { useGLTF, Clone } from "@react-three/drei";
 import * as THREE from "three";
 
-
 const MODEL_PATH = "/assets/models/train-tracks/train-tracks.glb";
 const MODEL_SCALE = 1 / 16;
 const ALPHA_TEST = 0.01;
@@ -68,10 +67,13 @@ function TrainTracksModel(props: TrainTracksProps) {
   }, [gltf.scene]);
 
   return (
-    <group scale={props.scale ?? MODEL_SCALE} position={props.position} rotation={props.rotation}>
+    <group
+      scale={props.scale ?? MODEL_SCALE}
+      position={props.position}
+      rotation={props.rotation}
+    >
       <Clone object={gltf.scene} />
     </group>
-
   );
 }
 

@@ -69,9 +69,7 @@ function Building1Model(props: BuildingProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  return (
-    <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
-  );
+  return <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
 export function Building1(props: BuildingProps) {
@@ -87,16 +85,13 @@ export function Building1(props: BuildingProps) {
         collisionGroups={COLLISION_GROUPS.obstacle}
         key={`${props.position?.[0]}-${props.position?.[1]}-${props.position?.[2]}`}
       >
-        <Building1Model
-          scale={props.scale}
-        />
+        <Building1Model scale={props.scale} />
       </RigidBody>
     </Suspense>
   );
 }
 
 useGLTF.preload(MODEL_PATH1);
-
 
 function BuildingModel2(props: BuildingProps) {
   const gltf = useGLTF(MODEL_PATH2);
@@ -105,9 +100,7 @@ function BuildingModel2(props: BuildingProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  return (
-    <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
-  );
+  return <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
 export function Building2(props: BuildingProps) {
@@ -123,9 +116,7 @@ export function Building2(props: BuildingProps) {
         collisionGroups={COLLISION_GROUPS.obstacle}
         key={`${props.position?.[0]}-${props.position?.[1]}-${props.position?.[2]}`}
       >
-        <BuildingModel2
-          scale={props.scale}
-        />
+        <BuildingModel2 scale={props.scale} />
       </RigidBody>
     </Suspense>
   );

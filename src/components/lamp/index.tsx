@@ -70,9 +70,7 @@ function LampModel(props: LampProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  return (
-    <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
-  );
+  return <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
 export function Lamp(props: LampProps) {
@@ -87,9 +85,7 @@ export function Lamp(props: LampProps) {
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
       >
-        <LampModel
-          scale={props.scale}
-        />
+        <LampModel scale={props.scale} />
       </RigidBody>
     </Suspense>
   );

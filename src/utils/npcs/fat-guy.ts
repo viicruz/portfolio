@@ -18,11 +18,11 @@ export const FAT_GUY_DATA: NPCData = {
       loop: true,
       startIndex: 0,
       points: [
-      { position: [0, 0, 0], waitMs: 500 },
-      { position: [4, 0, 0], waitMs: 1000 },
-      { position: [4, 0, -6], waitMs: 2000 },
-      { position: [0, 0, -6], waitMs: 1000 },
-      { position: [0, 0, 0], waitMs: 500 }
+        { position: [0, 0, 0], waitMs: 500 },
+        { position: [4, 0, 0], waitMs: 1000 },
+        { position: [4, 0, -6], waitMs: 2000 },
+        { position: [0, 0, -6], waitMs: 1000 },
+        { position: [0, 0, 0], waitMs: 500 },
       ],
     },
   },

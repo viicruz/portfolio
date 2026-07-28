@@ -70,9 +70,7 @@ function MuseumModel(props: MuseumProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  return (
-    <primitive object={gltf.scene} scale={props.scale} />
-  );
+  return <primitive object={gltf.scene} scale={props.scale} />;
 }
 
 export function Museum(props: MuseumProps) {
@@ -87,11 +85,8 @@ export function Museum(props: MuseumProps) {
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
       >
-        <MuseumModel
-          scale={props.scale}
-        />
+        <MuseumModel scale={props.scale} />
       </RigidBody>
-
     </Suspense>
   );
 }

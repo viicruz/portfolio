@@ -70,9 +70,7 @@ function RadioCityStationModel(props: RadioCityStationProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  return (
-    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
-  );
+  return <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
 export function RadioCityStation(props: RadioCityStationProps) {
@@ -87,9 +85,7 @@ export function RadioCityStation(props: RadioCityStationProps) {
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
       >
-        <RadioCityStationModel
-          scale={props.scale}
-        />
+        <RadioCityStationModel scale={props.scale} />
       </RigidBody>
     </Suspense>
   );

@@ -77,7 +77,10 @@ export function useFollowCamera(
         desiredFollow,
         dampFactor(followSmooth, clampedDelta),
       );
-      lookGhost.position.lerp(desiredLook, dampFactor(lookSmooth, clampedDelta));
+      lookGhost.position.lerp(
+        desiredLook,
+        dampFactor(lookSmooth, clampedDelta),
+      );
     }
 
     camera.position.copy(followGhost.position).add(offset);

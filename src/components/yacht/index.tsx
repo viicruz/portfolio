@@ -107,7 +107,6 @@ function YachtModel(props: YachtProps) {
     <group ref={groupRef} scale={props.scale ?? MODEL_SCALE}>
       <primitive object={gltf.scene} />
     </group>
-
   );
 }
 

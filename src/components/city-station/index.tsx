@@ -70,9 +70,7 @@ function CityStationModel(props: CityStationProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  return (
-    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
-  );
+  return <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
 export function CityStation(props: CityStationProps) {
@@ -87,9 +85,7 @@ export function CityStation(props: CityStationProps) {
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
       >
-        <CityStationModel
-          scale={props.scale}
-        />
+        <CityStationModel scale={props.scale} />
       </RigidBody>
     </Suspense>
   );

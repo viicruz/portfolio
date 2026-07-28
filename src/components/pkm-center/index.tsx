@@ -74,9 +74,7 @@ function PkmCenterModel(props: PkmCenterProps) {
   // const rotation = props.rotation ?? DEFAULT_ROTATION;
   // const scale = props.scale ?? MODEL_SCALE;
 
-  return (
-    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE}/>
-  );
+  return <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
 export function PkmCenter(props: PkmCenterProps) {
@@ -91,9 +89,7 @@ export function PkmCenter(props: PkmCenterProps) {
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
       >
-        <PkmCenterModel
-          scale={props.scale}
-        />
+        <PkmCenterModel scale={props.scale} />
       </RigidBody>
     </Suspense>
   );

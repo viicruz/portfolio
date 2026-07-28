@@ -70,9 +70,7 @@ function ArchwayModel(props: ArchwayProps) {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  return (
-    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
-  );
+  return <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
 export function Archway(props: ArchwayProps) {
@@ -87,9 +85,7 @@ export function Archway(props: ArchwayProps) {
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
       >
-        <ArchwayModel
-          scale={props.scale}
-        />
+        <ArchwayModel scale={props.scale} />
       </RigidBody>
     </Suspense>
   );

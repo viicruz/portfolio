@@ -2,7 +2,7 @@
 
 //* Libraries imports
 import React, { Suspense } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Clone } from "@react-three/drei";
 import * as THREE from "three";
 import { RigidBody } from "@react-three/rapier";
 
@@ -71,7 +71,7 @@ function LampModel(props: LampProps) {
   }, [gltf.scene]);
 
   return (
-    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
+    <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
   );
 }
 

@@ -3,19 +3,19 @@
 //* Libraries imports
 import React, { Suspense } from "react";
 import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { RigidBody } from "@react-three/rapier";
 
-//* Utils imports
-import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
-
-const MODEL_PATH = "/assets/models/pkm-center/pkm-center.glb";
+const MODEL_PATH = "/assets/models/yacht/yacht.glb";
 const MODEL_SCALE = 1 / 16;
 const ALPHA_TEST = 0.01;
 const DEFAULT_POSITION: [number, number, number] = [0, 2, -10];
 const DEFAULT_ROTATION: [number, number, number] = [0, 0, 0];
+const WAVE_VERTICAL_AMPLITUDE = 0.14;
+const WAVE_TILT_AMPLITUDE = 0.045;
+const WAVE_SPEED = 1.15;
 
-type PkmCenterProps = {
+type YachtProps = {
   position?: [number, number, number];
   rotation?: [number, number, number];
   scale?: number;
@@ -63,34 +63,61 @@ function configureMeshes(object: THREE.Object3D) {
   });
 }
 
-function PkmCenterModel(props: PkmCenterProps) {
+function YachtModel(props: YachtProps) {
   const gltf = useGLTF(MODEL_PATH);
+  const groupRef = React.useRef<THREE.Group>(null);
+  const waveTimeRef = React.useRef(0);
+  const basePositionRef = React.useRef<[number, number, number]>(
+    props.position ?? DEFAULT_POSITION,
+  );
+  const baseRotationRef = React.useRef<[number, number, number]>(
+    props.rotation ?? DEFAULT_ROTATION,
+  );
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  // const position = props.position ?? DEFAULT_POSITION;
-  // const rotation = props.rotation ?? DEFAULT_ROTATION;
-  // const scale = props.scale ?? MODEL_SCALE;
+  React.useEffect(() => {
+    basePositionRef.current = props.position ?? DEFAULT_POSITION;
+  }, [props.position]);
 
-  return <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
+  React.useEffect(() => {
+    baseRotationRef.current = props.rotation ?? DEFAULT_ROTATION;
+  }, [props.rotation]);
+
+  useFrame((_, delta) => {
+    const group = groupRef.current;
+    if (!group) return;
+
+    waveTimeRef.current += delta;
+
+    const wavePhase = waveTimeRef.current * WAVE_SPEED;
+    const bob = Math.sin(wavePhase) * WAVE_VERTICAL_AMPLITUDE;
+    const tilt = Math.sin(wavePhase + Math.PI / 2) * WAVE_TILT_AMPLITUDE;
+    const roll = Math.sin(wavePhase * 0.7) * WAVE_TILT_AMPLITUDE * 0.65;
+    const [baseX, baseY, baseZ] = basePositionRef.current;
+    const [baseRotX, baseRotY, baseRotZ] = baseRotationRef.current;
+
+    group.position.set(baseX, baseY + bob, baseZ);
+    group.rotation.set(baseRotX + tilt, baseRotY, baseRotZ + roll);
+  });
+
+  return (
+    <group ref={groupRef} scale={props.scale ?? MODEL_SCALE}>
+      <primitive object={gltf.scene} />
+    </group>
+  );
 }
 
-export function PkmCenter(props: PkmCenterProps) {
+export function Yacht(props: YachtProps) {
   return (
     <Suspense fallback={null}>
-      <RigidBody
-        type="fixed"
-        colliders="trimesh"
+      <YachtModel
         position={props.position ?? DEFAULT_POSITION}
         rotation={props.rotation ?? DEFAULT_ROTATION}
-        scale={props.scale ?? MODEL_SCALE}
-        name={RIGID_BODY_NAMES.obstacle}
-        collisionGroups={COLLISION_GROUPS.obstacle}
-      >
-        <PkmCenterModel scale={props.scale} />
-      </RigidBody>
+        scale={props.scale}
+      />
     </Suspense>
   );
 }

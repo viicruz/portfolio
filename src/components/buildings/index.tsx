@@ -2,20 +2,19 @@
 
 //* Libraries imports
 import React, { Suspense } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Clone } from "@react-three/drei";
 import * as THREE from "three";
+import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 import { RigidBody } from "@react-three/rapier";
 
-//* Utils imports
-import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
-
-const MODEL_PATH = "/assets/models/pkm-center/pkm-center.glb";
+const MODEL_PATH1 = "/assets/models/buildings/building1.glb";
+const MODEL_PATH2 = "/assets/models/buildings/building2.glb";
 const MODEL_SCALE = 1 / 16;
 const ALPHA_TEST = 0.01;
 const DEFAULT_POSITION: [number, number, number] = [0, 2, -10];
 const DEFAULT_ROTATION: [number, number, number] = [0, 0, 0];
 
-type PkmCenterProps = {
+type BuildingProps = {
   position?: [number, number, number];
   rotation?: [number, number, number];
   scale?: number;
@@ -63,21 +62,17 @@ function configureMeshes(object: THREE.Object3D) {
   });
 }
 
-function PkmCenterModel(props: PkmCenterProps) {
-  const gltf = useGLTF(MODEL_PATH);
+function Building1Model(props: BuildingProps) {
+  const gltf = useGLTF(MODEL_PATH1);
 
   React.useMemo(() => {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  // const position = props.position ?? DEFAULT_POSITION;
-  // const rotation = props.rotation ?? DEFAULT_ROTATION;
-  // const scale = props.scale ?? MODEL_SCALE;
-
-  return <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
+  return <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
 }
 
-export function PkmCenter(props: PkmCenterProps) {
+export function Building1(props: BuildingProps) {
   return (
     <Suspense fallback={null}>
       <RigidBody
@@ -88,11 +83,43 @@ export function PkmCenter(props: PkmCenterProps) {
         scale={props.scale ?? MODEL_SCALE}
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
+        key={`${props.position?.[0]}-${props.position?.[1]}-${props.position?.[2]}`}
       >
-        <PkmCenterModel scale={props.scale} />
+        <Building1Model scale={props.scale} />
       </RigidBody>
     </Suspense>
   );
 }
 
-useGLTF.preload(MODEL_PATH);
+useGLTF.preload(MODEL_PATH1);
+
+function BuildingModel2(props: BuildingProps) {
+  const gltf = useGLTF(MODEL_PATH2);
+
+  React.useMemo(() => {
+    configureMeshes(gltf.scene);
+  }, [gltf.scene]);
+
+  return <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
+}
+
+export function Building2(props: BuildingProps) {
+  return (
+    <Suspense fallback={null}>
+      <RigidBody
+        type="fixed"
+        colliders="trimesh"
+        position={props.position ?? DEFAULT_POSITION}
+        rotation={props.rotation ?? DEFAULT_ROTATION}
+        scale={props.scale ?? MODEL_SCALE}
+        name={RIGID_BODY_NAMES.obstacle}
+        collisionGroups={COLLISION_GROUPS.obstacle}
+        key={`${props.position?.[0]}-${props.position?.[1]}-${props.position?.[2]}`}
+      >
+        <BuildingModel2 scale={props.scale} />
+      </RigidBody>
+    </Suspense>
+  );
+}
+
+useGLTF.preload(MODEL_PATH2);

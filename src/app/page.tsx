@@ -23,17 +23,7 @@ import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
 import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
-import { PkmCenter } from "@/components/pkm-center";
-import { Museum } from "@/components/museum";
-import { Building1, Building2 } from "@/components/buildings";
-import { Lamp } from "@/components/lamp";
-import { Archway } from "@/components/archway";
-import { CityStation } from "@/components/city-station";
-import { TrainTracks } from "@/components/train-tracks";
-import { Yacht } from "@/components/yacht";
-import { Forest } from "@/components/forest";
-import { Flower } from "@/components/flower";
-import { GrassFloor } from "@/components/grass-floor";
+import { City } from "@/components/city";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
 function DirectionalLightWithHelper() {
@@ -101,24 +91,7 @@ export default function Home() {
   return (
     <main className="w-full h-svh">
       <Scene>
-        <GrassFloor />
-
-        <PkmCenter position={[-6, -1, 9.5]} scale={0.25}  />
-        <Building1 position={[-10.75, -1, 9.5]} scale={0.85} />
-        <Building2 position={[-15.2, -1, 9.5]} scale={0.25} />
-        {/* <Building2 position={[-14, -1, 10]} scale={0.25} /> */}
-        <Museum position={[10, -1, 8]} scale={0.25} />
-        <Lamp position={[4, -1, 11]} scale={0.25} />
-        <Archway position={[0, -1, 26.8]} scale={0.28} />
-        <CityStation position={[-9.5, -1, -7]} scale={0.25} />
-        <TrainTracks position={[-1.2, -1, -7]} scale={0.06} />
-        <Yacht position={[-45, -1.5, -20]} scale={0.08} />
-        {/* <Tree position={[2, -0.749, 0]} scale={1.25} /> */}
-        {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
-        {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}
-        {/* <Tree position={[3, -0.749, -6]} scale={1.25} /> */}
-        <Forest baseY={-0.749} />
-        <Flower />
+        <City />
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm

@@ -2,7 +2,7 @@
 
 //* Libraries imports
 import React, { Suspense } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Clone } from "@react-three/drei";
 import * as THREE from "three";
 
 
@@ -69,7 +69,7 @@ function TrainTracksModel(props: TrainTracksProps) {
 
   return (
     <group scale={props.scale ?? MODEL_SCALE} position={props.position} rotation={props.rotation}>
-      <primitive object={gltf.scene} />
+      <Clone object={gltf.scene} />
     </group>
 
   );

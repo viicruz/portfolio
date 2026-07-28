@@ -51,7 +51,9 @@
         "8": "•Addition of 3D models of trees and forest layout.",
         "9": "•Update of the map layout and scenery (fences, streets, and sea).",
         "10": "•Controls HUD.",
-        "11": "Well, for now that's it, come here from time to time. Whenever there are news, I update this wall!"
+        "11": "•3D models of structures and construction of the city area.",
+        "12": "•Change in how the camera behaves, smoothing the transition and user movements.",
+        "13": "Well, for now that's it, come here from time to time. Whenever there are news, I update this wall!"
       }
     }
   }

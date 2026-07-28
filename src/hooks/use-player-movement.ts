@@ -65,6 +65,10 @@ export function usePlayerMovement(
     if (!ref.current) return;
 
     const body = ref.current;
+    //log player position
+    // const position = body.translation();
+    // console.log("Player position:", position.x, position.y, position.z);
+
     if (!isActiveRef.current) {
       const currentY = body.linvel().y;
       body.setLinvel({ x: 0, y: currentY, z: 0 }, true);

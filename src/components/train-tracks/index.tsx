@@ -2,20 +2,16 @@
 
 //* Libraries imports
 import React, { Suspense } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Clone } from "@react-three/drei";
 import * as THREE from "three";
-import { RigidBody } from "@react-three/rapier";
 
-//* Utils imports
-import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
-
-const MODEL_PATH = "/assets/models/pkm-center/pkm-center.glb";
+const MODEL_PATH = "/assets/models/train-tracks/train-tracks.glb";
 const MODEL_SCALE = 1 / 16;
 const ALPHA_TEST = 0.01;
 const DEFAULT_POSITION: [number, number, number] = [0, 2, -10];
 const DEFAULT_ROTATION: [number, number, number] = [0, 0, 0];
 
-type PkmCenterProps = {
+type TrainTracksProps = {
   position?: [number, number, number];
   rotation?: [number, number, number];
   scale?: number;
@@ -63,34 +59,32 @@ function configureMeshes(object: THREE.Object3D) {
   });
 }
 
-function PkmCenterModel(props: PkmCenterProps) {
+function TrainTracksModel(props: TrainTracksProps) {
   const gltf = useGLTF(MODEL_PATH);
 
   React.useMemo(() => {
     configureMeshes(gltf.scene);
   }, [gltf.scene]);
 
-  // const position = props.position ?? DEFAULT_POSITION;
-  // const rotation = props.rotation ?? DEFAULT_ROTATION;
-  // const scale = props.scale ?? MODEL_SCALE;
-
-  return <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />;
+  return (
+    <group
+      scale={props.scale ?? MODEL_SCALE}
+      position={props.position}
+      rotation={props.rotation}
+    >
+      <Clone object={gltf.scene} />
+    </group>
+  );
 }
 
-export function PkmCenter(props: PkmCenterProps) {
+export function TrainTracks(props: TrainTracksProps) {
   return (
     <Suspense fallback={null}>
-      <RigidBody
-        type="fixed"
-        colliders="trimesh"
+      <TrainTracksModel
         position={props.position ?? DEFAULT_POSITION}
         rotation={props.rotation ?? DEFAULT_ROTATION}
-        scale={props.scale ?? MODEL_SCALE}
-        name={RIGID_BODY_NAMES.obstacle}
-        collisionGroups={COLLISION_GROUPS.obstacle}
-      >
-        <PkmCenterModel scale={props.scale} />
-      </RigidBody>
+        scale={props.scale}
+      />
     </Suspense>
   );
 }

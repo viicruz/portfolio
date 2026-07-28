@@ -23,10 +23,7 @@ import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
 import { FollowerPkm } from "@/components/characters/follower-pkm";
 import { Npc } from "@/components/characters/npc";
-import { PkmCenter } from "@/components/pkm-center";
-import { Forest } from "@/components/forest";
-import { Flower } from "@/components/flower";
-import { GrassFloor } from "@/components/grass-floor";
+import { City } from "@/components/city";
 import { useHardwareThreeSupport } from "@/hooks/use-hardware-three-support";
 
 function DirectionalLightWithHelper() {
@@ -94,15 +91,7 @@ export default function Home() {
   return (
     <main className="w-full h-svh">
       <Scene>
-        <GrassFloor />
-
-        <PkmCenter position={[-6, -1, 9.5]} scale={0.25} />
-        {/* <Tree position={[2, -0.749, 0]} scale={1.25} /> */}
-        {/* <Tree position={[-5, -0.749, -4]} scale={1.25} /> */}
-        {/* <Tree position={[0, -0.749, -6]} scale={1.25} /> */}
-        {/* <Tree position={[3, -0.749, -6]} scale={1.25} /> */}
-        <Forest baseY={-0.749} />
-        <Flower />
+        <City />
         <CharacterControls>
           <Player playerBodyRef={playerBodyRef} />
           <FollowerPkm

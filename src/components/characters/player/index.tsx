@@ -97,9 +97,7 @@ type PlayerProps = {
   playerBodyRef: React.RefObject<RapierRigidBody | null>;
 };
 
-export function Player({ playerBodyRef }: PlayerProps) {
-  const meshRef = React.useRef<THREE.Mesh>(null);
-
+export function Player(props: PlayerProps) {
   const handleCollisionEnter = React.useCallback(
     (payload: CollisionEnterLike) => {
       if (!shouldPlayBumpingSound(payload)) return;
@@ -110,27 +108,28 @@ export function Player({ playerBodyRef }: PlayerProps) {
 
   const setBodyRef = React.useCallback(
     (body: RapierRigidBody | null) => {
-      playerBodyRef.current = body;
+      props.playerBodyRef.current = body;
       if (!body) return;
 
       body.setEnabledRotations(false, false, false, false);
       body.setAngularDamping(5);
     },
-    [playerBodyRef],
+    [props.playerBodyRef],
   );
 
-  const { direction, movementState } = usePlayerAnimation(playerBodyRef);
+  const { direction, movementState } = usePlayerAnimation(props.playerBodyRef);
   const animationName = getAnimationName(direction, movementState);
 
-  //@ts-expect-error
-  useFollowCamera(meshRef, {
+  useFollowCamera(props.playerBodyRef, {
     offset: new THREE.Vector3(0, CAMERA_PARAMS.height, CAMERA_PARAMS.distance),
-    lerp: 0.1,
+    followSmooth: 6,
+    lookSmooth: 10,
+    lookAhead: 0,
   });
 
   useDialogAdvance();
   useGameMenuControls();
-  usePlayerMovement(playerBodyRef, { speed: SPEED });
+  usePlayerMovement(props.playerBodyRef, { speed: SPEED });
 
   return (
     <RigidBody
@@ -146,7 +145,6 @@ export function Player({ playerBodyRef }: PlayerProps) {
       position={[0, 2, 30]}
       onCollisionEnter={handleCollisionEnter}
     >
-      <mesh ref={meshRef} position={[0, 0, 0]} />
       <CapsuleCollider
         args={[0.5, 0.5]}
         collisionGroups={COLLISION_GROUPS.player}

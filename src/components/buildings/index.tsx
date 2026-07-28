@@ -2,7 +2,7 @@
 
 //* Libraries imports
 import React, { Suspense } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Clone } from "@react-three/drei";
 import * as THREE from "three";
 import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 import { RigidBody } from "@react-three/rapier";
@@ -70,7 +70,7 @@ function Building1Model(props: BuildingProps) {
   }, [gltf.scene]);
 
   return (
-    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
+    <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
   );
 }
 
@@ -85,6 +85,7 @@ export function Building1(props: BuildingProps) {
         scale={props.scale ?? MODEL_SCALE}
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
+        key={`${props.position?.[0]}-${props.position?.[1]}-${props.position?.[2]}`}
       >
         <Building1Model
           scale={props.scale}
@@ -105,7 +106,7 @@ function BuildingModel2(props: BuildingProps) {
   }, [gltf.scene]);
 
   return (
-    <primitive object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
+    <Clone object={gltf.scene} scale={props.scale ?? MODEL_SCALE} />
   );
 }
 
@@ -120,6 +121,7 @@ export function Building2(props: BuildingProps) {
         scale={props.scale ?? MODEL_SCALE}
         name={RIGID_BODY_NAMES.obstacle}
         collisionGroups={COLLISION_GROUPS.obstacle}
+        key={`${props.position?.[0]}-${props.position?.[1]}-${props.position?.[2]}`}
       >
         <BuildingModel2
           scale={props.scale}

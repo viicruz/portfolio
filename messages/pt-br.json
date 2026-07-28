@@ -44,14 +44,16 @@
         "1": "Eai bem vindo ao Devlog.",
         "2": "Se você já passou por aqui antes, este é o lugar para conferir tudo o que mudou desde a última atualização.",
         "3": "Sabe, passei um tempinho registrando as mudanças...",
-        "4": "Atualização da versão 0.3.1:",
+        "4": "Atualização da versão 0.3.2:",
         "5": "•Agora é possível escolher qual Pokémon acompanha o jogador.",
         "6": "•Melhorias de desempenho e shaders baseados no hardware do usuário.",
         "7": "•Renderizaração de sombras melhorada.",
         "8": "•Adição dos modelos 3D das árvores e layout da floresta.",
         "9": "•Atualização do layout do mapa e do cenário(cercas, ruas e mar).",
         "10": "•HUD de controles.",
-        "11": "Bom, por enquanto é isso, passe aqui de vez em quando. Sempre que houver novidades, eu atualizo este mural!"
+        "11": "•Modelos 3D das estruturas e contrução da área da cidade.",
+        "12": "•Mudança em como a câmera se comporta suavizando a transição e os movimentos do usuário.",
+        "13": "Bom, por enquanto é isso, passe aqui de vez em quando. Sempre que houver novidades, eu atualizo este mural!"
       }
     }
   }

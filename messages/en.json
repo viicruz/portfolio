@@ -22,6 +22,31 @@
     "close": "Close controls hint",
     "open": "Controls"
   },
+  "opening": {
+    "continueHint": "Press A / Space / Enter",
+    "professorLines": {
+      "1": "Hello there! Welcome to the world of POKéMON!",
+      "2": "My name is PROF. ELM. People call me the POKéMON PROF!",
+      "3": "This world is inhabited by creatures we call POKéMON.",
+      "4": "In truth, this is my portfolio — an interactive world built with Three.js.",
+      "5": "Explore freely and you will find projects, tech, and a bit of my journey as a developer."
+    },
+    "pokemonLines": {
+      "1": "This is what we call a POKéMON.",
+      "2": "Cute, right? Some people keep them as pets. Others use them for battles.",
+      "3": "As for myself... I study POKéMON as a profession."
+    },
+    "genderPrompt": "Are you a boy? Or are you a girl?",
+    "boy": "BOY",
+    "girl": "GIRL",
+    "namePrompt": "Let's begin with your name. What is it?",
+    "namePlaceholder": "YOUR NAME",
+    "confirmName": "So your name is {name}?",
+    "yes": "YES",
+    "no": "NO",
+    "readyLine": "All right, {name}! Your very own POKéMON adventure is about to unfold!",
+    "submitName": "OK"
+  },
   "dialogs": {
     "npc1": {
       "dialog1": {

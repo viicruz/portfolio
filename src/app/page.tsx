@@ -18,6 +18,9 @@ import { CharacterControls } from "@/contexts/controls";
 //* Store imports
 import { useGameMenuStore } from "@/store/game-menu";
 
+//* Utils imports — install LoadingManager hooks before model/sprite preloads
+import "@/utils/preload-assets";
+
 //* Components imports
 import { Scene } from "@/components/scene";
 import { Player } from "@/components/characters/player";
@@ -90,16 +93,19 @@ export default function Home() {
 
   return (
     <main className="w-full h-svh">
-      <Scene>
+      <Scene
+        characters={
+          <CharacterControls>
+            <Player playerBodyRef={playerBodyRef} />
+            <FollowerPkm
+              scale={[1.5, 1.2, 1.5]}
+              playerBodyRef={playerBodyRef}
+              pokemonKey={leadPokemon}
+            />
+          </CharacterControls>
+        }
+      >
         <City />
-        <CharacterControls>
-          <Player playerBodyRef={playerBodyRef} />
-          <FollowerPkm
-            scale={[1.5, 1.2, 1.5]}
-            playerBodyRef={playerBodyRef}
-            pokemonKey={leadPokemon}
-          />
-        </CharacterControls>
         {/* <Npc npcId="npc1" dialogId="dialog1" /> */}
         <Npc name="PROFESSOR_ELM" />
         {/* Example NPC with patrol behavior (local square route) */}

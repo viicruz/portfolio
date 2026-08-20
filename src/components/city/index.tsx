@@ -10,6 +10,7 @@ import { Archway } from "@/components/archway";
 import { CityStation } from "@/components/city-station";
 import { RadioCityStation } from "@/components/radio-city-station";
 import { TrainTracks } from "@/components/train-tracks";
+import { TrainTracksFoot } from "@/components/train-track-foot";
 import { Yacht } from "@/components/yacht";
 import { Forest } from "@/components/forest";
 import { Flower } from "@/components/flower";
@@ -62,6 +63,8 @@ export function City() {
       <TrainTracks position={[6.6, -1, -7]} scale={0.05995} />
       <TrainTracks position={[14.2, -1, -7]} scale={0.06} />
       <TrainTracks position={[21.8, -1, -7]} scale={0.05995} />
+      <TrainTracksFoot position={[6.6, -1, -7]} scale={0.05995} />
+      <TrainTracksFoot position={[14.2, -1, -7]} scale={0.05995} />
 
       {/* south block */}
       <Building1 position={[20, -1, -31]} scale={0.85} />

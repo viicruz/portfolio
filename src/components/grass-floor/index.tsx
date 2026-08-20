@@ -11,7 +11,7 @@ import { COLLISION_GROUPS, RIGID_BODY_NAMES } from "@/lib/rapier-collision";
 const MODEL_PATH = "/assets/models/terrain/terrain.gltf";
 const ALPHA_TEST = 0.01;
 const FLOOR_SURFACE_Y = -0.75;
-const COLLISION_EXCLUDED_NAME_TERMS = ["fence", "chain"] as const;
+const COLLISION_EXCLUDED_NAME_TERMS = ["fence", "chain", "mountain"] as const;
 
 function shouldExcludeFromCollision(object: THREE.Object3D) {
   let current: THREE.Object3D | null = object;

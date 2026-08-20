@@ -14,19 +14,19 @@ export type FlowerMapConfig = {
 // each "#" character becomes a flower. Use "." for empty space.
 // "." indicates white spaces.
 export const FLOWER_MAP = `
-...........
-...........
-.#......#..
-#.........#
-##.......#.
-...#.#....#
-....###....###
-......##....##
+............
+............
+..#.......#.
+.#.........#
+.##.......##
+.##.......##
+###.......###
+.##.......##
 `.trim();
 
 export const FLOWER_MAP_CONFIG = {
   flowerChar: "#",
-  origin: { x: -5, z: 25 },
+  origin: { x: -6, z: 25 },
   step: { x: 1, z: 2 },
 } as const satisfies FlowerMapConfig;
 

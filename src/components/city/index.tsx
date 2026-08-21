@@ -15,6 +15,7 @@ import { Yacht } from "@/components/yacht";
 import { Forest } from "@/components/forest";
 import { Flower } from "@/components/flower";
 import { GrassFloor } from "@/components/grass-floor";
+import { BulletTrain } from "../city-station/bullet-train";
 
 export function City() {
   return (
@@ -58,6 +59,7 @@ export function City() {
       {/* station area, -7 */}
       <RadioCityStation position={[-15.6, -1, -7]} scale={0.25} />
       <CityStation position={[-8.5, -1, -7]} scale={0.25} />
+      <BulletTrain position={[-15, 2.4, -7]} scale={0.03} />
 
       <TrainTracks position={[-1, -1, -7]} scale={0.06} />
       <TrainTracks position={[6.6, -1, -7]} scale={0.05995} />

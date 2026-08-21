@@ -49,7 +49,13 @@ export function Scene(props: SceneProps) {
           </div>
         )}
       </div>
-      <Canvas camera={{ fov: 40 }} shadows>
+      <Canvas
+        camera={{ fov: 40 }}
+        shadows
+        onCreated={(state) => {
+          state.gl.localClippingEnabled = true; // enable local clipping
+        }}
+      >
         <Suspense fallback={null}>
           <Physics
             debug={showPhysicsDebug}

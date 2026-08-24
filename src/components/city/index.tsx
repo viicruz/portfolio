@@ -16,6 +16,7 @@ import { Forest } from "@/components/forest";
 import { Flower } from "@/components/flower";
 import { GrassFloor } from "@/components/grass-floor";
 import { BulletTrain } from "../city-station/bullet-train";
+import { EnGate } from "@/components/en-gate";
 
 export function City() {
   return (
@@ -31,18 +32,23 @@ export function City() {
       <Lamp position={[-4, -1, 11]} scale={0.25} />
 
       {/* north block */}
+      <EnGate position={[0, -1, -37.5]} scale={0.25} rotation={[0, Math.PI / 2, 0]} />
+      <Building1 position={[6.5, -1, -31]} scale={0.85} />
       <Building1 position={[-6, -1, 25.5]} scale={0.85} />
       <Building1 position={[6.5, -1, 20.9]} scale={0.85} />
       <Building1 position={[6.5, -1, 24]} scale={0.85} />
       <Building1 position={[6.5, -1, 24]} scale={0.85} />
       <Building1 position={[19, -1, 25.5]} scale={0.85} />
+      <Building1 position={[-7, -1, -29]} scale={0.85} />
 
+      <Building2 position={[11, -1, -31]} scale={0.25} />
       <Building2 position={[14, -1, 26]} scale={0.25} />
       <Building2 position={[14, -1, 26]} scale={0.25} />
       <Building2 position={[14, -1, 26]} scale={0.25} />
       <Building2 position={[20, -1, 22]} scale={0.25} />
       <Building2 position={[20, -1, 18]} scale={0.25} />
       <Building2 position={[-7.5, -1, 22.5]} scale={0.25} />
+      <Building2 position={[-11.6, -1, -28]} scale={0.25} />
 
       <Archway position={[0, -1, 26.8]} scale={0.28} />
       <Lamp position={[-4.8, -1, 19]} scale={0.25} />

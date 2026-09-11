@@ -29,6 +29,7 @@ Current progress includes:
 - 🚧 UI improvements
 - 🚧 Additional gameplay mechanics
 
+
 More features will be added over time.
 
 ## 🛠️ Tech Stack

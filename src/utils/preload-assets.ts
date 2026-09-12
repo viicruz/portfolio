@@ -43,7 +43,50 @@ export const HOMEPAGE_SPRITE_DATA_URLS = [
   POKEMON_SPRITES.CHIKORITA.SPRITE_DATA,
 ] as const;
 
+export const OPENING_SPRITE_PATHS = [
+  "/assets/sprites/opening/professor.png",
+  "/assets/sprites/opening/marill.png",
+  "/assets/sprites/opening/marill-2.png",
+  "/assets/sprites/opening/ethan.png",
+  "/assets/sprites/opening/lyra.png",
+  "/assets/sprites/opening/pokeball.png",
+] as const;
+
 let didPreload = false;
+let openingPreloadPromise: Promise<void> | null = null;
+
+function decodeOpeningImage(src: string): Promise<void> {
+  const image = new Image();
+  image.src = src;
+
+  if (typeof image.decode === "function") {
+    return image.decode().then(() => undefined);
+  }
+
+  return new Promise((resolve, reject) => {
+    if (image.complete && image.naturalWidth > 0) {
+      resolve();
+      return;
+    }
+
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error(`Failed to preload ${src}`));
+  });
+}
+
+export function preloadOpeningAssets(): Promise<void> {
+  if (openingPreloadPromise) {
+    return openingPreloadPromise;
+  }
+
+  openingPreloadPromise = Promise.all(
+    OPENING_SPRITE_PATHS.map((src) =>
+      decodeOpeningImage(src).catch(() => undefined),
+    ),
+  ).then(() => undefined);
+
+  return openingPreloadPromise;
+}
 
 export function preloadHomepageAssets() {
   if (didPreload) {

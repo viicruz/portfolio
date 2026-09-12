@@ -52,7 +52,6 @@
   --animate-marill-idle-b: marill-idle-b 800ms step-end infinite;
   --animate-pokeball-drop: pokeball-drop 350ms ease-out both;
   --animate-pokeball-shake: pokeball-shake 280ms step-end both;
-  --animate-release-flash: release-flash 220ms ease-out both;
   --animate-marill-enter: marill-enter 400ms ease-out both;
 
   @keyframes marill-idle-a {
@@ -113,26 +112,18 @@
     }
   }
 
-  @keyframes release-flash {
-    0% {
-      opacity: 0;
-    }
-    30% {
-      opacity: 0.9;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-
   @keyframes marill-enter {
     0% {
-      opacity: 0;
-      transform: scale(0.4);
+      transform: scale(0.12);
+      filter: brightness(0) invert(1);
+    }
+    70% {
+      transform: scale(1);
+      filter: brightness(0) invert(1);
     }
     100% {
-      opacity: 1;
       transform: scale(1);
+      filter: brightness(1) invert(0);
     }
   }
 }

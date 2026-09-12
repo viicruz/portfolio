@@ -22,7 +22,10 @@ import { OpeningIntro } from "@/components/opening-intro";
 
 //* Utils imports
 import { cn } from "@/lib/utils";
-import { preloadHomepageAssets } from "@/utils/preload-assets";
+import {
+  preloadHomepageAssets,
+  preloadOpeningAssets,
+} from "@/utils/preload-assets";
 
 type SceneProps = {
   children?: React.ReactNode;
@@ -89,6 +92,7 @@ export function Scene(props: SceneProps) {
 
   useEffect(() => {
     preloadHomepageAssets();
+    void preloadOpeningAssets();
   }, []);
 
   useEffect(() => {
@@ -101,7 +105,17 @@ export function Scene(props: SceneProps) {
       return;
     }
 
-    setBootPhase("intro");
+    let cancelled = false;
+
+    void preloadOpeningAssets().then(() => {
+      if (!cancelled) {
+        setBootPhase("intro");
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [hydrated, hasCompletedOpening, bootPhase]);
 
   const finishReveal = useEffectEvent(() => {

@@ -16,15 +16,6 @@ import {
   type PlayerGender,
 } from "@/utils/player-profile";
 
-const OPENING_ASSETS = [
-  "/assets/sprites/opening/professor.png",
-  "/assets/sprites/opening/marill.png",
-  "/assets/sprites/opening/marill-2.png",
-  "/assets/sprites/opening/ethan.png",
-  "/assets/sprites/opening/lyra.png",
-  "/assets/sprites/opening/pokeball.png",
-] as const;
-
 const PROFESSOR_LINE_KEYS = ["1", "2", "3", "4", "5"] as const;
 const POKEMON_LINE_KEYS = ["1", "2", "3"] as const;
 
@@ -34,7 +25,6 @@ const PROFESSOR_SHIFT_MS = 550;
 const POKEBALL_APPEAR_MS = 350;
 const POKEBALL_HOLD_MS = 700;
 const POKEBALL_SHAKE_MS = 500;
-const POKEBALL_FLASH_MS = 220;
 const MARILL_ENTER_MS = 400;
 const MARILL_FADE_MS = 1100;
 
@@ -54,7 +44,6 @@ type PokemonRevealPhase =
   | "shiftProfessor"
   | "pokeball"
   | "shake"
-  | "burst"
   | "marillEnter"
   | "marill"
   | "fadeMarill"
@@ -69,13 +58,6 @@ function prefersReducedMotion(): boolean {
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
-}
-
-function preloadOpeningImages() {
-  for (const src of OPENING_ASSETS) {
-    const image = new Image();
-    image.src = src;
-  }
 }
 
 export function OpeningIntro(props: OpeningIntroProps) {
@@ -114,10 +96,6 @@ export function OpeningIntro(props: OpeningIntroProps) {
     revealPhase === "returnProfessor";
   const marillIdleActive =
     revealPhase === "marill" && !reducedMotion && !marillFadingOut;
-
-  useEffect(() => {
-    preloadOpeningImages();
-  }, []);
 
   useEffect(() => {
     if (step !== "professorAppear") {
@@ -170,9 +148,6 @@ export function OpeningIntro(props: OpeningIntroProps) {
     schedule(elapsed, () => setRevealPhase("shake"));
 
     elapsed += POKEBALL_SHAKE_MS;
-    schedule(elapsed, () => setRevealPhase("burst"));
-
-    elapsed += POKEBALL_FLASH_MS;
     schedule(elapsed, () => setRevealPhase("marillEnter"));
 
     elapsed += MARILL_ENTER_MS;
@@ -564,17 +539,10 @@ export function OpeningIntro(props: OpeningIntroProps) {
                 </div>
               ) : null}
 
-              {revealPhase === "burst" ? (
-                <div
-                  className="pointer-events-none absolute inset-0 animate-release-flash bg-white"
-                  style={{ animationDuration: `${POKEBALL_FLASH_MS}ms` }}
-                />
-              ) : null}
-
               {showMarill ? (
                 <div
                   className={cn(
-                    "relative h-16 w-16 pb-2 sm:h-20 sm:w-20",
+                    "relative h-16 w-16 origin-bottom pb-2 sm:h-20 sm:w-20",
                     revealPhase === "marillEnter" && !marillFadingOut
                       ? "animate-marill-enter"
                       : undefined,

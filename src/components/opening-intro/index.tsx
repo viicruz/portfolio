@@ -17,10 +17,10 @@ import {
 } from "@/utils/player-profile";
 
 const OPENING_ASSETS = [
-  "/assets/sprites/opening/professor-64x128px.png",
-  "/assets/sprites/opening/demo-pokemon-48x48px.png",
-  "/assets/sprites/opening/boy-64x128px.png",
-  "/assets/sprites/opening/girl-64x128px.png",
+  "/assets/sprites/opening/professor",
+  "/assets/sprites/opening/marill.png",
+  "/assets/sprites/opening/ethan",
+  "/assets/sprites/opening/lyra",
 ] as const;
 
 const PROFESSOR_LINE_KEYS = ["1", "2", "3", "4", "5"] as const;
@@ -329,7 +329,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
               "h-40 w-20 object-contain [image-rendering:pixelated] transition-opacity ease-out sm:h-52 sm:w-24",
               professorVisible ? "opacity-100" : "opacity-0",
             )}
-            src="/assets/sprites/opening/professor-64x128px.png"
+            src="/assets/sprites/opening/professor.png"
             style={{
               transitionDuration: `${reducedMotion ? 0 : APPEAR_MS}ms`,
               transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)",
@@ -349,7 +349,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
                   "mb-6 h-16 w-16 object-contain [image-rendering:pixelated] transition-opacity ease-out sm:h-20 sm:w-20",
                   pokemonVisible ? "opacity-100" : "opacity-0",
                 )}
-                src="/assets/sprites/opening/demo-pokemon-48x48px.png"
+                src="/assets/sprites/opening/marill.png"
                 style={{
                   transitionDuration: `${reducedMotion ? 0 : APPEAR_MS}ms`,
                   transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)",
@@ -378,7 +378,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
             <img
               alt=""
               className="h-32 w-16 object-contain [image-rendering:pixelated]"
-              src="/assets/sprites/opening/boy-64x128px.png"
+              src="/assets/sprites/opening/ethan.png"
             />
             <span className="font-pixel text-[0.65rem]">{t("boy")}</span>
           </button>
@@ -399,7 +399,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
             <img
               alt=""
               className="h-32 w-16 object-contain [image-rendering:pixelated]"
-              src="/assets/sprites/opening/girl-64x128px.png"
+              src="/assets/sprites/opening/lyra.png"
             />
             <span className="font-pixel text-[0.65rem]">{t("girl")}</span>
           </button>

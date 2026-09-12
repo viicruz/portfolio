@@ -19,6 +19,7 @@ import {
 const OPENING_ASSETS = [
   "/assets/sprites/opening/professor",
   "/assets/sprites/opening/marill.png",
+  "/assets/sprites/opening/marill-2.png",
   "/assets/sprites/opening/ethan",
   "/assets/sprites/opening/lyra",
 ] as const;
@@ -27,6 +28,7 @@ const PROFESSOR_LINE_KEYS = ["1", "2", "3", "4", "5"] as const;
 const POKEMON_LINE_KEYS = ["1", "2", "3"] as const;
 
 const APPEAR_MS = 500;
+const MARILL_IDLE_MS = 700;
 
 type OpeningStep =
   | "professorAppear"
@@ -341,21 +343,45 @@ export function OpeningIntro(props: OpeningIntroProps) {
             step === "askName" ||
             step === "confirm" ||
             step === "ready") && (
-            <>
+            <div
+              className={cn(
+                "relative mb-6 h-16 w-16 transition-opacity ease-out sm:h-20 sm:w-20",
+                pokemonVisible ? "opacity-100" : "opacity-0",
+              )}
+              style={{
+                transitionDuration: `${reducedMotion ? 0 : APPEAR_MS}ms`,
+                transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)",
+              }}
+            >
               {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
               <img
                 alt=""
                 className={cn(
-                  "mb-6 h-16 w-16 object-contain [image-rendering:pixelated] transition-opacity ease-out sm:h-20 sm:w-20",
-                  pokemonVisible ? "opacity-100" : "opacity-0",
+                  "absolute inset-0 h-full w-full object-contain [image-rendering:pixelated]",
+                  reducedMotion ? undefined : "animate-marill-idle-a",
                 )}
                 src="/assets/sprites/opening/marill.png"
-                style={{
-                  transitionDuration: `${reducedMotion ? 0 : APPEAR_MS}ms`,
-                  transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)",
-                }}
+                style={
+                  reducedMotion
+                    ? undefined
+                    : { animationDuration: `${MARILL_IDLE_MS * 2}ms` }
+                }
               />
-            </>
+              {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+              <img
+                alt=""
+                className={cn(
+                  "absolute inset-0 h-full w-full object-contain [image-rendering:pixelated]",
+                  reducedMotion ? "hidden" : "animate-marill-idle-b",
+                )}
+                src="/assets/sprites/opening/marill-2.png"
+                style={
+                  reducedMotion
+                    ? undefined
+                    : { animationDuration: `${MARILL_IDLE_MS * 2}ms` }
+                }
+              />
+            </div>
           )}
         </div>
       </div>

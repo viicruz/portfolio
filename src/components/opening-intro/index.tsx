@@ -17,11 +17,12 @@ import {
 } from "@/utils/player-profile";
 
 const OPENING_ASSETS = [
-  "/assets/sprites/opening/professor",
+  "/assets/sprites/opening/professor.png",
   "/assets/sprites/opening/marill.png",
   "/assets/sprites/opening/marill-2.png",
-  "/assets/sprites/opening/ethan",
-  "/assets/sprites/opening/lyra",
+  "/assets/sprites/opening/ethan.png",
+  "/assets/sprites/opening/lyra.png",
+  "/assets/sprites/opening/pokeball.png",
 ] as const;
 
 const PROFESSOR_LINE_KEYS = ["1", "2", "3", "4", "5"] as const;
@@ -29,15 +30,35 @@ const POKEMON_LINE_KEYS = ["1", "2", "3"] as const;
 
 const APPEAR_MS = 500;
 const MARILL_IDLE_MS = 700;
+const PROFESSOR_SHIFT_MS = 550;
+const POKEBALL_APPEAR_MS = 350;
+const POKEBALL_HOLD_MS = 700;
+const POKEBALL_SHAKE_MS = 500;
+const POKEBALL_FLASH_MS = 220;
+const MARILL_ENTER_MS = 400;
+const MARILL_FADE_MS = 1100;
 
 type OpeningStep =
   | "professorAppear"
   | "professorTalk"
+  | "releasePokemon"
   | "showPokemon"
+  | "clearStage"
   | "askGender"
   | "askName"
   | "confirm"
   | "ready";
+
+type PokemonRevealPhase =
+  | "idle"
+  | "shiftProfessor"
+  | "pokeball"
+  | "shake"
+  | "burst"
+  | "marillEnter"
+  | "marill"
+  | "fadeMarill"
+  | "returnProfessor";
 
 type OpeningIntroProps = {
   onComplete: () => void;
@@ -63,7 +84,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
 
   const [step, setStep] = useState<OpeningStep>("professorAppear");
   const [professorVisible, setProfessorVisible] = useState(false);
-  const [pokemonVisible, setPokemonVisible] = useState(false);
+  const [revealPhase, setRevealPhase] = useState<PokemonRevealPhase>("idle");
   const [lineIndex, setLineIndex] = useState(0);
   const [typingDone, setTypingDone] = useState(false);
   const [gender, setGender] = useState<PlayerGender>("boy");
@@ -73,6 +94,26 @@ export function OpeningIntro(props: OpeningIntroProps) {
 
   const reducedMotion = prefersReducedMotion();
   const typeSpeed = reducedMotion ? 0 : 28;
+  const professorShifted =
+    step === "releasePokemon" ||
+    step === "showPokemon" ||
+    revealPhase === "fadeMarill";
+  const marillFadingOut =
+    revealPhase === "fadeMarill" ||
+    revealPhase === "returnProfessor" ||
+    step === "askGender" ||
+    step === "askName" ||
+    step === "confirm" ||
+    step === "ready";
+  const showPokeball =
+    revealPhase === "pokeball" || revealPhase === "shake";
+  const showMarill =
+    revealPhase === "marillEnter" ||
+    revealPhase === "marill" ||
+    revealPhase === "fadeMarill" ||
+    revealPhase === "returnProfessor";
+  const marillIdleActive =
+    revealPhase === "marill" && !reducedMotion && !marillFadingOut;
 
   useEffect(() => {
     preloadOpeningImages();
@@ -104,19 +145,91 @@ export function OpeningIntro(props: OpeningIntroProps) {
   }, [step, reducedMotion]);
 
   useEffect(() => {
+    if (step !== "releasePokemon") {
+      return;
+    }
+
+    if (reducedMotion) {
+      setRevealPhase("marill");
+      setLineIndex(0);
+      setStep("showPokemon");
+      return;
+    }
+
+    const timers: number[] = [];
+    let elapsed = 0;
+
+    const schedule = (delay: number, callback: () => void) => {
+      timers.push(window.setTimeout(callback, delay));
+    };
+
+    elapsed += PROFESSOR_SHIFT_MS;
+    schedule(elapsed, () => setRevealPhase("pokeball"));
+
+    elapsed += POKEBALL_APPEAR_MS + POKEBALL_HOLD_MS;
+    schedule(elapsed, () => setRevealPhase("shake"));
+
+    elapsed += POKEBALL_SHAKE_MS;
+    schedule(elapsed, () => setRevealPhase("burst"));
+
+    elapsed += POKEBALL_FLASH_MS;
+    schedule(elapsed, () => setRevealPhase("marillEnter"));
+
+    elapsed += MARILL_ENTER_MS;
+    schedule(elapsed, () => {
+      setRevealPhase("marill");
+      setLineIndex(0);
+      setStep("showPokemon");
+    });
+
+    return () => {
+      for (const id of timers) {
+        window.clearTimeout(id);
+      }
+    };
+  }, [step, reducedMotion]);
+
+  useEffect(() => {
+    if (step !== "clearStage") {
+      return;
+    }
+
+    if (reducedMotion) {
+      setRevealPhase("returnProfessor");
+      setStep("askGender");
+      return;
+    }
+
+    const returnId = window.setTimeout(() => {
+      setRevealPhase("returnProfessor");
+    }, MARILL_FADE_MS);
+
+    const genderId = window.setTimeout(() => {
+      setStep("askGender");
+    }, MARILL_FADE_MS + PROFESSOR_SHIFT_MS);
+
+    return () => {
+      window.clearTimeout(returnId);
+      window.clearTimeout(genderId);
+    };
+  }, [step, reducedMotion]);
+
+  useEffect(() => {
     if (step === "askName") {
       nameInputRef.current?.focus();
     }
   }, [step]);
 
   useEffect(() => {
-    const isInteractiveFormStep =
-      step === "askGender" || step === "askName" || step === "confirm";
+    const keepTypingDone =
+      step === "askGender" ||
+      step === "askName" ||
+      step === "confirm" ||
+      step === "releasePokemon" ||
+      step === "clearStage";
 
     // lineIndex in the expression forces a reset whenever the spoken line changes
-    setTypingDone(
-      typeSpeed === 0 || isInteractiveFormStep || lineIndex < 0,
-    );
+    setTypingDone(typeSpeed === 0 || keepTypingDone || lineIndex < 0);
   }, [step, lineIndex, typeSpeed]);
 
   const finishIntro = useEffectEvent(() => {
@@ -138,6 +251,29 @@ export function OpeningIntro(props: OpeningIntroProps) {
     props.onComplete();
   });
 
+  const beginPokemonRelease = useEffectEvent(() => {
+    if (reducedMotion) {
+      setRevealPhase("marill");
+      setLineIndex(0);
+      setStep("showPokemon");
+      return;
+    }
+
+    setRevealPhase("shiftProfessor");
+    setStep("releasePokemon");
+  });
+
+  const beginClearStage = useEffectEvent(() => {
+    if (reducedMotion) {
+      setRevealPhase("returnProfessor");
+      setStep("askGender");
+      return;
+    }
+
+    setRevealPhase("fadeMarill");
+    setStep("clearStage");
+  });
+
   const advanceTalk = useEffectEvent(() => {
     if (!typingDone) {
       setTypingDone(true);
@@ -150,9 +286,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
         return;
       }
 
-      setLineIndex(0);
-      setPokemonVisible(true);
-      setStep("showPokemon");
+      beginPokemonRelease();
       return;
     }
 
@@ -162,7 +296,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
         return;
       }
 
-      setStep("askGender");
+      beginClearStage();
       return;
     }
 
@@ -244,11 +378,11 @@ export function OpeningIntro(props: OpeningIntroProps) {
   }, [step]);
 
   const dialogText = (() => {
-    if (step === "professorTalk") {
+    if (step === "professorTalk" || step === "releasePokemon") {
       return t(`professorLines.${PROFESSOR_LINE_KEYS[lineIndex]}`);
     }
 
-    if (step === "showPokemon") {
+    if (step === "showPokemon" || step === "clearStage") {
       return t(`pokemonLines.${POKEMON_LINE_KEYS[lineIndex]}`);
     }
 
@@ -273,7 +407,9 @@ export function OpeningIntro(props: OpeningIntroProps) {
 
   const showDialog =
     step === "professorTalk" ||
+    step === "releasePokemon" ||
     step === "showPokemon" ||
+    step === "clearStage" ||
     step === "askGender" ||
     step === "askName" ||
     step === "confirm" ||
@@ -322,128 +458,174 @@ export function OpeningIntro(props: OpeningIntroProps) {
       className="absolute inset-0 z-50 flex flex-col items-center justify-end bg-neutral-950 pointer-events-auto"
       role="dialog"
     >
-      <div className="relative flex flex-1 w-full max-w-3xl items-end justify-center px-6 pb-4 pt-16">
-        <div className="relative flex items-end justify-center gap-6">
+      <div className="relative flex flex-1 w-full max-w-3xl flex-col items-center justify-end px-6 pb-4 pt-16">
+        {step === "askGender" ? (
+          <div className="flex w-full flex-col items-center pb-4">
+            <div className="flex w-full items-center justify-center gap-8">
+              <button
+                aria-pressed={gender === "boy"}
+                className={cn(
+                  "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-4 py-3 transition-colors",
+                  gender === "boy"
+                    ? "border-amber-200 text-amber-200"
+                    : "border-white/20 text-white/70",
+                )}
+                id="opening-gender-boy"
+                onClick={() => setGender("boy")}
+                type="button"
+              >
+                {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+                <img
+                  alt=""
+                  className="h-32 w-16 object-contain [image-rendering:pixelated]"
+                  src="/assets/sprites/opening/ethan.png"
+                />
+                <span className="font-pixel text-[0.65rem]">{t("boy")}</span>
+              </button>
+
+              <button
+                aria-pressed={gender === "girl"}
+                className={cn(
+                  "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-4 py-3 transition-colors",
+                  gender === "girl"
+                    ? "border-amber-200 text-amber-200"
+                    : "border-white/20 text-white/70",
+                )}
+                id="opening-gender-girl"
+                onClick={() => setGender("girl")}
+                type="button"
+              >
+                {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+                <img
+                  alt=""
+                  className="h-32 w-16 object-contain [image-rendering:pixelated]"
+                  src="/assets/sprites/opening/lyra.png"
+                />
+                <span className="font-pixel text-[0.65rem]">{t("girl")}</span>
+              </button>
+            </div>
+
+            <div className="flex w-full justify-center pt-3">
+              <button
+                className="rounded-xl border-2 border-amber-200 bg-amber-200/10 px-6 py-2 font-pixel text-[0.65rem] text-amber-200"
+                id="opening-gender-confirm"
+                onClick={() => setStep("askName")}
+                type="button"
+              >
+                {t("submitName")}
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        <div className="relative h-40 w-full sm:h-52">
           {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
           <img
             alt=""
             className={cn(
-              "h-40 w-20 object-contain [image-rendering:pixelated] transition-opacity ease-out sm:h-52 sm:w-24",
+              "absolute bottom-0 left-1/2 h-40 w-20 object-contain [image-rendering:pixelated] ease-out sm:h-52 sm:w-24",
               professorVisible ? "opacity-100" : "opacity-0",
+              professorShifted
+                ? "-translate-x-[calc(50%+4.5rem)] sm:-translate-x-[calc(50%+6rem)]"
+                : "-translate-x-1/2",
             )}
             src="/assets/sprites/opening/professor.png"
             style={{
-              transitionDuration: `${reducedMotion ? 0 : APPEAR_MS}ms`,
+              transitionDuration: reducedMotion
+                ? "0ms"
+                : `${APPEAR_MS}ms, ${PROFESSOR_SHIFT_MS}ms`,
+              transitionProperty: "opacity, translate",
               transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)",
             }}
           />
 
-          {(step === "showPokemon" ||
-            step === "askGender" ||
-            step === "askName" ||
-            step === "confirm" ||
-            step === "ready") && (
-            <div
-              className={cn(
-                "relative mb-6 h-16 w-16 transition-opacity ease-out sm:h-20 sm:w-20",
-                pokemonVisible ? "opacity-100" : "opacity-0",
-              )}
-              style={{
-                transitionDuration: `${reducedMotion ? 0 : APPEAR_MS}ms`,
-                transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)",
-              }}
-            >
-              {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
-              <img
-                alt=""
-                className={cn(
-                  "absolute inset-0 h-full w-full object-contain [image-rendering:pixelated]",
-                  reducedMotion ? undefined : "animate-marill-idle-a",
-                )}
-                src="/assets/sprites/opening/marill.png"
-                style={
-                  reducedMotion
-                    ? undefined
-                    : { animationDuration: `${MARILL_IDLE_MS * 2}ms` }
-                }
-              />
-              {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
-              <img
-                alt=""
-                className={cn(
-                  "absolute inset-0 h-full w-full object-contain [image-rendering:pixelated]",
-                  reducedMotion ? "hidden" : "animate-marill-idle-b",
-                )}
-                src="/assets/sprites/opening/marill-2.png"
-                style={
-                  reducedMotion
-                    ? undefined
-                    : { animationDuration: `${MARILL_IDLE_MS * 2}ms` }
-                }
-              />
+          {revealPhase !== "idle" ? (
+            <div className="absolute bottom-0 left-1/2 flex h-20 w-20 translate-x-3 items-end justify-center sm:h-24 sm:w-24 sm:translate-x-5">
+              {showPokeball ? (
+                <div
+                  className={cn(
+                    "flex h-8 w-8 items-end justify-center sm:h-9 sm:w-9",
+                    revealPhase === "pokeball" ? "animate-pokeball-drop" : undefined,
+                    revealPhase === "shake" ? "animate-pokeball-shake" : undefined,
+                  )}
+                  style={{
+                    animationDuration:
+                      revealPhase === "pokeball"
+                        ? `${POKEBALL_APPEAR_MS}ms`
+                        : `${POKEBALL_SHAKE_MS}ms`,
+                  }}
+                >
+                  {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+                  <img
+                    alt=""
+                    className="h-full w-full object-contain [image-rendering:pixelated]"
+                    src="/assets/sprites/opening/pokeball.png"
+                  />
+                </div>
+              ) : null}
+
+              {revealPhase === "burst" ? (
+                <div
+                  className="pointer-events-none absolute inset-0 animate-release-flash bg-white"
+                  style={{ animationDuration: `${POKEBALL_FLASH_MS}ms` }}
+                />
+              ) : null}
+
+              {showMarill ? (
+                <div
+                  className={cn(
+                    "relative h-16 w-16 pb-2 sm:h-20 sm:w-20",
+                    revealPhase === "marillEnter" && !marillFadingOut
+                      ? "animate-marill-enter"
+                      : undefined,
+                    marillFadingOut ? "opacity-0" : "opacity-100",
+                  )}
+                  style={{
+                    animationDuration:
+                      revealPhase === "marillEnter" && !marillFadingOut
+                        ? `${MARILL_ENTER_MS}ms`
+                        : undefined,
+                    transitionDuration: reducedMotion
+                      ? "0ms"
+                      : `${MARILL_FADE_MS}ms`,
+                    transitionProperty: "opacity",
+                    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                >
+                  {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+                  <img
+                    alt=""
+                    className={cn(
+                      "absolute inset-0 h-full w-full object-contain [image-rendering:pixelated]",
+                      marillIdleActive ? "animate-marill-idle-a" : undefined,
+                    )}
+                    src="/assets/sprites/opening/marill.png"
+                    style={
+                      marillIdleActive
+                        ? { animationDuration: `${MARILL_IDLE_MS * 2}ms` }
+                        : undefined
+                    }
+                  />
+                  {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+                  <img
+                    alt=""
+                    className={cn(
+                      "absolute inset-0 h-full w-full object-contain [image-rendering:pixelated]",
+                      marillIdleActive ? "animate-marill-idle-b" : "hidden",
+                    )}
+                    src="/assets/sprites/opening/marill-2.png"
+                    style={
+                      marillIdleActive
+                        ? { animationDuration: `${MARILL_IDLE_MS * 2}ms` }
+                        : undefined
+                    }
+                  />
+                </div>
+              ) : null}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
-
-      {step === "askGender" ? (
-        <div className="flex w-full max-w-3xl items-center justify-center gap-8 px-6 pb-4">
-          <button
-            aria-pressed={gender === "boy"}
-            className={cn(
-              "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-4 py-3 transition-colors",
-              gender === "boy"
-                ? "border-amber-200 text-amber-200"
-                : "border-white/20 text-white/70",
-            )}
-            id="opening-gender-boy"
-            onClick={() => setGender("boy")}
-            type="button"
-          >
-            {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
-            <img
-              alt=""
-              className="h-32 w-16 object-contain [image-rendering:pixelated]"
-              src="/assets/sprites/opening/ethan.png"
-            />
-            <span className="font-pixel text-[0.65rem]">{t("boy")}</span>
-          </button>
-
-          <button
-            aria-pressed={gender === "girl"}
-            className={cn(
-              "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-4 py-3 transition-colors",
-              gender === "girl"
-                ? "border-amber-200 text-amber-200"
-                : "border-white/20 text-white/70",
-            )}
-            id="opening-gender-girl"
-            onClick={() => setGender("girl")}
-            type="button"
-          >
-            {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
-            <img
-              alt=""
-              className="h-32 w-16 object-contain [image-rendering:pixelated]"
-              src="/assets/sprites/opening/lyra.png"
-            />
-            <span className="font-pixel text-[0.65rem]">{t("girl")}</span>
-          </button>
-        </div>
-      ) : null}
-
-      {step === "askGender" ? (
-        <div className="flex w-full max-w-3xl justify-center px-6 pb-2">
-          <button
-            className="rounded-xl border-2 border-amber-200 bg-amber-200/10 px-6 py-2 font-pixel text-[0.65rem] text-amber-200"
-            id="opening-gender-confirm"
-            onClick={() => setStep("askName")}
-            type="button"
-          >
-            {t("submitName")}
-          </button>
-        </div>
-      ) : null}
 
       {showDialog ? (
         <div className="flex w-full justify-center px-4 pb-8">
@@ -522,10 +704,15 @@ export function OpeningIntro(props: OpeningIntroProps) {
               {step === "askGender" ? <p>{dialogText}</p> : null}
 
               {(step === "professorTalk" ||
+                step === "releasePokemon" ||
                 step === "showPokemon" ||
+                step === "clearStage" ||
                 step === "ready") && (
                 <>
-                  {typingDone || typeSpeed === 0 ? (
+                  {step === "releasePokemon" ||
+                  step === "clearStage" ||
+                  typingDone ||
+                  typeSpeed === 0 ? (
                     <p>{dialogText}</p>
                   ) : (
                     <ReactTyped

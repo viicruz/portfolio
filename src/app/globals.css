@@ -50,6 +50,10 @@
 @theme {
   --animate-marill-idle-a: marill-idle-a 800ms step-end infinite;
   --animate-marill-idle-b: marill-idle-b 800ms step-end infinite;
+  --animate-pokeball-drop: pokeball-drop 350ms ease-out both;
+  --animate-pokeball-shake: pokeball-shake 280ms step-end both;
+  --animate-release-flash: release-flash 220ms ease-out both;
+  --animate-marill-enter: marill-enter 400ms ease-out both;
 
   @keyframes marill-idle-a {
     0%,
@@ -70,6 +74,65 @@
     50%,
     100% {
       visibility: visible;
+    }
+  }
+
+  @keyframes pokeball-drop {
+    0% {
+      opacity: 0;
+      transform: translateY(-24px) scale(0.6);
+    }
+    70% {
+      opacity: 1;
+      transform: translateY(2px) scale(1);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes pokeball-shake {
+    0% {
+      transform: translateX(0) rotate(0deg);
+    }
+    20% {
+      transform: translateX(-3px) rotate(-8deg);
+    }
+    40% {
+      transform: translateX(3px) rotate(8deg);
+    }
+    60% {
+      transform: translateX(-3px) rotate(-8deg);
+    }
+    80% {
+      transform: translateX(3px) rotate(8deg);
+    }
+    100% {
+      transform: translateX(0) rotate(0deg);
+    }
+  }
+
+  @keyframes release-flash {
+    0% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 0.9;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes marill-enter {
+    0% {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 }

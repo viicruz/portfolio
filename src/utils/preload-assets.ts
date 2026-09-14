@@ -44,6 +44,7 @@ export const HOMEPAGE_SPRITE_DATA_URLS = [
 ] as const;
 
 export const OPENING_SPRITE_PATHS = [
+  "/assets/sprites/opening/background.png",
   "/assets/sprites/opening/professor.png",
   "/assets/sprites/opening/marill.png",
   "/assets/sprites/opening/marill-2.png",

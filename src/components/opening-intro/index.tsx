@@ -80,6 +80,11 @@ export function OpeningIntro(props: OpeningIntroProps) {
     step === "releasePokemon" ||
     step === "showPokemon" ||
     revealPhase === "fadeMarill";
+  const professorTranslateClass = professorShifted
+    ? "-translate-x-[calc(50%+9.5rem)] sm:-translate-x-[calc(50%+12rem)]"
+    : step === "askGender"
+      ? "-translate-x-[calc(50%-8rem)] sm:-translate-x-[calc(50%-11rem)]"
+      : "-translate-x-1/2";
   const marillFadingOut =
     revealPhase === "fadeMarill" ||
     revealPhase === "returnProfessor" ||
@@ -433,76 +438,82 @@ export function OpeningIntro(props: OpeningIntroProps) {
       className="absolute inset-0 z-50 flex flex-col items-center justify-end bg-neutral-950 pointer-events-auto"
       role="dialog"
     >
-      <div className="relative flex flex-1 w-full max-w-3xl flex-col items-center justify-end px-6 pb-4 pt-16">
-        {step === "askGender" ? (
-          <div className="flex w-full flex-col items-center pb-4">
-            <div className="flex w-full items-center justify-center gap-8">
-              <button
-                aria-pressed={gender === "boy"}
-                className={cn(
-                  "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-4 py-3 transition-colors",
-                  gender === "boy"
-                    ? "border-amber-200 text-amber-200"
-                    : "border-white/20 text-white/70",
-                )}
-                id="opening-gender-boy"
-                onClick={() => setGender("boy")}
-                type="button"
-              >
-                {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
-                <img
-                  alt=""
-                  className="h-32 w-16 object-contain [image-rendering:pixelated]"
-                  src="/assets/sprites/opening/ethan.png"
-                />
-                <span className="font-pixel text-[0.65rem]">{t("boy")}</span>
-              </button>
+      {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+      <img
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center [image-rendering:pixelated]"
+        src="/assets/sprites/opening/background.png"
+      />
 
-              <button
-                aria-pressed={gender === "girl"}
-                className={cn(
-                  "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-4 py-3 transition-colors",
-                  gender === "girl"
-                    ? "border-amber-200 text-amber-200"
-                    : "border-white/20 text-white/70",
-                )}
-                id="opening-gender-girl"
-                onClick={() => setGender("girl")}
-                type="button"
-              >
-                {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
-                <img
-                  alt=""
-                  className="h-32 w-16 object-contain [image-rendering:pixelated]"
-                  src="/assets/sprites/opening/lyra.png"
-                />
-                <span className="font-pixel text-[0.65rem]">{t("girl")}</span>
-              </button>
+      <div className="relative flex flex-1 w-full max-w-5xl flex-col items-center justify-end px-6 pb-4 pt-16">
+        <div className="relative h-96 w-full sm:h-[28rem]">
+          {step === "askGender" ? (
+            <div className="absolute bottom-0 left-0 z-10 flex flex-col items-center pb-2 pl-1 sm:left-4 sm:pl-2">
+              <div className="flex items-end gap-3 sm:gap-4">
+                <button
+                  aria-pressed={gender === "boy"}
+                  className={cn(
+                    "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-3 py-3 transition-colors sm:px-4",
+                    gender === "boy"
+                      ? "border-amber-200 text-amber-200"
+                      : "border-white/20 text-white/70",
+                  )}
+                  id="opening-gender-boy"
+                  onClick={() => setGender("boy")}
+                  type="button"
+                >
+                  {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+                  <img
+                    alt=""
+                    className="h-32 w-16 object-contain [image-rendering:pixelated]"
+                    src="/assets/sprites/opening/ethan.png"
+                  />
+                  <span className="font-pixel text-[0.65rem]">{t("boy")}</span>
+                </button>
+
+                <button
+                  aria-pressed={gender === "girl"}
+                  className={cn(
+                    "flex flex-col items-center gap-2 rounded-xl border-2 bg-black/40 px-3 py-3 transition-colors sm:px-4",
+                    gender === "girl"
+                      ? "border-amber-200 text-amber-200"
+                      : "border-white/20 text-white/70",
+                  )}
+                  id="opening-gender-girl"
+                  onClick={() => setGender("girl")}
+                  type="button"
+                >
+                  {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
+                  <img
+                    alt=""
+                    className="h-32 w-16 object-contain [image-rendering:pixelated]"
+                    src="/assets/sprites/opening/lyra.png"
+                  />
+                  <span className="font-pixel text-[0.65rem]">{t("girl")}</span>
+                </button>
+              </div>
+
+              <div className="flex w-full justify-center pt-3">
+                <button
+                  className="rounded-xl border-2 border-amber-200 bg-amber-200/10 px-6 py-2 font-pixel text-[0.65rem] text-amber-200"
+                  id="opening-gender-confirm"
+                  onClick={() => setStep("askName")}
+                  type="button"
+                >
+                  {t("submitName")}
+                </button>
+              </div>
             </div>
+          ) : null}
 
-            <div className="flex w-full justify-center pt-3">
-              <button
-                className="rounded-xl border-2 border-amber-200 bg-amber-200/10 px-6 py-2 font-pixel text-[0.65rem] text-amber-200"
-                id="opening-gender-confirm"
-                onClick={() => setStep("askName")}
-                type="button"
-              >
-                {t("submitName")}
-              </button>
-            </div>
-          </div>
-        ) : null}
-
-        <div className="relative h-40 w-full sm:h-52">
           {/* biome-ignore lint/performance/noImgElement: pixel-art sprite needs crisp nearest-neighbor scaling */}
           <img
             alt=""
             className={cn(
-              "absolute bottom-0 left-1/2 h-40 w-20 object-contain [image-rendering:pixelated] ease-out sm:h-52 sm:w-24",
+              "absolute bottom-0 left-1/2 h-96 w-56 object-contain [image-rendering:pixelated] ease-out sm:h-[28rem] sm:w-72",
               professorVisible ? "opacity-100" : "opacity-0",
-              professorShifted
-                ? "-translate-x-[calc(50%+4.5rem)] sm:-translate-x-[calc(50%+6rem)]"
-                : "-translate-x-1/2",
+              professorTranslateClass,
             )}
             src="/assets/sprites/opening/professor.png"
             style={{
@@ -515,11 +526,11 @@ export function OpeningIntro(props: OpeningIntroProps) {
           />
 
           {revealPhase !== "idle" ? (
-            <div className="absolute bottom-0 left-1/2 flex h-20 w-20 translate-x-3 items-end justify-center sm:h-24 sm:w-24 sm:translate-x-5">
+            <div className="absolute bottom-0 left-1/2 flex size-40 translate-x-4 items-end justify-center sm:h-48 sm:w-48 sm:translate-x-6">
               {showPokeball ? (
                 <div
                   className={cn(
-                    "flex h-8 w-8 items-end justify-center sm:h-9 sm:w-9",
+                    "flex size-16 items-end justify-center sm:h-20 sm:w-20",
                     revealPhase === "pokeball" ? "animate-pokeball-drop" : undefined,
                     revealPhase === "shake" ? "animate-pokeball-shake" : undefined,
                   )}
@@ -542,7 +553,7 @@ export function OpeningIntro(props: OpeningIntroProps) {
               {showMarill ? (
                 <div
                   className={cn(
-                    "relative h-16 w-16 origin-bottom pb-2 sm:h-20 sm:w-20",
+                    "relative h-36 w-36 origin-bottom pb-2 sm:h-44 sm:w-44",
                     revealPhase === "marillEnter" && !marillFadingOut
                       ? "animate-marill-enter"
                       : undefined,

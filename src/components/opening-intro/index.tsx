@@ -5,13 +5,15 @@ import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ReactTyped } from "react-typed";
 
+//* Components imports
+import { PlayerNameDialog } from "@/components/opening-intro/player-name-dialog";
+
 //* Store imports
 import { usePlayerProfileStore } from "@/store/player-profile";
 
 //* Utils imports
 import { cn } from "@/lib/utils";
 import {
-  MAX_NAME_LENGTH,
   sanitizePlayerName,
   type PlayerGender,
 } from "@/utils/player-profile";
@@ -71,7 +73,6 @@ export function OpeningIntro(props: OpeningIntroProps) {
   const [typingDone, setTypingDone] = useState(false);
   const [gender, setGender] = useState<PlayerGender>("boy");
   const [nameDraft, setNameDraft] = useState("");
-  const nameInputRef = useRef<HTMLInputElement>(null);
   const finishStartedRef = useRef(false);
 
   const reducedMotion = prefersReducedMotion();
@@ -193,12 +194,6 @@ export function OpeningIntro(props: OpeningIntroProps) {
       window.clearTimeout(genderId);
     };
   }, [step, reducedMotion]);
-
-  useEffect(() => {
-    if (step === "askName") {
-      nameInputRef.current?.focus();
-    }
-  }, [step]);
 
   useEffect(() => {
     const keepTypingDone =
@@ -622,40 +617,6 @@ export function OpeningIntro(props: OpeningIntroProps) {
             ) : null}
 
             <div className="flex min-h-28 flex-col justify-center rounded-xl bg-white px-3 py-3 font-pixel text-base text-black sm:text-xl">
-              {step === "askName" ? (
-                <div className="flex flex-col gap-3">
-                  <p>{dialogText}</p>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <input
-                      autoComplete="off"
-                      className="w-full max-w-xs rounded border-2 border-black bg-neutral-100 px-3 py-2 font-pixel text-sm uppercase outline-none focus:border-amber-500"
-                      id="opening-player-name"
-                      maxLength={MAX_NAME_LENGTH}
-                      onChange={(event) => setNameDraft(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          handleSubmitName();
-                        }
-                      }}
-                      placeholder={t("namePlaceholder")}
-                      ref={nameInputRef}
-                      type="text"
-                      value={nameDraft}
-                    />
-                    <button
-                      className="rounded bg-sky-600 px-4 py-2 font-pixel text-[0.65rem] text-white disabled:opacity-40"
-                      disabled={!canSubmitName}
-                      id="opening-name-submit"
-                      onClick={handleSubmitName}
-                      type="button"
-                    >
-                      {t("submitName")}
-                    </button>
-                  </div>
-                </div>
-              ) : null}
-
               {step === "confirm" ? (
                 <div className="flex flex-col gap-3">
                   <p>{dialogText}</p>
@@ -680,7 +641,9 @@ export function OpeningIntro(props: OpeningIntroProps) {
                 </div>
               ) : null}
 
-              {step === "askGender" ? <p>{dialogText}</p> : null}
+              {step === "askGender" || step === "askName" ? (
+                <p>{dialogText}</p>
+              ) : null}
 
               {(step === "professorTalk" ||
                 step === "releasePokemon" ||
@@ -718,6 +681,13 @@ export function OpeningIntro(props: OpeningIntroProps) {
       ) : (
         <div className="h-36 w-full" />
       )}
+
+      <PlayerNameDialog
+        nameDraft={nameDraft}
+        onNameDraftChange={setNameDraft}
+        onSubmit={handleSubmitName}
+        open={step === "askName"}
+      />
     </div>
   );
 }

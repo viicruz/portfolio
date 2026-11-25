@@ -22,10 +22,8 @@ import { OpeningIntro } from "@/components/opening-intro";
 
 //* Utils imports
 import { cn } from "@/lib/utils";
-import {
-  preloadHomepageAssets,
-  preloadOpeningAssets,
-} from "@/utils/preload-assets";
+import { preloadHomepageAssets } from "@/utils/preload-assets";
+import { preloadOpeningAssets } from "@/utils/preload-opening-assets";
 
 type SceneProps = {
   children?: React.ReactNode;

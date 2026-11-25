@@ -27,6 +27,12 @@ export const playBumpingSound = () => {
   void bumpingSfx.play().catch(() => {});
 };
 
+export const playDialogAdvanceSound = () => {
+  if (typeof window === "undefined") return;
+  dialogAdvanceSfx.currentTime = 0;
+  void dialogAdvanceSfx.play().catch(() => {});
+};
+
 type Translation = typeof en.dialogs;
 
 type DialogStore = {
@@ -78,8 +84,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
       canDialogAdvance: true,
       npcDialogIntention: null,
     });
-    dialogAdvanceSfx.currentTime = 0;
-    dialogAdvanceSfx.play();
+    playDialogAdvanceSound();
   },
 
   setNpcId: (npcId) => set({ npcId }),
@@ -108,8 +113,7 @@ export const useDialogStore = create<DialogStore>((set) => ({
         : false;
 
       if (canDialogAdvance) {
-        dialogAdvanceSfx.currentTime = 0;
-        dialogAdvanceSfx.play();
+        playDialogAdvanceSound();
         return {
           dialogLine: nextDialogLine,
           canDialogAdvance,

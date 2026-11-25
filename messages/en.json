@@ -22,6 +22,31 @@
     "close": "Close controls hint",
     "open": "Controls"
   },
+  "opening": {
+    "continueHint": "Press A / Space / Enter",
+    "professorLines": {
+      "1": "Hello! This isn't a regular website.",
+      "2": "I'm Victor, a web developer. This is how I chose to say hello.",
+      "3": "You're about to walk through an interactive portfolio.",
+      "4": "It's a small 3D world built with Three.js, in the spirit of classic handheld games.",
+      "5": "Explore freely. Projects, technologies, and a bit of my journey are out on the map."
+    },
+    "pokemonLines": {
+      "1": "See? The world is already awake.",
+      "2": "The look nods to those old games. The story inside is my work.",
+      "3": "Talk to whoever you meet. That's where the portfolio actually speaks."
+    },
+    "genderPrompt": "Before we start, how should you appear in this world?",
+    "boy": "BOY",
+    "girl": "GIRL",
+    "namePrompt": "And what should I call you?",
+    "namePlaceholder": "YOUR NAME",
+    "confirmName": "So I should call you {name}?",
+    "yes": "YES",
+    "no": "NO",
+    "readyLine": "All right, {name}! Step in and explore the portfolio at your own pace.",
+    "submitName": "OK"
+  },
   "dialogs": {
     "npc1": {
       "dialog1": {

@@ -4,6 +4,7 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 //* Store imports
+import { playDialogAdvanceSound } from "@/store";
 import { usePlayerProfileStore } from "@/store/player-profile";
 
 //* Local imports
@@ -50,6 +51,18 @@ export function useOpeningFlow(onComplete: () => void) {
   const [gender, setGender] = useState<PlayerGender>("boy");
   const [nameDraft, setNameDraft] = useState("");
   const finishStartedRef = useRef(false);
+  const lineIndexRef = useRef(0);
+  const typingDoneRef = useRef(false);
+
+  const commitLineIndex = useEffectEvent((index: number) => {
+    lineIndexRef.current = index;
+    setLineIndex(index);
+  });
+
+  const commitTypingDone = useEffectEvent((done: boolean) => {
+    typingDoneRef.current = done;
+    setTypingDone(done);
+  });
 
   const reducedMotion = prefersReducedMotion();
   const typeSpeed = getTypeSpeed(reducedMotion);
@@ -69,6 +82,7 @@ export function useOpeningFlow(onComplete: () => void) {
     if (reducedMotion) {
       setProfessorVisible(true);
       setStep("professorTalk");
+      commitTypingDone(true);
       return;
     }
 
@@ -78,6 +92,7 @@ export function useOpeningFlow(onComplete: () => void) {
 
     const nextId = window.setTimeout(() => {
       setStep("professorTalk");
+      commitTypingDone(false);
     }, PROFESSOR_TALK_DELAY_MS);
 
     return () => {
@@ -98,8 +113,9 @@ export function useOpeningFlow(onComplete: () => void) {
         window.setTimeout(() => {
           if (cue.kind === "showPokemon") {
             setRevealPhase("marill");
-            setLineIndex(0);
+            commitLineIndex(0);
             setStep("showPokemon");
+            commitTypingDone(isTypingDone("showPokemon", typeSpeed));
             return;
           }
 
@@ -113,7 +129,7 @@ export function useOpeningFlow(onComplete: () => void) {
         window.clearTimeout(id);
       }
     };
-  }, [step]);
+  }, [step, typeSpeed]);
 
   useEffect(() => {
     if (step !== "clearStage") {
@@ -133,12 +149,6 @@ export function useOpeningFlow(onComplete: () => void) {
       window.clearTimeout(genderId);
     };
   }, [step]);
-
-  // lineIndex restarts typing when the spoken line changes and step stays the same.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: lineIndex is the reset key for the next line
-  useEffect(() => {
-    setTypingDone(isTypingDone(step, typeSpeed));
-  }, [step, lineIndex, typeSpeed]);
 
   const finishIntro = useEffectEvent(() => {
     if (finishStartedRef.current) {
@@ -164,8 +174,10 @@ export function useOpeningFlow(onComplete: () => void) {
     setStep(transition.step);
 
     if (transition.resetLineIndex) {
-      setLineIndex(0);
+      commitLineIndex(0);
     }
+
+    commitTypingDone(isTypingDone(transition.step, typeSpeed));
   });
 
   const beginClearStage = useEffectEvent(() => {
@@ -176,19 +188,26 @@ export function useOpeningFlow(onComplete: () => void) {
   });
 
   const advanceTalk = useEffectEvent(() => {
-    const result = resolveAdvanceTalk({ typingDone, step, lineIndex });
+    const result = resolveAdvanceTalk({
+      typingDone: typingDoneRef.current,
+      step,
+      lineIndex: lineIndexRef.current,
+    });
 
     if (result === null) {
       return;
     }
 
     if (result.type === "completeTyping") {
-      setTypingDone(true);
+      commitTypingDone(true);
       return;
     }
 
+    playDialogAdvanceSound();
+
     if (result.type === "nextLine") {
-      setLineIndex((current) => current + 1);
+      commitLineIndex(lineIndexRef.current + 1);
+      commitTypingDone(isTypingDone(step, typeSpeed));
       return;
     }
 
@@ -206,12 +225,15 @@ export function useOpeningFlow(onComplete: () => void) {
   });
 
   const submitGender = () => {
+    playDialogAdvanceSound();
     setStep("askName");
   };
 
   const confirmReady = () => {
+    playDialogAdvanceSound();
     setStep("ready");
-    setLineIndex(0);
+    commitLineIndex(0);
+    commitTypingDone(isTypingDone("ready", typeSpeed));
   };
 
   const handleSubmitName = () => {
@@ -219,12 +241,13 @@ export function useOpeningFlow(onComplete: () => void) {
       return;
     }
 
+    playDialogAdvanceSound();
     setNameDraft(sanitizedName);
     setStep("confirm");
   };
 
   const markTypingDone = () => {
-    setTypingDone(true);
+    commitTypingDone(true);
   };
 
   return {

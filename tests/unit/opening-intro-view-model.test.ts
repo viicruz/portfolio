@@ -20,6 +20,7 @@ import {
   POKEMON_REVEAL_TIMELINE,
   resolveAdvanceTalk,
   resolveOpeningKeyAction,
+  showsInstantLine,
 } from "@/components/opening-intro/view-model";
 import { OPENING_SPRITE_PATHS } from "@/utils/preload-opening-assets";
 
@@ -424,6 +425,26 @@ describe("opening intro view model", () => {
 
     it("marks every line complete when the type speed is zero", () => {
       expect(isTypingDone("professorTalk", 0)).toBe(true);
+    });
+  });
+
+  describe("spoken line swap", () => {
+    it("starts the replacement line untyped at the normal type speed", () => {
+      for (const step of TALK_STEPS) {
+        const typingDone = isTypingDone(step, 28);
+
+        expect(typingDone).toBe(false);
+        expect(showsInstantLine(step, typingDone, 28)).toBe(false);
+      }
+    });
+
+    it("starts the replacement line fully typed when the type speed is zero", () => {
+      for (const step of TALK_STEPS) {
+        const typingDone = isTypingDone(step, 0);
+
+        expect(typingDone).toBe(true);
+        expect(showsInstantLine(step, typingDone, 0)).toBe(true);
+      }
     });
   });
 

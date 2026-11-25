@@ -14,8 +14,7 @@ const MIN_NAME_LENGTH = 1;
 
 export function isPlayerGender(value: unknown): value is PlayerGender {
   return (
-    typeof value === "string" &&
-    PLAYER_GENDERS.includes(value as PlayerGender)
+    typeof value === "string" && PLAYER_GENDERS.includes(value as PlayerGender)
   );
 }
 

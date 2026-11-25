@@ -17,10 +17,7 @@ type PlayerProfileStore = {
   profile: PlayerProfile | null;
   hasCompletedOpening: boolean;
   hydrate: () => void;
-  completeOpening: (input: {
-    name: string;
-    gender: PlayerGender;
-  }) => void;
+  completeOpening: (input: { name: string; gender: PlayerGender }) => void;
 };
 
 export const usePlayerProfileStore = create<PlayerProfileStore>((set) => ({

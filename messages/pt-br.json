@@ -25,26 +25,26 @@
   "opening": {
     "continueHint": "Pressione A / Espaço / Enter",
     "professorLines": {
-      "1": "Olá! Bem-vindo ao mundo dos POKéMON!",
-      "2": "Meu nome é PROF. ELM. As pessoas me chamam de PROF. POKéMON!",
-      "3": "Este mundo é habitado por criaturas que chamamos de POKéMON.",
-      "4": "Na verdade, este é o meu portfólio — um mundo interativo feito com Three.js.",
-      "5": "Explore à vontade e você encontrará projetos, tecnologias e um pouco da minha jornada como desenvolvedor."
+      "1": "Olá! Isso aqui não é um site comum.",
+      "2": "Eu sou o Victor, desenvolvedor web. Escolhi me apresentar assim.",
+      "3": "Você está prestes a andar por um portfólio interativo.",
+      "4": "É um mundinho em 3D feito com Three.js, no espírito dos jogos clássicos de portátil.",
+      "5": "Explore à vontade. Projetos, tecnologias e um pouco da minha trajetória estão no mapa."
     },
     "pokemonLines": {
-      "1": "Isto é o que chamamos de POKéMON.",
-      "2": "Fofinho, né? Algumas pessoas os criam como pets. Outras os usam em batalhas.",
-      "3": "Quanto a mim... estudo POKéMON como profissão."
+      "1": "Viu? O mundo já está acordado.",
+      "2": "O visual lembra aqueles jogos antigos. A história dentro dele é o meu trabalho.",
+      "3": "Converse com quem você encontrar. É ali que o portfólio realmente fala."
     },
-    "genderPrompt": "Você é um menino? Ou uma menina?",
+    "genderPrompt": "Antes de começar, como você quer aparecer neste mundo?",
     "boy": "MENINO",
     "girl": "MENINA",
-    "namePrompt": "Vamos começar pelo seu nome. Qual é?",
+    "namePrompt": "E como eu devo te chamar?",
     "namePlaceholder": "SEU NOME",
-    "confirmName": "Então o seu nome é {name}?",
+    "confirmName": "Então posso te chamar de {name}?",
     "yes": "SIM",
     "no": "NÃO",
-    "readyLine": "Tudo bem, {name}! A sua própria aventura POKéMON está prestes a começar!",
+    "readyLine": "Certo, {name}! Entre e explore o portfólio no seu ritmo.",
     "submitName": "OK"
   },
   "dialogs": {

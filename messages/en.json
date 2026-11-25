@@ -25,26 +25,26 @@
   "opening": {
     "continueHint": "Press A / Space / Enter",
     "professorLines": {
-      "1": "Hello there! Welcome to the world of POKéMON!",
-      "2": "My name is PROF. ELM. People call me the POKéMON PROF!",
-      "3": "This world is inhabited by creatures we call POKéMON.",
-      "4": "In truth, this is my portfolio — an interactive world built with Three.js.",
-      "5": "Explore freely and you will find projects, tech, and a bit of my journey as a developer."
+      "1": "Hello! This isn't a regular website.",
+      "2": "I'm Victor, a web developer. This is how I chose to say hello.",
+      "3": "You're about to walk through an interactive portfolio.",
+      "4": "It's a small 3D world built with Three.js, in the spirit of classic handheld games.",
+      "5": "Explore freely. Projects, technologies, and a bit of my journey are out on the map."
     },
     "pokemonLines": {
-      "1": "This is what we call a POKéMON.",
-      "2": "Cute, right? Some people keep them as pets. Others use them for battles.",
-      "3": "As for myself... I study POKéMON as a profession."
+      "1": "See? The world is already awake.",
+      "2": "The look nods to those old games. The story inside is my work.",
+      "3": "Talk to whoever you meet. That's where the portfolio actually speaks."
     },
-    "genderPrompt": "Are you a boy? Or are you a girl?",
+    "genderPrompt": "Before we start, how should you appear in this world?",
     "boy": "BOY",
     "girl": "GIRL",
-    "namePrompt": "Let's begin with your name. What is it?",
+    "namePrompt": "And what should I call you?",
     "namePlaceholder": "YOUR NAME",
-    "confirmName": "So your name is {name}?",
+    "confirmName": "So I should call you {name}?",
     "yes": "YES",
     "no": "NO",
-    "readyLine": "All right, {name}! Your very own POKéMON adventure is about to unfold!",
+    "readyLine": "All right, {name}! Step in and explore the portfolio at your own pace.",
     "submitName": "OK"
   },
   "dialogs": {
